@@ -1,0 +1,62 @@
+GAS LISTING C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/ccDHpfcd.s 			page 1
+
+
+   1               		.file	"eboot.c"
+   2               	__SREG__ = 0x3f
+   3               	__SP_H__ = 0x3e
+   4               	__SP_L__ = 0x3d
+   5               	__CCP__  = 0x34
+   6               	__tmp_reg__ = 0
+   7               	__zero_reg__ = 1
+   8               		.text
+   9               	.global	main
+  10               		.type	main, @function
+  11               	main:
+  12               	/* prologue: function */
+  13               	/* frame size = 0 */
+  14 0000 80EC      		ldi r24,lo8(-64)
+  15 0002 85BF      		out 85-32,r24
+  16 0004 0E94 0000 		call BootConfigRead
+  17 0008 0E94 0000 		call NicInit
+  18 000c 892B      		or r24,r25
+  19 000e 01F4      		brne .L2
+  20 0010 0E94 0000 		call DhcpQuery
+  21 0014 892B      		or r24,r25
+  22 0016 01F4      		brne .L2
+  23 0018 8091 0000 		lds r24,confboot+6
+  24 001c 8823      		tst r24
+  25 001e 01F0      		breq .L2
+  26 0020 0E94 0000 		call TftpRecv
+  27               	.L2:
+  28 0024 80E0      		ldi r24,lo8(0)
+  29 0026 90E0      		ldi r25,hi8(0)
+  30               	/* epilogue start */
+  31 0028 0895      		ret
+  32               		.size	main, .-main
+  33               		.comm sframe,594,1
+  34               		.comm rframe,594,1
+  35               		.comm sid,4,1
+  36               	.global __do_clear_bss
+GAS LISTING C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/ccDHpfcd.s 			page 2
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 eboot.c
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/ccDHpfcd.s:2      *ABS*:0000003f __SREG__
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/ccDHpfcd.s:3      *ABS*:0000003e __SP_H__
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/ccDHpfcd.s:4      *ABS*:0000003d __SP_L__
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/ccDHpfcd.s:5      *ABS*:00000034 __CCP__
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/ccDHpfcd.s:6      *ABS*:00000000 __tmp_reg__
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/ccDHpfcd.s:7      *ABS*:00000001 __zero_reg__
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/ccDHpfcd.s:11     .text:00000000 main
+                            *COM*:00000252 sframe
+                            *COM*:00000252 rframe
+                            *COM*:00000004 sid
+
+UNDEFINED SYMBOLS
+BootConfigRead
+NicInit
+DhcpQuery
+confboot
+TftpRecv
+__do_clear_bss

@@ -1,0 +1,124 @@
+ARM GAS  C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\ccHq5lmO.s 			page 1
+
+
+   1              		.cpu arm7tdmi
+   2              		.fpu softvfp
+   3              		.eabi_attribute 20, 1
+   4              		.eabi_attribute 21, 1
+   5              		.eabi_attribute 23, 3
+   6              		.eabi_attribute 24, 1
+   7              		.eabi_attribute 25, 1
+   8              		.eabi_attribute 26, 1
+   9              		.eabi_attribute 30, 4
+  10              		.eabi_attribute 18, 4
+  11              		.code	16
+  12              		.file	"udp.c"
+  13              		.text
+  14              		.align	1
+  15              		.global	UdpInput
+  16              		.code	16
+  17              		.thumb_func
+  18              		.type	UdpInput, %function
+  19              	UdpInput:
+  20 0000 F8B5     		push	{r3, r4, r5, r6, r7, lr}
+  21 0002 104C     		ldr	r4, .L5
+  22 0004 051C     		mov	r5, r0
+  23 0006 0E1C     		mov	r6, r1
+  24 0008 671D     		add	r7, r4, #5
+  25              	.L3:
+  26 000a 1120     		mov	r0, #17
+  27 000c 311C     		mov	r1, r6
+  28 000e FFF7FEFF 		bl	IpInput
+  29 0012 0028     		cmp	r0, #0
+  30 0014 12DD     		ble	.L2
+  31 0016 0C49     		ldr	r1, .L5+4
+  32 0018 CB7F     		ldrb	r3, [r1, #31]
+  33 001a FA7F     		ldrb	r2, [r7, #31]
+  34 001c 1B02     		lsl	r3, r3, #8
+  35 001e 1343     		orr	r3, r3, r2
+  36 0020 9D42     		cmp	r5, r3
+  37 0022 F2D1     		bne	.L3
+  38 0024 E31D     		add	r3, r4, #7
+  39 0026 0834     		add	r4, r4, #8
+  40 0028 DA7F     		ldrb	r2, [r3, #31]
+  41 002a E37F     		ldrb	r3, [r4, #31]
+  42 002c 1B02     		lsl	r3, r3, #8
+  43 002e 1343     		orr	r3, r3, r2
+  44 0030 1B04     		lsl	r3, r3, #16
+  45 0032 1802     		lsl	r0, r3, #8
+  46 0034 000C     		lsr	r0, r0, #16
+  47 0036 1B0E     		lsr	r3, r3, #24
+  48 0038 1843     		orr	r0, r0, r3
+  49 003a 0838     		sub	r0, r0, #8
+  50              	.L2:
+  51              		@ sp needed for prologue
+  52 003c F8BC     		pop	{r3, r4, r5, r6, r7}
+  53 003e 02BC     		pop	{r1}
+  54 0040 0847     		bx	r1
+  55              	.L6:
+  56 0042 C046     		.align	2
+  57              	.L5:
+ARM GAS  C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\ccHq5lmO.s 			page 2
+
+
+  58 0044 00000000 		.word	rframe
+  59 0048 06000000 		.word	rframe+6
+  60              		.size	UdpInput, .-UdpInput
+  61              		.align	1
+  62              		.global	UdpOutput
+  63              		.code	16
+  64              		.thumb_func
+  65              		.type	UdpOutput, %function
+  66              	UdpOutput:
+  67 004c 38B5     		push	{r3, r4, r5, lr}
+  68 004e 0E4C     		ldr	r4, .L8
+  69 0050 E51C     		add	r5, r4, #3
+  70 0052 EA77     		strb	r2, [r5, #31]
+  71 0054 251D     		add	r5, r4, #4
+  72 0056 120A     		lsr	r2, r2, #8
+  73 0058 EA77     		strb	r2, [r5, #31]
+  74 005a 621D     		add	r2, r4, #5
+  75 005c D177     		strb	r1, [r2, #31]
+  76 005e A21D     		add	r2, r4, #6
+  77 0060 090A     		lsr	r1, r1, #8
+  78 0062 D177     		strb	r1, [r2, #31]
+  79 0064 1A1C     		mov	r2, r3
+  80 0066 0832     		add	r2, r2, #8
+  81 0068 1304     		lsl	r3, r2, #16
+  82 006a 1102     		lsl	r1, r2, #8
+  83 006c 1B0E     		lsr	r3, r3, #24
+  84 006e 0B43     		orr	r3, r3, r1
+  85 0070 E11D     		add	r1, r4, #7
+  86 0072 CB77     		strb	r3, [r1, #31]
+  87 0074 0834     		add	r4, r4, #8
+  88 0076 1B0A     		lsr	r3, r3, #8
+  89 0078 E377     		strb	r3, [r4, #31]
+  90 007a 1121     		mov	r1, #17
+  91 007c FFF7FEFF 		bl	IpOutput
+  92              		@ sp needed for prologue
+  93 0080 38BC     		pop	{r3, r4, r5}
+  94 0082 02BC     		pop	{r1}
+  95 0084 0847     		bx	r1
+  96              	.L9:
+  97 0086 C046     		.align	2
+  98              	.L8:
+  99 0088 00000000 		.word	sframe
+ 100              		.size	UdpOutput, .-UdpOutput
+ 101              		.ident	"GCC: (GNU) 4.5.2"
+ARM GAS  C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\ccHq5lmO.s 			page 3
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 udp.c
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\ccHq5lmO.s:14     .text:00000000 $t
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\ccHq5lmO.s:19     .text:00000000 UdpInput
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\ccHq5lmO.s:58     .text:00000044 $d
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\ccHq5lmO.s:61     .text:0000004c $t
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\ccHq5lmO.s:66     .text:0000004c UdpOutput
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\ccHq5lmO.s:99     .text:00000088 $d
+
+UNDEFINED SYMBOLS
+IpInput
+rframe
+IpOutput
+sframe

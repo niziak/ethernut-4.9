@@ -1,0 +1,485 @@
+
+Allocating common symbols
+Common symbol       size              file
+
+rframe              0x252             appload.o
+test                0x228             dhcp.o
+arptab_ha           0x6               arp.o
+arptab_ip           0x4               arp.o
+arpframe            0x2a              arp.o
+sframe              0x252             appload.o
+confboot            0x86              config.o
+
+Memory Configuration
+
+Name             Origin             Length             Attributes
+text             0x00000000         0x00020000         xr
+data             0x00800060         0x0000ffa0         rw !x
+eeprom           0x00810000         0x00010000         rw !x
+fuse             0x00820000         0x00000400         rw !x
+lock             0x00830000         0x00000400         rw !x
+signature        0x00840000         0x00000400         rw !x
+*default*        0x00000000         0xffffffff
+
+Linker script and memory map
+
+Address of section .data set to 0x800100
+LOAD start.o
+LOAD appload.o
+LOAD config.o
+LOAD dhcp.o
+LOAD tftp.o
+LOAD udp.o
+LOAD ip.o
+LOAD arp.o
+LOAD ether.o
+LOAD debug.o
+LOAD utils.o
+                0x000010ff                __stack = 0x10ff
+Address of section .text set to 0x1f000
+
+.hash
+ *(.hash)
+
+.dynsym
+ *(.dynsym)
+
+.dynstr
+ *(.dynstr)
+
+.gnu.version
+ *(.gnu.version)
+
+.gnu.version_d
+ *(.gnu.version_d)
+
+.gnu.version_r
+ *(.gnu.version_r)
+
+.rel.init
+ *(.rel.init)
+
+.rela.init
+ *(.rela.init)
+
+.rel.text
+ *(.rel.text)
+ *(.rel.text.*)
+ *(.rel.gnu.linkonce.t*)
+
+.rela.text
+ *(.rela.text)
+ *(.rela.text.*)
+ *(.rela.gnu.linkonce.t*)
+
+.rel.fini
+ *(.rel.fini)
+
+.rela.fini
+ *(.rela.fini)
+
+.rel.rodata
+ *(.rel.rodata)
+ *(.rel.rodata.*)
+ *(.rel.gnu.linkonce.r*)
+
+.rela.rodata
+ *(.rela.rodata)
+ *(.rela.rodata.*)
+ *(.rela.gnu.linkonce.r*)
+
+.rel.data
+ *(.rel.data)
+ *(.rel.data.*)
+ *(.rel.gnu.linkonce.d*)
+
+.rela.data
+ *(.rela.data)
+ *(.rela.data.*)
+ *(.rela.gnu.linkonce.d*)
+
+.rel.ctors
+ *(.rel.ctors)
+
+.rela.ctors
+ *(.rela.ctors)
+
+.rel.dtors
+ *(.rel.dtors)
+
+.rela.dtors
+ *(.rela.dtors)
+
+.rel.got
+ *(.rel.got)
+
+.rela.got
+ *(.rela.got)
+
+.rel.bss
+ *(.rel.bss)
+
+.rela.bss
+ *(.rela.bss)
+
+.rel.plt
+ *(.rel.plt)
+
+.rela.plt
+ *(.rela.plt)
+
+.text           0x0001f000      0xfb2
+ *(.vectors)
+ *(.vectors)
+ *(.progmem.gcc*)
+ *(.progmem*)
+                0x0001f000                . = ALIGN (0x2)
+                0x0001f000                __trampolines_start = .
+ *(.trampolines)
+ .trampolines   0x0001f000        0x0 linker stubs
+ *(.trampolines*)
+                0x0001f000                __trampolines_end = .
+ *(.jumptables)
+ *(.jumptables*)
+ *(.lowtext)
+ *(.lowtext*)
+                0x0001f000                __ctors_start = .
+ *(.ctors)
+                0x0001f000                __ctors_end = .
+                0x0001f000                __dtors_start = .
+ *(.dtors)
+                0x0001f000                __dtors_end = .
+ SORT(*)(.ctors)
+ SORT(*)(.dtors)
+ *(.init0)
+ *(.init0)
+ *(.init1)
+ *(.init1)
+ *(.init2)
+ *(.init2)
+ *(.init3)
+ *(.init3)
+ *(.init4)
+ *(.init4)
+ *(.init5)
+ *(.init5)
+ *(.init6)
+ *(.init6)
+ *(.init7)
+ *(.init7)
+ *(.init8)
+ *(.init8)
+ *(.init9)
+ *(.init9)
+ *(.text)
+ .text          0x0001f000       0x36 start.o
+                0x0001f002                __boot_idata
+                0x0001f02e                __boot_start
+                0x0001f01c                __boot_ibss
+                0x0001f000                __boot_entry
+                0x0001f032                exit
+ .text          0x0001f036       0x22 appload.o
+                0x0001f036                main
+ .text          0x0001f058       0x36 config.o
+                0x0001f058                BootConfigRead
+ .text          0x0001f08e      0x310 dhcp.o
+                0x0001f11e                DhcpTransact
+                0x0001f1e6                DhcpQuery
+                0x0001f08e                DhcpGetOption
+                0x0001f0ea                DhcpSetOption
+ .text          0x0001f39e      0x26a tftp.o
+                0x0001f462                TftpRecv
+                0x0001f39e                FlashPage
+ .text          0x0001f608       0x94 udp.o
+                0x0001f654                UdpInput
+                0x0001f608                UdpOutput
+ .text          0x0001f69c      0x23a ip.o
+                0x0001f69c                IpChkSum
+                0x0001f802                IpInput
+                0x0001f70e                IpOutput
+ .text          0x0001f8d6      0x19e arp.o
+                0x0001f8d6                ArpRequest
+ .text          0x0001fa74      0x4a6 ether.o
+                0x0001feba                EtherInit
+                0x0001fb62                NicPhyWrite
+                0x0001fbca                EtherInput
+                0x0001fe14                NicPhyConfig
+                0x0001fca6                EtherOutput
+                0x0001fa74                NicPhyRegSelect
+                0x0001fb1a                NicPhyRead
+                0x0001fda2                NicReset
+ .text          0x0001ff1a        0x0 debug.o
+ .text          0x0001ff1a       0x98 utils.o
+                0x0001ff1a                MicroDelay
+                0x0001ffa4                memset_
+                0x0001ff7c                __byte_swap4
+                0x0001ff2e                Delay
+                0x0001ff70                __byte_swap2
+                0x0001ff92                memcpy_
+                0x0001ffb2                . = ALIGN (0x2)
+ *(.text.*)
+                0x0001ffb2                . = ALIGN (0x2)
+ *(.fini9)
+ *(.fini9)
+ *(.fini8)
+ *(.fini8)
+ *(.fini7)
+ *(.fini7)
+ *(.fini6)
+ *(.fini6)
+ *(.fini5)
+ *(.fini5)
+ *(.fini4)
+ *(.fini4)
+ *(.fini3)
+ *(.fini3)
+ *(.fini2)
+ *(.fini2)
+ *(.fini1)
+ *(.fini1)
+ *(.fini0)
+ *(.fini0)
+                0x0001ffb2                _etext = .
+
+.data           0x00800100       0x30 load address 0x0001ffb2
+                0x00800100                PROVIDE (__data_start, .)
+ *(.data)
+ .data          0x00800100        0x0 start.o
+ .data          0x00800100        0x0 appload.o
+ .data          0x00800100       0x20 config.o
+                0x00800100                confnet
+ .data          0x00800120        0x0 dhcp.o
+ .data          0x00800120        0xf tftp.o
+ .data          0x0080012f        0x0 udp.o
+ .data          0x0080012f        0x0 ip.o
+ .data          0x0080012f        0x0 arp.o
+ .data          0x0080012f        0x0 ether.o
+ .data          0x0080012f        0x0 debug.o
+ .data          0x0080012f        0x0 utils.o
+ *(.data*)
+ *(.rodata)
+ *(.rodata*)
+ *(.gnu.linkonce.d*)
+                0x00800130                . = ALIGN (0x2)
+ *fill*         0x0080012f        0x1 00
+                0x00800130                _edata = .
+                0x00800130                PROVIDE (__data_end, .)
+
+.bss            0x00800130      0x786
+                0x00800130                PROVIDE (__bss_start, .)
+ *(.bss)
+ .bss           0x00800130        0x0 start.o
+ .bss           0x00800130        0x0 appload.o
+ .bss           0x00800130        0x0 config.o
+ .bss           0x00800130        0x0 dhcp.o
+ .bss           0x00800130        0x0 tftp.o
+ .bss           0x00800130        0x0 udp.o
+ .bss           0x00800130        0x0 ip.o
+ .bss           0x00800130        0x0 arp.o
+ .bss           0x00800130        0x0 ether.o
+ .bss           0x00800130        0x0 debug.o
+ .bss           0x00800130        0x0 utils.o
+ *(.bss*)
+ *(COMMON)
+ COMMON         0x00800130      0x4a4 appload.o
+                0x00800130                rframe
+                0x00800382                sframe
+ COMMON         0x008005d4       0x86 config.o
+                0x008005d4                confboot
+ COMMON         0x0080065a      0x228 dhcp.o
+                0x0080065a                test
+ COMMON         0x00800882       0x34 arp.o
+                0x00800882                arptab_ha
+                0x00800888                arptab_ip
+                0x0080088c                arpframe
+                0x008008b6                PROVIDE (__bss_end, .)
+                0x0001ffb2                __data_load_start = LOADADDR (.data)
+                0x0001ffe2                __data_load_end = (__data_load_start + SIZEOF (.data))
+
+.noinit         0x008008b6        0x0
+                0x008008b6                PROVIDE (__noinit_start, .)
+ *(.noinit*)
+                0x008008b6                PROVIDE (__noinit_end, .)
+                0x008008b6                _end = .
+                0x008008b6                PROVIDE (__heap_start, .)
+
+.eeprom         0x00810000        0x0
+ *(.eeprom*)
+                0x00810000                __eeprom_end = .
+
+.fuse
+ *(.fuse)
+ *(.lfuse)
+ *(.hfuse)
+ *(.efuse)
+
+.lock
+ *(.lock*)
+
+.signature
+ *(.signature*)
+
+.stab           0x00000000      0x150
+ *(.stab)
+ .stab          0x00000000      0x150 start.o
+
+.stabstr        0x00000000       0x37
+ *(.stabstr)
+ .stabstr       0x00000000       0x37 start.o
+
+.stab.excl
+ *(.stab.excl)
+
+.stab.exclstr
+ *(.stab.exclstr)
+
+.stab.index
+ *(.stab.index)
+
+.stab.indexstr
+ *(.stab.indexstr)
+
+.comment
+ *(.comment)
+
+.debug
+ *(.debug)
+
+.line
+ *(.line)
+
+.debug_srcinfo
+ *(.debug_srcinfo)
+
+.debug_sfnames
+ *(.debug_sfnames)
+
+.debug_aranges
+ *(.debug_aranges)
+
+.debug_pubnames
+ *(.debug_pubnames)
+
+.debug_info
+ *(.debug_info)
+ *(.gnu.linkonce.wi.*)
+
+.debug_abbrev
+ *(.debug_abbrev)
+
+.debug_line
+ *(.debug_line)
+
+.debug_frame
+ *(.debug_frame)
+
+.debug_str
+ *(.debug_str)
+
+.debug_loc
+ *(.debug_loc)
+
+.debug_macinfo
+ *(.debug_macinfo)
+OUTPUT(appload.elf elf32-avr)
+LOAD linker stubs
+
+Cross Reference Table
+
+Symbol                                            File
+ArpRequest                                        arp.o
+                                                  ip.o
+BootConfigRead                                    config.o
+                                                  appload.o
+Delay                                             utils.o
+                                                  ether.o
+DhcpGetOption                                     dhcp.o
+DhcpQuery                                         dhcp.o
+                                                  appload.o
+DhcpSetOption                                     dhcp.o
+DhcpTransact                                      dhcp.o
+EtherInit                                         ether.o
+                                                  appload.o
+EtherInput                                        ether.o
+                                                  arp.o
+                                                  ip.o
+EtherOutput                                       ether.o
+                                                  arp.o
+                                                  ip.o
+FlashPage                                         tftp.o
+IpChkSum                                          ip.o
+IpInput                                           ip.o
+                                                  udp.o
+IpOutput                                          ip.o
+                                                  udp.o
+MicroDelay                                        utils.o
+                                                  ether.o
+NicPhyConfig                                      ether.o
+NicPhyRead                                        ether.o
+NicPhyRegSelect                                   ether.o
+NicPhyWrite                                       ether.o
+NicReset                                          ether.o
+TftpRecv                                          tftp.o
+                                                  appload.o
+UdpInput                                          udp.o
+                                                  tftp.o
+                                                  dhcp.o
+UdpOutput                                         udp.o
+                                                  tftp.o
+                                                  dhcp.o
+__boot_entry                                      start.o
+__boot_ibss                                       start.o
+__boot_idata                                      start.o
+__boot_start                                      start.o
+__bss_end                                         start.o
+__bss_start                                       start.o
+__byte_swap2                                      utils.o
+                                                  ip.o
+                                                  udp.o
+                                                  tftp.o
+__byte_swap4                                      utils.o
+__data_end                                        start.o
+__data_load_start                                 start.o
+__data_start                                      start.o
+__do_clear_bss                                    arp.o
+                                                  dhcp.o
+                                                  config.o
+                                                  appload.o
+__do_copy_data                                    tftp.o
+                                                  config.o
+arpframe                                          ether.o
+                                                  arp.o
+arptab_ha                                         arp.o
+arptab_ip                                         arp.o
+confboot                                          tftp.o
+                                                  dhcp.o
+                                                  config.o
+confnet                                           config.o
+                                                  ether.o
+                                                  arp.o
+                                                  ip.o
+                                                  dhcp.o
+exit                                              start.o
+main                                              appload.o
+                                                  start.o
+memcpy_                                           utils.o
+                                                  ether.o
+                                                  arp.o
+                                                  tftp.o
+                                                  dhcp.o
+memset_                                           utils.o
+                                                  arp.o
+rframe                                            ether.o
+                                                  arp.o
+                                                  ip.o
+                                                  udp.o
+                                                  tftp.o
+                                                  dhcp.o
+                                                  appload.o
+sframe                                            ether.o
+                                                  ip.o
+                                                  udp.o
+                                                  tftp.o
+                                                  dhcp.o
+                                                  appload.o
+test                                              dhcp.o

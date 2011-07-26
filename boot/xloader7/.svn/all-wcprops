@@ -1,0 +1,71 @@
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svnroot/ethernut/!svn/ver/3370/trunk/nut/boot/xloader7
+END
+at91sam7s.h
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svnroot/ethernut/!svn/ver/3370/trunk/nut/boot/xloader7/at91sam7s.h
+END
+README_FIRST.txt
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svnroot/ethernut/!svn/ver/3370/trunk/nut/boot/xloader7/README_FIRST.txt
+END
+startup.s
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svnroot/ethernut/!svn/ver/3370/trunk/nut/boot/xloader7/startup.s
+END
+lib_at91sam7s.h
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svnroot/ethernut/!svn/ver/3370/trunk/nut/boot/xloader7/lib_at91sam7s.h
+END
+main.c
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svnroot/ethernut/!svn/ver/3370/trunk/nut/boot/xloader7/main.c
+END
+xloader7.inter
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svnroot/ethernut/!svn/ver/3370/trunk/nut/boot/xloader7/xloader7.inter
+END
+bootldr_at91sam7s64.ld
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svnroot/ethernut/!svn/ver/3370/trunk/nut/boot/xloader7/bootldr_at91sam7s64.ld
+END
+bootldr_at91sam7s128.ld
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svnroot/ethernut/!svn/ver/3370/trunk/nut/boot/xloader7/bootldr_at91sam7s128.ld
+END
+bootldr_at91sam7s256.ld
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svnroot/ethernut/!svn/ver/3370/trunk/nut/boot/xloader7/bootldr_at91sam7s256.ld
+END
+Makefile
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svnroot/ethernut/!svn/ver/3370/trunk/nut/boot/xloader7/Makefile
+END
+board.h
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svnroot/ethernut/!svn/ver/3370/trunk/nut/boot/xloader7/board.h
+END

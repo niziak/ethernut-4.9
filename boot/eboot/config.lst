@@ -1,0 +1,137 @@
+GAS LISTING C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/cc4ilpGy.s 			page 1
+
+
+   1               		.file	"config.c"
+   2               	__SREG__ = 0x3f
+   3               	__SP_H__ = 0x3e
+   4               	__SP_L__ = 0x3d
+   5               	__CCP__  = 0x34
+   6               	__tmp_reg__ = 0
+   7               	__zero_reg__ = 1
+   8               		.text
+   9               	.global	BootConfigRead
+  10               		.type	BootConfigRead, @function
+  11               	BootConfigRead:
+  12               	/* prologue: function */
+  13               	/* frame size = 0 */
+  14               	.L2:
+  15 0000 E199      		sbic 60-32,1
+  16 0002 00C0      		rjmp .L2
+  17 0004 80E4      		ldi r24,lo8(64)
+  18 0006 90E0      		ldi r25,hi8(64)
+  19 0008 9FBB      		out (62)+1-32,r25
+  20 000a 8EBB      		out 62-32,r24
+  21 000c E09A      		sbi 60-32,0
+  22 000e 8DB3      		in r24,61-32
+  23 0010 8032      		cpi r24,lo8(32)
+  24 0012 01F4      		brne .L7
+  25 0014 20E4      		ldi r18,lo8(64)
+  26 0016 30E0      		ldi r19,hi8(64)
+  27 0018 E0E0      		ldi r30,lo8(confnet)
+  28 001a F0E0      		ldi r31,hi8(confnet)
+  29               	.L15:
+  30 001c E199      		sbic 60-32,1
+  31 001e 00C0      		rjmp .L15
+  32 0020 3FBB      		out (62)+1-32,r19
+  33 0022 2EBB      		out 62-32,r18
+  34 0024 E09A      		sbi 60-32,0
+  35 0026 8DB3      		in r24,61-32
+  36 0028 8193      		st Z+,r24
+  37 002a 2F5F      		subi r18,lo8(-(1))
+  38 002c 3F4F      		sbci r19,hi8(-(1))
+  39 002e 2036      		cpi r18,96
+  40 0030 3105      		cpc r19,__zero_reg__
+  41 0032 01F4      		brne .L15
+  42               	.L10:
+  43 0034 E199      		sbic 60-32,1
+  44 0036 00C0      		rjmp .L10
+  45 0038 80E0      		ldi r24,lo8(256)
+  46 003a 91E0      		ldi r25,hi8(256)
+  47 003c 9FBB      		out (62)+1-32,r25
+  48 003e 8EBB      		out 62-32,r24
+  49 0040 E09A      		sbi 60-32,0
+  50 0042 8DB3      		in r24,61-32
+  51 0044 8638      		cpi r24,lo8(-122)
+  52 0046 01F4      		brne .L7
+  53 0048 20E0      		ldi r18,lo8(256)
+  54 004a 31E0      		ldi r19,hi8(256)
+  55 004c E0E0      		ldi r30,lo8(confboot)
+  56 004e F0E0      		ldi r31,hi8(confboot)
+  57               	.L16:
+GAS LISTING C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/cc4ilpGy.s 			page 2
+
+
+  58 0050 E199      		sbic 60-32,1
+  59 0052 00C0      		rjmp .L16
+  60 0054 3FBB      		out (62)+1-32,r19
+  61 0056 2EBB      		out 62-32,r18
+  62 0058 E09A      		sbi 60-32,0
+  63 005a 8DB3      		in r24,61-32
+  64 005c 8193      		st Z+,r24
+  65 005e 2F5F      		subi r18,lo8(-(1))
+  66 0060 3F4F      		sbci r19,hi8(-(1))
+  67 0062 81E0      		ldi r24,hi8(390)
+  68 0064 2638      		cpi r18,lo8(390)
+  69 0066 3807      		cpc r19,r24
+  70 0068 01F4      		brne .L16
+  71               	.L7:
+  72 006a 0895      		ret
+  73               		.size	BootConfigRead, .-BootConfigRead
+  74               	.global	confnet
+  75               		.data
+  76               		.type	confnet, @object
+  77               		.size	confnet, 32
+  78               	confnet:
+  79 0000 00        		.byte	0
+  80 0001 45        		.byte	69
+  81 0002 54        		.byte	84
+  82 0003 48        		.byte	72
+  83 0004 45        		.byte	69
+  84 0005 52        		.byte	82
+  85 0006 4E        		.byte	78
+  86 0007 55        		.byte	85
+  87 0008 54        		.byte	84
+  88 0009 00        		.byte	0
+  89 000a 00        		.byte	0
+  90 000b 06        		.byte	6
+  91 000c 98        		.byte	-104
+  92 000d 00        		.byte	0
+  93 000e 00        		.byte	0
+  94 000f 00        		.byte	0
+  95 0010 00        		.byte	0
+  96 0011 00        		.byte	0
+  97 0012 00        		.byte	0
+  98 0013 00        		.byte	0
+  99 0014 00        		.byte	0
+ 100 0015 00        		.byte	0
+ 101 0016 00        		.byte	0
+ 102 0017 00        		.byte	0
+ 103 0018 00        		.byte	0
+ 104 0019 00        		.byte	0
+ 105 001a 00        		.byte	0
+ 106 001b 00        		.byte	0
+ 107 001c 00        		.byte	0
+ 108 001d 00        		.byte	0
+ 109 001e 00        		.byte	0
+ 110 001f 00        		.byte	0
+ 111               		.comm confboot,134,1
+ 112               	.global __do_copy_data
+ 113               	.global __do_clear_bss
+GAS LISTING C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/cc4ilpGy.s 			page 3
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 config.c
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/cc4ilpGy.s:2      *ABS*:0000003f __SREG__
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/cc4ilpGy.s:3      *ABS*:0000003e __SP_H__
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/cc4ilpGy.s:4      *ABS*:0000003d __SP_L__
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/cc4ilpGy.s:5      *ABS*:00000034 __CCP__
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/cc4ilpGy.s:6      *ABS*:00000000 __tmp_reg__
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/cc4ilpGy.s:7      *ABS*:00000001 __zero_reg__
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/cc4ilpGy.s:11     .text:00000000 BootConfigRead
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/cc4ilpGy.s:78     .data:00000000 confnet
+                            *COM*:00000086 confboot
+
+UNDEFINED SYMBOLS
+__do_copy_data
+__do_clear_bss

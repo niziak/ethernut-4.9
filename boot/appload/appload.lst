@@ -1,0 +1,56 @@
+GAS LISTING C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/ccbaN0De.s 			page 1
+
+
+   1               		.file	"appload.c"
+   2               	__SREG__ = 0x3f
+   3               	__SP_H__ = 0x3e
+   4               	__SP_L__ = 0x3d
+   5               	__CCP__  = 0x34
+   6               	__tmp_reg__ = 0
+   7               	__zero_reg__ = 1
+   8               		.text
+   9               	.global	main
+  10               		.type	main, @function
+  11               	main:
+  12               	/* prologue: function */
+  13               	/* frame size = 0 */
+  14 0000 80EC      		ldi r24,lo8(-64)
+  15 0002 85BF      		out 85-32,r24
+  16 0004 0E94 0000 		call BootConfigRead
+  17 0008 0E94 0000 		call EtherInit
+  18 000c 892B      		or r24,r25
+  19 000e 01F4      		brne .L2
+  20 0010 0E94 0000 		call DhcpQuery
+  21 0014 892B      		or r24,r25
+  22 0016 01F4      		brne .L2
+  23 0018 0E94 0000 		call TftpRecv
+  24               	.L2:
+  25 001c 80E0      		ldi r24,lo8(0)
+  26 001e 90E0      		ldi r25,hi8(0)
+  27               	/* epilogue start */
+  28 0020 0895      		ret
+  29               		.size	main, .-main
+  30               		.comm sframe,594,1
+  31               		.comm rframe,594,1
+  32               	.global __do_clear_bss
+GAS LISTING C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/ccbaN0De.s 			page 2
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 appload.c
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/ccbaN0De.s:2      *ABS*:0000003f __SREG__
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/ccbaN0De.s:3      *ABS*:0000003e __SP_H__
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/ccbaN0De.s:4      *ABS*:0000003d __SP_L__
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/ccbaN0De.s:5      *ABS*:00000034 __CCP__
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/ccbaN0De.s:6      *ABS*:00000000 __tmp_reg__
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/ccbaN0De.s:7      *ABS*:00000001 __zero_reg__
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/ccbaN0De.s:11     .text:00000000 main
+                            *COM*:00000252 sframe
+                            *COM*:00000252 rframe
+
+UNDEFINED SYMBOLS
+BootConfigRead
+EtherInit
+DhcpQuery
+TftpRecv
+__do_clear_bss

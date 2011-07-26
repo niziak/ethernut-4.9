@@ -1,0 +1,372 @@
+GAS LISTING C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/ccZej2vh.s 			page 1
+
+
+   1               		.file	"tftp.c"
+   2               	__SREG__ = 0x3f
+   3               	__SP_H__ = 0x3e
+   4               	__SP_L__ = 0x3d
+   5               	__CCP__  = 0x34
+   6               	__tmp_reg__ = 0
+   7               	__zero_reg__ = 1
+   8               		.text
+   9               		.type	FlashPage, @function
+  10               	FlashPage:
+  11 0000 DF92      		push r13
+  12 0002 EF92      		push r14
+  13 0004 FF92      		push r15
+  14 0006 0F93      		push r16
+  15 0008 1F93      		push r17
+  16 000a CF93      		push r28
+  17 000c DF93      		push r29
+  18               	/* prologue: function */
+  19               	/* frame size = 0 */
+  20 000e FC01      		movw r30,r24
+  21 0010 7B01      		movw r14,r22
+  22 0012 8A01      		movw r16,r20
+  23 0014 81E0      		ldi r24,hi8(257)
+  24 0016 4130      		cpi r20,lo8(257)
+  25 0018 5807      		cpc r21,r24
+  26 001a 00F0      		brlo .L2
+  27 001c 00E0      		ldi r16,lo8(256)
+  28 001e 11E0      		ldi r17,hi8(256)
+  29               	.L2:
+  30 0020 81E0      		ldi r24,hi8(480)
+  31 0022 E03E      		cpi r30,lo8(480)
+  32 0024 F807      		cpc r31,r24
+  33 0026 00F4      		brsh .L8
+  34 0028 FBBF      		out 91-32,r31
+  35 002a DE2E      		mov r13,r30
+  36 002c 80E0      		ldi r24,lo8(0)
+  37 002e 9E2F      		mov r25,r30
+  38 0030 63E0      		ldi r22,lo8(3)
+  39 0032 0E94 0000 		call SpmCommand
+  40 0036 80E0      		ldi r24,lo8(0)
+  41 0038 90E0      		ldi r25,hi8(0)
+  42 003a 61E1      		ldi r22,lo8(17)
+  43 003c 0E94 0000 		call SpmCommand
+  44 0040 C0E0      		ldi r28,lo8(0)
+  45 0042 D0E0      		ldi r29,hi8(0)
+  46 0044 00C0      		rjmp .L4
+  47               	.L5:
+  48 0046 F701      		movw r30,r14
+  49 0048 EC0F      		add r30,r28
+  50 004a FD1F      		adc r31,r29
+  51 004c 6081      		ld r22,Z
+  52 004e 7181      		ldd r23,Z+1
+  53 0050 CE01      		movw r24,r28
+  54 0052 0E94 0000 		call SpmBufferFill
+  55 0056 2296      		adiw r28,2
+  56               	.L4:
+  57 0058 C017      		cp r28,r16
+GAS LISTING C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/ccZej2vh.s 			page 2
+
+
+  58 005a D107      		cpc r29,r17
+  59 005c 00F0      		brlo .L5
+  60 005e 00C0      		rjmp .L9
+  61               	.L7:
+  62 0060 CE01      		movw r24,r28
+  63 0062 6FEF      		ldi r22,lo8(-1)
+  64 0064 7FEF      		ldi r23,hi8(-1)
+  65 0066 0E94 0000 		call SpmBufferFill
+  66 006a 2296      		adiw r28,2
+  67               	.L9:
+  68 006c CF3F      		cpi r28,255
+  69 006e D105      		cpc r29,__zero_reg__
+  70 0070 01F0      		breq .L7
+  71 0072 00F0      		brlo .L7
+  72 0074 80E0      		ldi r24,lo8(0)
+  73 0076 9D2D      		mov r25,r13
+  74 0078 65E0      		ldi r22,lo8(5)
+  75 007a 0E94 0000 		call SpmCommand
+  76 007e 80E0      		ldi r24,lo8(0)
+  77 0080 90E0      		ldi r25,hi8(0)
+  78 0082 61E1      		ldi r22,lo8(17)
+  79 0084 0E94 0000 		call SpmCommand
+  80               	.L8:
+  81               	/* epilogue start */
+  82 0088 DF91      		pop r29
+  83 008a CF91      		pop r28
+  84 008c 1F91      		pop r17
+  85 008e 0F91      		pop r16
+  86 0090 FF90      		pop r15
+  87 0092 EF90      		pop r14
+  88 0094 DF90      		pop r13
+  89 0096 0895      		ret
+  90               		.size	FlashPage, .-FlashPage
+  91               	.global	TftpRecv
+  92               		.type	TftpRecv, @function
+  93               	TftpRecv:
+  94 0098 6F92      		push r6
+  95 009a 7F92      		push r7
+  96 009c 8F92      		push r8
+  97 009e 9F92      		push r9
+  98 00a0 AF92      		push r10
+  99 00a2 BF92      		push r11
+ 100 00a4 DF92      		push r13
+ 101 00a6 EF92      		push r14
+ 102 00a8 FF92      		push r15
+ 103 00aa 0F93      		push r16
+ 104 00ac 1F93      		push r17
+ 105 00ae CF93      		push r28
+ 106 00b0 DF93      		push r29
+ 107               	/* prologue: function */
+ 108               	/* frame size = 0 */
+ 109 00b2 81E0      		ldi r24,lo8(1)
+ 110 00b4 90E0      		ldi r25,hi8(1)
+ 111               	/* #APP */
+ 112               	 ;  72 "types.h" 1
+ 113 00b6 082E      		mov __tmp_reg__, r24
+ 114 00b8 892F      		mov r24, r25
+GAS LISTING C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/ccZej2vh.s 			page 3
+
+
+ 115 00ba 902D      		mov r25, __tmp_reg__
+ 116               		
+ 117               	 ;  0 "" 2
+ 118               	/* #NOAPP */
+ 119 00bc 9093 0000 		sts (sframe+42)+1,r25
+ 120 00c0 8093 0000 		sts sframe+42,r24
+ 121 00c4 A0E0      		ldi r26,lo8(sframe+44)
+ 122 00c6 B0E0      		ldi r27,hi8(sframe+44)
+ 123 00c8 02E0      		ldi r16,lo8(2)
+ 124 00ca 10E0      		ldi r17,hi8(2)
+ 125 00cc E0E0      		ldi r30,lo8(confboot+6)
+ 126 00ce F0E0      		ldi r31,hi8(confboot+6)
+ 127               	.L11:
+ 128 00d0 8191      		ld r24,Z+
+ 129 00d2 8D93      		st X+,r24
+ 130 00d4 0F5F      		subi r16,lo8(-(1))
+ 131 00d6 1F4F      		sbci r17,hi8(-(1))
+ 132 00d8 8823      		tst r24
+ 133 00da 01F4      		brne .L11
+ 134 00dc FD01      		movw r30,r26
+ 135 00de 8FE6      		ldi r24,lo8(111)
+ 136 00e0 8193      		st Z+,r24
+ 137 00e2 83E6      		ldi r24,lo8(99)
+ 138 00e4 1196      		adiw r26,1
+ 139 00e6 8C93      		st X,r24
+ 140 00e8 DF01      		movw r26,r30
+ 141 00ea 1196      		adiw r26,1
+ 142 00ec 94E7      		ldi r25,lo8(116)
+ 143 00ee 9183      		std Z+1,r25
+ 144 00f0 FD01      		movw r30,r26
+ 145 00f2 3196      		adiw r30,1
+ 146 00f4 85E6      		ldi r24,lo8(101)
+ 147 00f6 1196      		adiw r26,1
+ 148 00f8 8C93      		st X,r24
+ 149 00fa 9183      		std Z+1,r25
+ 150 00fc 1282      		std Z+2,__zero_reg__
+ 151 00fe 46E0      		ldi r20,lo8(6)
+ 152 0100 842E      		mov r8,r20
+ 153 0102 912C      		mov r9,__zero_reg__
+ 154 0104 800E      		add r8,r16
+ 155 0106 911E      		adc r9,r17
+ 156 0108 35E4      		ldi r19,lo8(69)
+ 157 010a A32E      		mov r10,r19
+ 158 010c B12C      		mov r11,__zero_reg__
+ 159 010e EE24      		clr r14
+ 160 0110 FF24      		clr r15
+ 161 0112 24E0      		ldi r18,lo8(4)
+ 162 0114 622E      		mov r6,r18
+ 163 0116 712C      		mov r7,__zero_reg__
+ 164               	.L21:
+ 165 0118 DD24      		clr r13
+ 166               	.L15:
+ 167 011a 6091 0000 		lds r22,confboot+2
+ 168 011e 7091 0000 		lds r23,(confboot+2)+1
+ 169 0122 8091 0000 		lds r24,(confboot+2)+2
+ 170 0126 9091 0000 		lds r25,(confboot+2)+3
+ 171 012a A501      		movw r20,r10
+GAS LISTING C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/ccZej2vh.s 			page 4
+
+
+ 172 012c 20E0      		ldi r18,lo8(1024)
+ 173 012e 34E0      		ldi r19,hi8(1024)
+ 174 0130 8401      		movw r16,r8
+ 175 0132 0E94 0000 		call UdpOutput
+ 176 0136 97FD      		sbrc r25,7
+ 177 0138 00C0      		rjmp .L12
+ 178 013a 80E0      		ldi r24,lo8(1024)
+ 179 013c 94E0      		ldi r25,hi8(1024)
+ 180 013e 60E2      		ldi r22,lo8(20000)
+ 181 0140 7EE4      		ldi r23,hi8(20000)
+ 182 0142 0E94 0000 		call UdpInput
+ 183 0146 EC01      		movw r28,r24
+ 184 0148 8430      		cpi r24,4
+ 185 014a 9105      		cpc r25,__zero_reg__
+ 186 014c 04F0      		brlt .L12
+ 187 014e 8091 0000 		lds r24,rframe+42
+ 188 0152 9091 0000 		lds r25,(rframe+42)+1
+ 189               	/* #APP */
+ 190               	 ;  72 "types.h" 1
+ 191 0156 082E      		mov __tmp_reg__, r24
+ 192 0158 892F      		mov r24, r25
+ 193 015a 902D      		mov r25, __tmp_reg__
+ 194               		
+ 195               	 ;  0 "" 2
+ 196               	/* #NOAPP */
+ 197 015c 0397      		sbiw r24,3
+ 198 015e 01F0      		breq .L26
+ 199 0160 00C0      		rjmp .L13
+ 200               	.L12:
+ 201 0162 D394      		inc r13
+ 202 0164 83E0      		ldi r24,lo8(3)
+ 203 0166 D816      		cp r13,r24
+ 204 0168 01F4      		brne .L15
+ 205 016a 00C0      		rjmp .L13
+ 206               	.L26:
+ 207 016c E114      		cp r14,__zero_reg__
+ 208 016e F104      		cpc r15,__zero_reg__
+ 209 0170 01F4      		brne .L16
+ 210 0172 A090 0000 		lds r10,rframe+34
+ 211 0176 B090 0000 		lds r11,(rframe+34)+1
+ 212               	/* #APP */
+ 213               	 ;  72 "types.h" 1
+ 214 017a 0A2C      		mov __tmp_reg__, r10
+ 215 017c AB2C      		mov r10, r11
+ 216 017e B02C      		mov r11, __tmp_reg__
+ 217               		
+ 218               	 ;  0 "" 2
+ 219               	/* #NOAPP */
+ 220 0180 C301      		movw r24,r6
+ 221               	/* #APP */
+ 222               	 ;  72 "types.h" 1
+ 223 0182 082E      		mov __tmp_reg__, r24
+ 224 0184 892F      		mov r24, r25
+ 225 0186 902D      		mov r25, __tmp_reg__
+ 226               		
+ 227               	 ;  0 "" 2
+ 228               	/* #NOAPP */
+GAS LISTING C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/ccZej2vh.s 			page 5
+
+
+ 229 0188 9093 0000 		sts (sframe+42)+1,r25
+ 230 018c 8093 0000 		sts sframe+42,r24
+ 231 0190 94E0      		ldi r25,lo8(4)
+ 232 0192 892E      		mov r8,r25
+ 233 0194 912C      		mov r9,__zero_reg__
+ 234               	.L16:
+ 235 0196 0091 0000 		lds r16,rframe+44
+ 236 019a 1091 0000 		lds r17,(rframe+44)+1
+ 237               	/* #APP */
+ 238               	 ;  72 "types.h" 1
+ 239 019e 002E      		mov __tmp_reg__, r16
+ 240 01a0 012F      		mov r16, r17
+ 241 01a2 102D      		mov r17, __tmp_reg__
+ 242               		
+ 243               	 ;  0 "" 2
+ 244               	/* #NOAPP */
+ 245 01a4 C701      		movw r24,r14
+ 246 01a6 0196      		adiw r24,1
+ 247 01a8 0817      		cp r16,r24
+ 248 01aa 1907      		cpc r17,r25
+ 249 01ac 01F0      		breq .L17
+ 250 01ae E114      		cp r14,__zero_reg__
+ 251 01b0 F104      		cpc r15,__zero_reg__
+ 252 01b2 01F4      		brne .+2
+ 253 01b4 00C0      		rjmp .L13
+ 254 01b6 8701      		movw r16,r14
+ 255 01b8 00C0      		rjmp .L18
+ 256               	.L17:
+ 257 01ba C430      		cpi r28,4
+ 258 01bc D105      		cpc r29,__zero_reg__
+ 259 01be 01F0      		breq .L19
+ 260 01c0 EE0C      		lsl r14
+ 261 01c2 FF1C      		rol r15
+ 262 01c4 AE01      		movw r20,r28
+ 263 01c6 4450      		subi r20,lo8(-(-4))
+ 264 01c8 5040      		sbci r21,hi8(-(-4))
+ 265 01ca C701      		movw r24,r14
+ 266 01cc 60E0      		ldi r22,lo8(rframe+46)
+ 267 01ce 70E0      		ldi r23,hi8(rframe+46)
+ 268 01d0 0E94 0000 		call FlashPage
+ 269 01d4 81E0      		ldi r24,hi8(261)
+ 270 01d6 C530      		cpi r28,lo8(261)
+ 271 01d8 D807      		cpc r29,r24
+ 272 01da 04F0      		brlt .L19
+ 273 01dc AE01      		movw r20,r28
+ 274 01de 4450      		subi r20,lo8(-(-260))
+ 275 01e0 5140      		sbci r21,hi8(-(-260))
+ 276 01e2 C701      		movw r24,r14
+ 277 01e4 0196      		adiw r24,1
+ 278 01e6 60E0      		ldi r22,lo8(rframe+302)
+ 279 01e8 70E0      		ldi r23,hi8(rframe+302)
+ 280 01ea 0E94 0000 		call FlashPage
+ 281               	.L19:
+ 282 01ee C801      		movw r24,r16
+ 283               	/* #APP */
+ 284               	 ;  72 "types.h" 1
+ 285 01f0 082E      		mov __tmp_reg__, r24
+GAS LISTING C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/ccZej2vh.s 			page 6
+
+
+ 286 01f2 892F      		mov r24, r25
+ 287 01f4 902D      		mov r25, __tmp_reg__
+ 288               		
+ 289               	 ;  0 "" 2
+ 290               	/* #NOAPP */
+ 291 01f6 9093 0000 		sts (sframe+44)+1,r25
+ 292 01fa 8093 0000 		sts sframe+44,r24
+ 293               	.L18:
+ 294 01fe C450      		subi r28,lo8(516)
+ 295 0200 D240      		sbci r29,hi8(516)
+ 296 0202 04F0      		brlt .L20
+ 297 0204 7801      		movw r14,r16
+ 298 0206 00C0      		rjmp .L21
+ 299               	.L20:
+ 300 0208 6091 0000 		lds r22,confboot+2
+ 301 020c 7091 0000 		lds r23,(confboot+2)+1
+ 302 0210 8091 0000 		lds r24,(confboot+2)+2
+ 303 0214 9091 0000 		lds r25,(confboot+2)+3
+ 304 0218 A501      		movw r20,r10
+ 305 021a 20E0      		ldi r18,lo8(1024)
+ 306 021c 34E0      		ldi r19,hi8(1024)
+ 307 021e 8401      		movw r16,r8
+ 308 0220 0E94 0000 		call UdpOutput
+ 309 0224 20E0      		ldi r18,lo8(0)
+ 310 0226 30E0      		ldi r19,hi8(0)
+ 311 0228 00C0      		rjmp .L22
+ 312               	.L13:
+ 313 022a 2FEF      		ldi r18,lo8(-1)
+ 314 022c 3FEF      		ldi r19,hi8(-1)
+ 315               	.L22:
+ 316 022e C901      		movw r24,r18
+ 317               	/* epilogue start */
+ 318 0230 DF91      		pop r29
+ 319 0232 CF91      		pop r28
+ 320 0234 1F91      		pop r17
+ 321 0236 0F91      		pop r16
+ 322 0238 FF90      		pop r15
+ 323 023a EF90      		pop r14
+ 324 023c DF90      		pop r13
+ 325 023e BF90      		pop r11
+ 326 0240 AF90      		pop r10
+ 327 0242 9F90      		pop r9
+ 328 0244 8F90      		pop r8
+ 329 0246 7F90      		pop r7
+ 330 0248 6F90      		pop r6
+ 331 024a 0895      		ret
+ 332               		.size	TftpRecv, .-TftpRecv
+GAS LISTING C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/ccZej2vh.s 			page 7
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 tftp.c
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/ccZej2vh.s:2      *ABS*:0000003f __SREG__
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/ccZej2vh.s:3      *ABS*:0000003e __SP_H__
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/ccZej2vh.s:4      *ABS*:0000003d __SP_L__
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/ccZej2vh.s:5      *ABS*:00000034 __CCP__
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/ccZej2vh.s:6      *ABS*:00000000 __tmp_reg__
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/ccZej2vh.s:7      *ABS*:00000001 __zero_reg__
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/ccZej2vh.s:10     .text:00000000 FlashPage
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/ccZej2vh.s:93     .text:00000098 TftpRecv
+
+UNDEFINED SYMBOLS
+SpmCommand
+SpmBufferFill
+sframe
+confboot
+UdpOutput
+UdpInput
+rframe

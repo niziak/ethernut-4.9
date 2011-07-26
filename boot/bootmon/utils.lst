@@ -1,0 +1,418 @@
+ARM GAS  C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\ccyLBAym.s 			page 1
+
+
+   1              		.cpu arm7tdmi
+   2              		.fpu softvfp
+   3              		.eabi_attribute 20, 1
+   4              		.eabi_attribute 21, 1
+   5              		.eabi_attribute 23, 3
+   6              		.eabi_attribute 24, 1
+   7              		.eabi_attribute 25, 1
+   8              		.eabi_attribute 26, 1
+   9              		.eabi_attribute 30, 4
+  10              		.eabi_attribute 18, 4
+  11              		.code	16
+  12              		.file	"utils.c"
+  13              		.text
+  14              		.align	1
+  15              		.global	MicroDelay
+  16              		.code	16
+  17              		.thumb_func
+  18              		.type	MicroDelay, %function
+  19              	MicroDelay:
+  20 0000 00B5     		push	{lr}
+  21 0002 08E0     		b	.L2
+  22              	.L3:
+  23              	@ 49 "utils.c" 1
+  24 0004 001C     		mov r0, r0
+  25              	@ 0 "" 2
+  26              	@ 50 "utils.c" 1
+  27 0006 001C     		mov r0, r0
+  28              	@ 0 "" 2
+  29              	@ 51 "utils.c" 1
+  30 0008 001C     		mov r0, r0
+  31              	@ 0 "" 2
+  32              	@ 52 "utils.c" 1
+  33 000a 001C     		mov r0, r0
+  34              	@ 0 "" 2
+  35              	@ 53 "utils.c" 1
+  36 000c 001C     		mov r0, r0
+  37              	@ 0 "" 2
+  38              	@ 54 "utils.c" 1
+  39 000e 001C     		mov r0, r0
+  40              	@ 0 "" 2
+  41              	@ 55 "utils.c" 1
+  42 0010 001C     		mov r0, r0
+  43              	@ 0 "" 2
+  44              	@ 56 "utils.c" 1
+  45 0012 001C     		mov r0, r0
+  46              	@ 0 "" 2
+  47              		.code	16
+  48 0014 0138     		sub	r0, r0, #1
+  49              	.L2:
+  50 0016 0028     		cmp	r0, #0
+  51 0018 F4D1     		bne	.L3
+  52              		@ sp needed for prologue
+  53 001a 01BC     		pop	{r0}
+  54 001c 0047     		bx	r0
+  55              		.size	MicroDelay, .-MicroDelay
+  56              		.align	1
+  57              		.global	Delay
+ARM GAS  C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\ccyLBAym.s 			page 2
+
+
+  58              		.code	16
+  59              		.thumb_func
+  60              		.type	Delay, %function
+  61              	Delay:
+  62 001e 38B5     		push	{r3, r4, r5, lr}
+  63 0020 051C     		mov	r5, r0
+  64 0022 0024     		mov	r4, #0
+  65 0024 0BE0     		b	.L5
+  66              	.L6:
+  67 0026 0848     		ldr	r0, .L7
+  68 0028 FFF7FEFF 		bl	MicroDelay
+  69 002c 0648     		ldr	r0, .L7
+  70 002e FFF7FEFF 		bl	MicroDelay
+  71 0032 0548     		ldr	r0, .L7
+  72 0034 FFF7FEFF 		bl	MicroDelay
+  73 0038 0134     		add	r4, r4, #1
+  74 003a 2406     		lsl	r4, r4, #24
+  75 003c 240E     		lsr	r4, r4, #24
+  76              	.L5:
+  77 003e AC42     		cmp	r4, r5
+  78 0040 F1D3     		bcc	.L6
+  79              		@ sp needed for prologue
+  80 0042 38BC     		pop	{r3, r4, r5}
+  81 0044 01BC     		pop	{r0}
+  82 0046 0047     		bx	r0
+  83              	.L8:
+  84              		.align	2
+  85              	.L7:
+  86 0048 FFFF0000 		.word	65535
+  87              		.size	Delay, .-Delay
+  88              		.align	1
+  89              		.global	strcpy_
+  90              		.code	16
+  91              		.thumb_func
+  92              		.type	strcpy_, %function
+  93              	strcpy_:
+  94 004c 00B5     		push	{lr}
+  95 004e 02E0     		b	.L10
+  96              	.L11:
+  97 0050 0370     		strb	r3, [r0]
+  98 0052 0131     		add	r1, r1, #1
+  99 0054 0130     		add	r0, r0, #1
+ 100              	.L10:
+ 101 0056 0B78     		ldrb	r3, [r1]
+ 102 0058 002B     		cmp	r3, #0
+ 103 005a F9D1     		bne	.L11
+ 104 005c 0370     		strb	r3, [r0]
+ 105              		@ sp needed for prologue
+ 106 005e 01BC     		pop	{r0}
+ 107 0060 0047     		bx	r0
+ 108              		.size	strcpy_, .-strcpy_
+ 109              		.align	1
+ 110              		.global	memcpy_
+ 111              		.code	16
+ 112              		.thumb_func
+ 113              		.type	memcpy_, %function
+ 114              	memcpy_:
+ARM GAS  C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\ccyLBAym.s 			page 3
+
+
+ 115 0062 10B5     		push	{r4, lr}
+ 116 0064 0023     		mov	r3, #0
+ 117 0066 05E0     		b	.L13
+ 118              	.L14:
+ 119 0068 CC5C     		ldrb	r4, [r1, r3]
+ 120 006a 013A     		sub	r2, r2, #1
+ 121 006c 1206     		lsl	r2, r2, #24
+ 122 006e C454     		strb	r4, [r0, r3]
+ 123 0070 120E     		lsr	r2, r2, #24
+ 124 0072 0133     		add	r3, r3, #1
+ 125              	.L13:
+ 126 0074 002A     		cmp	r2, #0
+ 127 0076 F7D1     		bne	.L14
+ 128              		@ sp needed for prologue
+ 129 0078 10BC     		pop	{r4}
+ 130 007a 01BC     		pop	{r0}
+ 131 007c 0047     		bx	r0
+ 132              		.size	memcpy_, .-memcpy_
+ 133              		.align	1
+ 134              		.global	memcmp_
+ 135              		.code	16
+ 136              		.thumb_func
+ 137              		.type	memcmp_, %function
+ 138              	memcmp_:
+ 139 007e 10B5     		push	{r4, lr}
+ 140 0080 06E0     		b	.L16
+ 141              	.L18:
+ 142 0082 013A     		sub	r2, r2, #1
+ 143 0084 0478     		ldrb	r4, [r0]
+ 144 0086 0B78     		ldrb	r3, [r1]
+ 145 0088 1206     		lsl	r2, r2, #24
+ 146 008a 120E     		lsr	r2, r2, #24
+ 147 008c 9C42     		cmp	r4, r3
+ 148 008e 03D1     		bne	.L19
+ 149              	.L16:
+ 150 0090 002A     		cmp	r2, #0
+ 151 0092 F6D1     		bne	.L18
+ 152 0094 0020     		mov	r0, #0
+ 153 0096 01E0     		b	.L17
+ 154              	.L19:
+ 155 0098 0120     		mov	r0, #1
+ 156 009a 4042     		neg	r0, r0
+ 157              	.L17:
+ 158              		@ sp needed for prologue
+ 159 009c 10BC     		pop	{r4}
+ 160 009e 02BC     		pop	{r1}
+ 161 00a0 0847     		bx	r1
+ 162              		.size	memcmp_, .-memcmp_
+ 163              		.align	1
+ 164              		.global	memset_
+ 165              		.code	16
+ 166              		.thumb_func
+ 167              		.type	memset_, %function
+ 168              	memset_:
+ 169 00a2 00B5     		push	{lr}
+ 170 00a4 04E0     		b	.L21
+ 171              	.L22:
+ARM GAS  C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\ccyLBAym.s 			page 4
+
+
+ 172 00a6 013A     		sub	r2, r2, #1
+ 173 00a8 1206     		lsl	r2, r2, #24
+ 174 00aa 0170     		strb	r1, [r0]
+ 175 00ac 120E     		lsr	r2, r2, #24
+ 176 00ae 0130     		add	r0, r0, #1
+ 177              	.L21:
+ 178 00b0 002A     		cmp	r2, #0
+ 179 00b2 F8D1     		bne	.L22
+ 180              		@ sp needed for prologue
+ 181 00b4 01BC     		pop	{r0}
+ 182 00b6 0047     		bx	r0
+ 183              		.size	memset_, .-memset_
+ 184              		.align	1
+ 185              		.global	hex2bin
+ 186              		.code	16
+ 187              		.thumb_func
+ 188              		.type	hex2bin, %function
+ 189              	hex2bin:
+ 190 00b8 00B5     		push	{lr}
+ 191 00ba 031C     		mov	r3, r0
+ 192 00bc 3038     		sub	r0, r0, #48
+ 193 00be 0206     		lsl	r2, r0, #24
+ 194 00c0 120E     		lsr	r2, r2, #24
+ 195 00c2 092A     		cmp	r2, #9
+ 196 00c4 0FD9     		bls	.L25
+ 197 00c6 1A1C     		mov	r2, r3
+ 198 00c8 613A     		sub	r2, r2, #97
+ 199 00ca 1206     		lsl	r2, r2, #24
+ 200 00cc 120E     		lsr	r2, r2, #24
+ 201 00ce 2738     		sub	r0, r0, #39
+ 202 00d0 052A     		cmp	r2, #5
+ 203 00d2 08D9     		bls	.L25
+ 204 00d4 1A1C     		mov	r2, r3
+ 205 00d6 413A     		sub	r2, r2, #65
+ 206 00d8 1206     		lsl	r2, r2, #24
+ 207 00da 120E     		lsr	r2, r2, #24
+ 208 00dc 0020     		mov	r0, #0
+ 209 00de 052A     		cmp	r2, #5
+ 210 00e0 01D8     		bhi	.L25
+ 211 00e2 181C     		mov	r0, r3
+ 212 00e4 3738     		sub	r0, r0, #55
+ 213              	.L25:
+ 214              		@ sp needed for prologue
+ 215 00e6 02BC     		pop	{r1}
+ 216 00e8 0847     		bx	r1
+ 217              		.size	hex2bin, .-hex2bin
+ 218              		.align	1
+ 219              		.global	inet_addr
+ 220              		.code	16
+ 221              		.thumb_func
+ 222              		.type	inet_addr, %function
+ 223              	inet_addr:
+ 224 00ea 10B5     		push	{r4, lr}
+ 225 00ec 82B0     		sub	sp, sp, #8
+ 226 00ee 0023     		mov	r3, #0
+ 227 00f0 0193     		str	r3, [sp, #4]
+ 228 00f2 01A9     		add	r1, sp, #4
+ARM GAS  C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\ccyLBAym.s 			page 5
+
+
+ 229 00f4 0022     		mov	r2, #0
+ 230              	.L33:
+ 231 00f6 0378     		ldrb	r3, [r0]
+ 232 00f8 303B     		sub	r3, r3, #48
+ 233 00fa 1B06     		lsl	r3, r3, #24
+ 234 00fc 1B0E     		lsr	r3, r3, #24
+ 235 00fe 092B     		cmp	r3, #9
+ 236 0100 23D8     		bhi	.L37
+ 237 0102 0023     		mov	r3, #0
+ 238              	.L31:
+ 239 0104 9C00     		lsl	r4, r3, #2
+ 240 0106 E318     		add	r3, r4, r3
+ 241 0108 0478     		ldrb	r4, [r0]
+ 242 010a 5B04     		lsl	r3, r3, #17
+ 243 010c 303C     		sub	r4, r4, #48
+ 244 010e 1B0C     		lsr	r3, r3, #16
+ 245 0110 0130     		add	r0, r0, #1
+ 246 0112 1B19     		add	r3, r3, r4
+ 247 0114 0478     		ldrb	r4, [r0]
+ 248 0116 1B04     		lsl	r3, r3, #16
+ 249 0118 1B0C     		lsr	r3, r3, #16
+ 250 011a 2F2C     		cmp	r4, #47
+ 251 011c 04D9     		bls	.L30
+ 252 011e 392C     		cmp	r4, #57
+ 253 0120 02D8     		bhi	.L30
+ 254 0122 FF2B     		cmp	r3, #255
+ 255 0124 EED9     		bls	.L31
+ 256 0126 10E0     		b	.L37
+ 257              	.L30:
+ 258 0128 FF2B     		cmp	r3, #255
+ 259 012a 0ED8     		bhi	.L37
+ 260 012c 0132     		add	r2, r2, #1
+ 261 012e 1206     		lsl	r2, r2, #24
+ 262 0130 120E     		lsr	r2, r2, #24
+ 263 0132 0B70     		strb	r3, [r1]
+ 264 0134 2E2C     		cmp	r4, #46
+ 265 0136 03D0     		beq	.L32
+ 266 0138 042A     		cmp	r2, #4
+ 267 013a 06D1     		bne	.L37
+ 268 013c 0198     		ldr	r0, [sp, #4]
+ 269 013e 06E0     		b	.L29
+ 270              	.L32:
+ 271 0140 042A     		cmp	r2, #4
+ 272 0142 02D0     		beq	.L37
+ 273 0144 0131     		add	r1, r1, #1
+ 274 0146 0130     		add	r0, r0, #1
+ 275 0148 D5E7     		b	.L33
+ 276              	.L37:
+ 277 014a 0120     		mov	r0, #1
+ 278 014c 4042     		neg	r0, r0
+ 279              	.L29:
+ 280 014e 02B0     		add	sp, sp, #8
+ 281              		@ sp needed for prologue
+ 282 0150 10BC     		pop	{r4}
+ 283 0152 02BC     		pop	{r1}
+ 284 0154 0847     		bx	r1
+ 285              		.size	inet_addr, .-inet_addr
+ARM GAS  C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\ccyLBAym.s 			page 6
+
+
+ 286              		.global	__aeabi_uidivmod
+ 287              		.global	__aeabi_uidiv
+ 288              		.align	1
+ 289              		.global	inet_ntoa
+ 290              		.code	16
+ 291              		.thumb_func
+ 292              		.type	inet_ntoa, %function
+ 293              	inet_ntoa:
+ 294 0156 F0B5     		push	{r4, r5, r6, r7, lr}
+ 295 0158 87B0     		sub	sp, sp, #28
+ 296 015a 0F22     		mov	r2, #15
+ 297 015c 6A44     		add	r2, r2, sp
+ 298 015e 0390     		str	r0, [sp, #12]
+ 299 0160 0192     		str	r2, [sp, #4]
+ 300 0162 1B4F     		ldr	r7, .L46
+ 301 0164 03AE     		add	r6, sp, #12
+ 302              	.L44:
+ 303 0166 3578     		ldrb	r5, [r6]
+ 304 0168 0024     		mov	r4, #0
+ 305              	.L40:
+ 306 016a 281C     		mov	r0, r5
+ 307 016c 0A21     		mov	r1, #10
+ 308 016e FFF7FEFF 		bl	__aeabi_uidivmod
+ 309 0172 0906     		lsl	r1, r1, #24
+ 310 0174 090E     		lsr	r1, r1, #24
+ 311 0176 0291     		str	r1, [sp, #8]
+ 312 0178 281C     		mov	r0, r5
+ 313 017a 0A21     		mov	r1, #10
+ 314 017c FFF7FEFF 		bl	__aeabi_uidiv
+ 315 0180 029A     		ldr	r2, [sp, #8]
+ 316 0182 05AB     		add	r3, sp, #20
+ 317 0184 3032     		add	r2, r2, #48
+ 318 0186 0506     		lsl	r5, r0, #24
+ 319 0188 1A55     		strb	r2, [r3, r4]
+ 320 018a 0134     		add	r4, r4, #1
+ 321 018c 2406     		lsl	r4, r4, #24
+ 322 018e 2D0E     		lsr	r5, r5, #24
+ 323 0190 240E     		lsr	r4, r4, #24
+ 324 0192 002D     		cmp	r5, #0
+ 325 0194 E9D1     		bne	.L40
+ 326 0196 231C     		mov	r3, r4
+ 327 0198 3570     		strb	r5, [r6]
+ 328 019a 3A1C     		mov	r2, r7
+ 329 019c 06E0     		b	.L41
+ 330              	.L42:
+ 331 019e 013C     		sub	r4, r4, #1
+ 332 01a0 2406     		lsl	r4, r4, #24
+ 333 01a2 240E     		lsr	r4, r4, #24
+ 334 01a4 05A9     		add	r1, sp, #20
+ 335 01a6 095D     		ldrb	r1, [r1, r4]
+ 336 01a8 1170     		strb	r1, [r2]
+ 337 01aa 0132     		add	r2, r2, #1
+ 338              	.L41:
+ 339 01ac 002C     		cmp	r4, #0
+ 340 01ae F6D1     		bne	.L42
+ 341 01b0 FB18     		add	r3, r7, r3
+ 342 01b2 2E22     		mov	r2, #46
+ARM GAS  C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\ccyLBAym.s 			page 7
+
+
+ 343 01b4 1A70     		strb	r2, [r3]
+ 344 01b6 019A     		ldr	r2, [sp, #4]
+ 345 01b8 5F1C     		add	r7, r3, #1
+ 346 01ba 9642     		cmp	r6, r2
+ 347 01bc 01D0     		beq	.L43
+ 348 01be 0136     		add	r6, r6, #1
+ 349 01c0 D1E7     		b	.L44
+ 350              	.L43:
+ 351 01c2 07B0     		add	sp, sp, #28
+ 352 01c4 0248     		ldr	r0, .L46
+ 353 01c6 1C70     		strb	r4, [r3]
+ 354              		@ sp needed for prologue
+ 355 01c8 F0BC     		pop	{r4, r5, r6, r7}
+ 356 01ca 02BC     		pop	{r1}
+ 357 01cc 0847     		bx	r1
+ 358              	.L47:
+ 359 01ce C046     		.align	2
+ 360              	.L46:
+ 361 01d0 00000000 		.word	.LANCHOR0
+ 362              		.size	inet_ntoa, .-inet_ntoa
+ 363              		.bss
+ 364              		.align	2
+ 365              		.set	.LANCHOR0,. + 0
+ 366              		.type	str.1351, %object
+ 367              		.size	str.1351, 16
+ 368              	str.1351:
+ 369 0000 00000000 		.space	16
+ 369      00000000 
+ 369      00000000 
+ 369      00000000 
+ 370              		.ident	"GCC: (GNU) 4.5.2"
+ARM GAS  C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\ccyLBAym.s 			page 8
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 utils.c
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\ccyLBAym.s:14     .text:00000000 $t
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\ccyLBAym.s:19     .text:00000000 MicroDelay
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\ccyLBAym.s:61     .text:0000001e Delay
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\ccyLBAym.s:86     .text:00000048 $d
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\ccyLBAym.s:88     .text:0000004c $t
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\ccyLBAym.s:93     .text:0000004c strcpy_
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\ccyLBAym.s:114    .text:00000062 memcpy_
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\ccyLBAym.s:138    .text:0000007e memcmp_
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\ccyLBAym.s:168    .text:000000a2 memset_
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\ccyLBAym.s:189    .text:000000b8 hex2bin
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\ccyLBAym.s:223    .text:000000ea inet_addr
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\ccyLBAym.s:293    .text:00000156 inet_ntoa
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\ccyLBAym.s:361    .text:000001d0 $d
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\ccyLBAym.s:364    .bss:00000000 $d
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\ccyLBAym.s:368    .bss:00000000 str.1351
+
+UNDEFINED SYMBOLS
+__aeabi_uidivmod
+__aeabi_uidiv

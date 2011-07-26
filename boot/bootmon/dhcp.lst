@@ -1,0 +1,484 @@
+ARM GAS  C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\ccFLsx4o.s 			page 1
+
+
+   1              		.cpu arm7tdmi
+   2              		.fpu softvfp
+   3              		.eabi_attribute 20, 1
+   4              		.eabi_attribute 21, 1
+   5              		.eabi_attribute 23, 3
+   6              		.eabi_attribute 24, 1
+   7              		.eabi_attribute 25, 1
+   8              		.eabi_attribute 26, 1
+   9              		.eabi_attribute 30, 4
+  10              		.eabi_attribute 18, 4
+  11              		.code	16
+  12              		.file	"dhcp.c"
+  13              		.text
+  14              		.align	1
+  15              		.global	DhcpGetOption
+  16              		.code	16
+  17              		.thumb_func
+  18              		.type	DhcpGetOption, %function
+  19              	DhcpGetOption:
+  20 0000 30B5     		push	{r4, r5, lr}
+  21 0002 124B     		ldr	r3, .L13
+  22              	.L11:
+  23 0004 1C78     		ldrb	r4, [r3]
+  24 0006 002C     		cmp	r4, #0
+  25 0008 19D0     		beq	.L12
+  26              	.L3:
+  27 000a FF2C     		cmp	r4, #255
+  28 000c 19D0     		beq	.L10
+  29 000e 5D1C     		add	r5, r3, #1
+  30 0010 8442     		cmp	r4, r0
+  31 0012 12D1     		bne	.L6
+  32 0014 5C78     		ldrb	r4, [r3, #1]
+  33 0016 201C     		add	r0, r4, #0
+  34 0018 9442     		cmp	r4, r2
+  35 001a 00D9     		bls	.L7
+  36 001c 101C     		add	r0, r2, #0
+  37              	.L7:
+  38 001e 0006     		lsl	r0, r0, #24
+  39 0020 000E     		lsr	r0, r0, #24
+  40 0022 0022     		mov	r2, #0
+  41 0024 03E0     		b	.L8
+  42              	.L9:
+  43 0026 9C18     		add	r4, r3, r2
+  44 0028 A478     		ldrb	r4, [r4, #2]
+  45 002a 8C54     		strb	r4, [r1, r2]
+  46 002c 0132     		add	r2, r2, #1
+  47              	.L8:
+  48 002e 1406     		lsl	r4, r2, #24
+  49 0030 240E     		lsr	r4, r4, #24
+  50 0032 8442     		cmp	r4, r0
+  51 0034 F7D3     		bcc	.L9
+  52 0036 2878     		ldrb	r0, [r5]
+  53 0038 04E0     		b	.L5
+  54              	.L6:
+  55 003a 5B78     		ldrb	r3, [r3, #1]
+  56 003c EB18     		add	r3, r5, r3
+  57              	.L12:
+ARM GAS  C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\ccFLsx4o.s 			page 2
+
+
+  58 003e 0133     		add	r3, r3, #1
+  59 0040 E0E7     		b	.L11
+  60              	.L10:
+  61 0042 0020     		mov	r0, #0
+  62              	.L5:
+  63              		@ sp needed for prologue
+  64 0044 30BC     		pop	{r4, r5}
+  65 0046 02BC     		pop	{r1}
+  66 0048 0847     		bx	r1
+  67              	.L14:
+  68 004a C046     		.align	2
+  69              	.L13:
+  70 004c 1A010000 		.word	rframe+282
+  71              		.size	DhcpGetOption, .-DhcpGetOption
+  72              		.align	1
+  73              		.global	DhcpSetOption
+  74              		.code	16
+  75              		.thumb_func
+  76              		.type	DhcpSetOption, %function
+  77              	DhcpSetOption:
+  78 0050 F0B5     		push	{r4, r5, r6, r7, lr}
+  79 0052 0170     		strb	r1, [r0]
+  80 0054 4370     		strb	r3, [r0, #1]
+  81 0056 851C     		add	r5, r0, #2
+  82 0058 1C1C     		mov	r4, r3
+  83 005a 0021     		mov	r1, #0
+  84 005c 06E0     		b	.L16
+  85              	.L17:
+  86 005e 575C     		ldrb	r7, [r2, r1]
+  87 0060 4618     		add	r6, r0, r1
+  88 0062 013C     		sub	r4, r4, #1
+  89 0064 2406     		lsl	r4, r4, #24
+  90 0066 B770     		strb	r7, [r6, #2]
+  91 0068 0131     		add	r1, r1, #1
+  92 006a 240E     		lsr	r4, r4, #24
+  93              	.L16:
+  94 006c 002C     		cmp	r4, #0
+  95 006e F6D1     		bne	.L17
+  96 0070 E818     		add	r0, r5, r3
+  97 0072 FF23     		mov	r3, #255
+  98 0074 0370     		strb	r3, [r0]
+  99              		@ sp needed for prologue
+ 100 0076 F0BC     		pop	{r4, r5, r6, r7}
+ 101 0078 02BC     		pop	{r1}
+ 102 007a 0847     		bx	r1
+ 103              		.size	DhcpSetOption, .-DhcpSetOption
+ 104              		.align	1
+ 105              		.global	DhcpTransact
+ 106              		.code	16
+ 107              		.thumb_func
+ 108              		.type	DhcpTransact, %function
+ 109              	DhcpTransact:
+ 110 007c F0B5     		push	{r4, r5, r6, r7, lr}
+ 111 007e 85B0     		sub	sp, sp, #20
+ 112 0080 0191     		str	r1, [sp, #4]
+ 113 0082 071C     		mov	r7, r0
+ 114 0084 0024     		mov	r4, #0
+ARM GAS  C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\ccFLsx4o.s 			page 3
+
+
+ 115 0086 0025     		mov	r5, #0
+ 116              	.L23:
+ 117 0088 002C     		cmp	r4, #0
+ 118 008a 0AD1     		bne	.L19
+ 119 008c 0120     		mov	r0, #1
+ 120 008e 8621     		mov	r1, #134
+ 121 0090 8822     		mov	r2, #136
+ 122 0092 4042     		neg	r0, r0
+ 123 0094 C901     		lsl	r1, r1, #7
+ 124 0096 D201     		lsl	r2, r2, #7
+ 125 0098 3B1C     		mov	r3, r7
+ 126 009a FFF7FEFF 		bl	UdpOutput
+ 127 009e 0028     		cmp	r0, #0
+ 128 00a0 3FDB     		blt	.L24
+ 129              	.L19:
+ 130 00a2 8820     		mov	r0, #136
+ 131 00a4 FA21     		mov	r1, #250
+ 132 00a6 C001     		lsl	r0, r0, #7
+ 133 00a8 4900     		lsl	r1, r1, #1
+ 134 00aa FFF7FEFF 		bl	UdpInput
+ 135 00ae 041E     		sub	r4, r0, #0
+ 136 00b0 03DC     		bgt	.L21
+ 137 00b2 0135     		add	r5, r5, #1
+ 138 00b4 2D06     		lsl	r5, r5, #24
+ 139 00b6 2D0E     		lsr	r5, r5, #24
+ 140 00b8 30E0     		b	.L22
+ 141              	.L21:
+ 142 00ba 1D4B     		ldr	r3, .L26
+ 143 00bc 1A1C     		mov	r2, r3
+ 144 00be 2E32     		add	r2, r2, #46
+ 145 00c0 1178     		ldrb	r1, [r2]
+ 146 00c2 0132     		add	r2, r2, #1
+ 147 00c4 1278     		ldrb	r2, [r2]
+ 148 00c6 1202     		lsl	r2, r2, #8
+ 149 00c8 0A43     		orr	r2, r2, r1
+ 150 00ca 191C     		mov	r1, r3
+ 151 00cc 3031     		add	r1, r1, #48
+ 152 00ce 0978     		ldrb	r1, [r1]
+ 153 00d0 3133     		add	r3, r3, #49
+ 154 00d2 1B78     		ldrb	r3, [r3]
+ 155 00d4 0904     		lsl	r1, r1, #16
+ 156 00d6 0A43     		orr	r2, r2, r1
+ 157 00d8 1B06     		lsl	r3, r3, #24
+ 158 00da 1A43     		orr	r2, r2, r3
+ 159 00dc 154B     		ldr	r3, .L26+4
+ 160 00de 191C     		mov	r1, r3
+ 161 00e0 2E31     		add	r1, r1, #46
+ 162 00e2 0878     		ldrb	r0, [r1]
+ 163 00e4 0131     		add	r1, r1, #1
+ 164 00e6 0978     		ldrb	r1, [r1]
+ 165 00e8 0902     		lsl	r1, r1, #8
+ 166 00ea 0143     		orr	r1, r1, r0
+ 167 00ec 181C     		mov	r0, r3
+ 168 00ee 3030     		add	r0, r0, #48
+ 169 00f0 0078     		ldrb	r0, [r0]
+ 170 00f2 3133     		add	r3, r3, #49
+ 171 00f4 1B78     		ldrb	r3, [r3]
+ARM GAS  C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\ccFLsx4o.s 			page 4
+
+
+ 172 00f6 0004     		lsl	r0, r0, #16
+ 173 00f8 0143     		orr	r1, r1, r0
+ 174 00fa 1B06     		lsl	r3, r3, #24
+ 175 00fc 0B43     		orr	r3, r3, r1
+ 176 00fe 9A42     		cmp	r2, r3
+ 177 0100 0CD1     		bne	.L22
+ 178 0102 6E46     		mov	r6, sp
+ 179 0104 0F36     		add	r6, r6, #15
+ 180 0106 3520     		mov	r0, #53
+ 181 0108 311C     		mov	r1, r6
+ 182 010a 0122     		mov	r2, #1
+ 183 010c FFF7FEFF 		bl	DhcpGetOption
+ 184 0110 0128     		cmp	r0, #1
+ 185 0112 03D1     		bne	.L22
+ 186 0114 3378     		ldrb	r3, [r6]
+ 187 0116 019A     		ldr	r2, [sp, #4]
+ 188 0118 9342     		cmp	r3, r2
+ 189 011a 04D0     		beq	.L20
+ 190              	.L22:
+ 191 011c 022D     		cmp	r5, #2
+ 192 011e B3D9     		bls	.L23
+ 193 0120 01E0     		b	.L20
+ 194              	.L24:
+ 195 0122 0124     		mov	r4, #1
+ 196 0124 6442     		neg	r4, r4
+ 197              	.L20:
+ 198 0126 05B0     		add	sp, sp, #20
+ 199 0128 201C     		mov	r0, r4
+ 200              		@ sp needed for prologue
+ 201 012a F0BC     		pop	{r4, r5, r6, r7}
+ 202 012c 02BC     		pop	{r1}
+ 203 012e 0847     		bx	r1
+ 204              	.L27:
+ 205              		.align	2
+ 206              	.L26:
+ 207 0130 00000000 		.word	rframe
+ 208 0134 00000000 		.word	sframe
+ 209              		.size	DhcpTransact, .-DhcpTransact
+ 210              		.align	1
+ 211              		.global	DhcpQuery
+ 212              		.code	16
+ 213              		.thumb_func
+ 214              		.type	DhcpQuery, %function
+ 215              	DhcpQuery:
+ 216 0138 F0B5     		push	{r4, r5, r6, r7, lr}
+ 217 013a 654C     		ldr	r4, .L41
+ 218 013c 637F     		ldrb	r3, [r4, #29]
+ 219 013e 227F     		ldrb	r2, [r4, #28]
+ 220 0140 1B02     		lsl	r3, r3, #8
+ 221 0142 1343     		orr	r3, r3, r2
+ 222 0144 A27F     		ldrb	r2, [r4, #30]
+ 223 0146 1204     		lsl	r2, r2, #16
+ 224 0148 1343     		orr	r3, r3, r2
+ 225 014a E27F     		ldrb	r2, [r4, #31]
+ 226 014c 1206     		lsl	r2, r2, #24
+ 227 014e 83B0     		sub	sp, sp, #12
+ 228 0150 1343     		orr	r3, r2
+ARM GAS  C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\ccFLsx4o.s 			page 5
+
+
+ 229 0152 07D0     		beq	.L29
+ 230 0154 1A0A     		lsr	r2, r3, #8
+ 231 0156 2374     		strb	r3, [r4, #16]
+ 232 0158 6274     		strb	r2, [r4, #17]
+ 233 015a 1A0C     		lsr	r2, r3, #16
+ 234 015c 1B0E     		lsr	r3, r3, #24
+ 235 015e A274     		strb	r2, [r4, #18]
+ 236 0160 E374     		strb	r3, [r4, #19]
+ 237 0162 ADE0     		b	.L40
+ 238              	.L29:
+ 239 0164 5B4D     		ldr	r5, .L41+4
+ 240 0166 2374     		strb	r3, [r4, #16]
+ 241 0168 6374     		strb	r3, [r4, #17]
+ 242 016a A374     		strb	r3, [r4, #18]
+ 243 016c E374     		strb	r3, [r4, #19]
+ 244 016e 2B1C     		mov	r3, r5
+ 245 0170 0127     		mov	r7, #1
+ 246 0172 2A33     		add	r3, r3, #42
+ 247 0174 1F70     		strb	r7, [r3]
+ 248 0176 584B     		ldr	r3, .L41+8
+ 249 0178 2A1C     		mov	r2, r5
+ 250 017a 1978     		ldrb	r1, [r3]
+ 251 017c 2E32     		add	r2, r2, #46
+ 252 017e 1170     		strb	r1, [r2]
+ 253 0180 5978     		ldrb	r1, [r3, #1]
+ 254 0182 0132     		add	r2, r2, #1
+ 255 0184 1170     		strb	r1, [r2]
+ 256 0186 9978     		ldrb	r1, [r3, #2]
+ 257 0188 0132     		add	r2, r2, #1
+ 258 018a 1170     		strb	r1, [r2]
+ 259 018c DA78     		ldrb	r2, [r3, #3]
+ 260 018e 2B1C     		mov	r3, r5
+ 261 0190 3133     		add	r3, r3, #49
+ 262 0192 1A70     		strb	r2, [r3]
+ 263 0194 063B     		sub	r3, r3, #6
+ 264 0196 1F70     		strb	r7, [r3]
+ 265 0198 0622     		mov	r2, #6
+ 266 019a 0133     		add	r3, r3, #1
+ 267 019c 281C     		mov	r0, r5
+ 268 019e 211C     		mov	r1, r4
+ 269 01a0 1A70     		strb	r2, [r3]
+ 270 01a2 4630     		add	r0, r0, #70
+ 271 01a4 0A31     		add	r1, r1, #10
+ 272 01a6 FFF7FEFF 		bl	memcpy_
+ 273 01aa 2B1C     		mov	r3, r5
+ 274 01ac 7E22     		mov	r2, #126
+ 275 01ae FF33     		add	r3, r3, #255
+ 276 01b0 5242     		neg	r2, r2
+ 277 01b2 6E46     		mov	r6, sp
+ 278 01b4 1B35     		add	r5, r5, #27
+ 279 01b6 1A76     		strb	r2, [r3, #24]
+ 280 01b8 6321     		mov	r1, #99
+ 281 01ba 5322     		mov	r2, #83
+ 282 01bc 0736     		add	r6, r6, #7
+ 283 01be FF35     		add	r5, r5, #255
+ 284 01c0 D975     		strb	r1, [r3, #23]
+ 285 01c2 5A76     		strb	r2, [r3, #25]
+ARM GAS  C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\ccFLsx4o.s 			page 6
+
+
+ 286 01c4 9976     		strb	r1, [r3, #26]
+ 287 01c6 281C     		mov	r0, r5
+ 288 01c8 3521     		mov	r1, #53
+ 289 01ca 321C     		mov	r2, r6
+ 290 01cc 0123     		mov	r3, #1
+ 291 01ce 3770     		strb	r7, [r6]
+ 292 01d0 FFF7FEFF 		bl	DhcpSetOption
+ 293 01d4 F420     		mov	r0, #244
+ 294 01d6 0221     		mov	r1, #2
+ 295 01d8 FFF7FEFF 		bl	DhcpTransact
+ 296 01dc 0028     		cmp	r0, #0
+ 297 01de 71DD     		ble	.L38
+ 298 01e0 6946     		mov	r1, sp
+ 299 01e2 0422     		mov	r2, #4
+ 300 01e4 3620     		mov	r0, #54
+ 301 01e6 FFF7FEFF 		bl	DhcpGetOption
+ 302 01ea 0323     		mov	r3, #3
+ 303 01ec 3370     		strb	r3, [r6]
+ 304 01ee 281C     		mov	r0, r5
+ 305 01f0 3521     		mov	r1, #53
+ 306 01f2 321C     		mov	r2, r6
+ 307 01f4 0123     		mov	r3, #1
+ 308 01f6 FFF7FEFF 		bl	DhcpSetOption
+ 309 01fa 384D     		ldr	r5, .L41+12
+ 310 01fc 3221     		mov	r1, #50
+ 311 01fe 2A1C     		mov	r2, r5
+ 312 0200 0423     		mov	r3, #4
+ 313 0202 FFF7FEFF 		bl	DhcpSetOption
+ 314 0206 3621     		mov	r1, #54
+ 315 0208 6A46     		mov	r2, sp
+ 316 020a 0423     		mov	r3, #4
+ 317 020c FFF7FEFF 		bl	DhcpSetOption
+ 318 0210 8020     		mov	r0, #128
+ 319 0212 4000     		lsl	r0, r0, #1
+ 320 0214 0521     		mov	r1, #5
+ 321 0216 FFF7FEFF 		bl	DhcpTransact
+ 322 021a 0028     		cmp	r0, #0
+ 323 021c 52DD     		ble	.L38
+ 324 021e 6B78     		ldrb	r3, [r5, #1]
+ 325 0220 2A78     		ldrb	r2, [r5]
+ 326 0222 1B02     		lsl	r3, r3, #8
+ 327 0224 1343     		orr	r3, r3, r2
+ 328 0226 AA78     		ldrb	r2, [r5, #2]
+ 329 0228 1204     		lsl	r2, r2, #16
+ 330 022a 1343     		orr	r3, r3, r2
+ 331 022c EA78     		ldrb	r2, [r5, #3]
+ 332 022e 1206     		lsl	r2, r2, #24
+ 333 0230 1343     		orr	r3, r3, r2
+ 334 0232 1A0A     		lsr	r2, r3, #8
+ 335 0234 2374     		strb	r3, [r4, #16]
+ 336 0236 6274     		strb	r2, [r4, #17]
+ 337 0238 1A0C     		lsr	r2, r3, #16
+ 338 023a 1B0E     		lsr	r3, r3, #24
+ 339 023c E374     		strb	r3, [r4, #19]
+ 340 023e A274     		strb	r2, [r4, #18]
+ 341 0240 274B     		ldr	r3, .L41+16
+ 342 0242 DA78     		ldrb	r2, [r3, #3]
+ARM GAS  C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\ccFLsx4o.s 			page 7
+
+
+ 343 0244 9978     		ldrb	r1, [r3, #2]
+ 344 0246 1202     		lsl	r2, r2, #8
+ 345 0248 0A43     		orr	r2, r2, r1
+ 346 024a 1979     		ldrb	r1, [r3, #4]
+ 347 024c 0904     		lsl	r1, r1, #16
+ 348 024e 0A43     		orr	r2, r2, r1
+ 349 0250 5979     		ldrb	r1, [r3, #5]
+ 350 0252 0906     		lsl	r1, r1, #24
+ 351 0254 1143     		orr	r1, r2
+ 352 0256 10D1     		bne	.L31
+ 353 0258 6A79     		ldrb	r2, [r5, #5]
+ 354 025a 2979     		ldrb	r1, [r5, #4]
+ 355 025c 1202     		lsl	r2, r2, #8
+ 356 025e 0A43     		orr	r2, r2, r1
+ 357 0260 A979     		ldrb	r1, [r5, #6]
+ 358 0262 0904     		lsl	r1, r1, #16
+ 359 0264 0A43     		orr	r2, r2, r1
+ 360 0266 E979     		ldrb	r1, [r5, #7]
+ 361 0268 0906     		lsl	r1, r1, #24
+ 362 026a 0A43     		orr	r2, r2, r1
+ 363 026c 110A     		lsr	r1, r2, #8
+ 364 026e 9A70     		strb	r2, [r3, #2]
+ 365 0270 D970     		strb	r1, [r3, #3]
+ 366 0272 110C     		lsr	r1, r2, #16
+ 367 0274 120E     		lsr	r2, r2, #24
+ 368 0276 1971     		strb	r1, [r3, #4]
+ 369 0278 5A71     		strb	r2, [r3, #5]
+ 370              	.L31:
+ 371 027a 1949     		ldr	r1, .L41+16
+ 372 027c 8B79     		ldrb	r3, [r1, #6]
+ 373 027e 002B     		cmp	r3, #0
+ 374 0280 19D1     		bne	.L32
+ 375 0282 6A46     		mov	r2, sp
+ 376 0284 0732     		add	r2, r2, #7
+ 377 0286 1370     		strb	r3, [r2]
+ 378 0288 164A     		ldr	r2, .L41+20
+ 379 028a 05E0     		b	.L33
+ 380              	.L36:
+ 381 028c CC18     		add	r4, r1, r3
+ 382 028e 0133     		add	r3, r3, #1
+ 383 0290 1B06     		lsl	r3, r3, #24
+ 384 0292 A071     		strb	r0, [r4, #6]
+ 385 0294 0132     		add	r2, r2, #1
+ 386 0296 1B0E     		lsr	r3, r3, #24
+ 387              	.L33:
+ 388 0298 1078     		ldrb	r0, [r2]
+ 389 029a 0028     		cmp	r0, #0
+ 390 029c 01D0     		beq	.L39
+ 391              	.L34:
+ 392 029e 382B     		cmp	r3, #56
+ 393 02a0 F4D9     		bls	.L36
+ 394              	.L39:
+ 395 02a2 6A46     		mov	r2, sp
+ 396 02a4 0732     		add	r2, r2, #7
+ 397 02a6 1370     		strb	r3, [r2]
+ 398 02a8 6B46     		mov	r3, sp
+ 399 02aa 0733     		add	r3, r3, #7
+ARM GAS  C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\ccFLsx4o.s 			page 8
+
+
+ 400 02ac 0C4A     		ldr	r2, .L41+16
+ 401 02ae 1B78     		ldrb	r3, [r3]
+ 402 02b0 D318     		add	r3, r2, r3
+ 403 02b2 0022     		mov	r2, #0
+ 404 02b4 9A71     		strb	r2, [r3, #6]
+ 405              	.L32:
+ 406 02b6 0120     		mov	r0, #1
+ 407 02b8 0B49     		ldr	r1, .L41+24
+ 408 02ba 0422     		mov	r2, #4
+ 409 02bc FFF7FEFF 		bl	DhcpGetOption
+ 410              	.L40:
+ 411 02c0 0020     		mov	r0, #0
+ 412 02c2 01E0     		b	.L30
+ 413              	.L38:
+ 414 02c4 0120     		mov	r0, #1
+ 415 02c6 4042     		neg	r0, r0
+ 416              	.L30:
+ 417 02c8 03B0     		add	sp, sp, #12
+ 418              		@ sp needed for prologue
+ 419 02ca F0BC     		pop	{r4, r5, r6, r7}
+ 420 02cc 02BC     		pop	{r1}
+ 421 02ce 0847     		bx	r1
+ 422              	.L42:
+ 423              		.align	2
+ 424              	.L41:
+ 425 02d0 00000000 		.word	confnet
+ 426 02d4 00000000 		.word	sframe
+ 427 02d8 00000000 		.word	random_id
+ 428 02dc 3A000000 		.word	rframe+58
+ 429 02e0 00000000 		.word	confboot
+ 430 02e4 96000000 		.word	rframe+150
+ 431 02e8 14000000 		.word	confnet+20
+ 432              		.size	DhcpQuery, .-DhcpQuery
+ 433              		.comm	test,552,4
+ 434              		.ident	"GCC: (GNU) 4.5.2"
+ARM GAS  C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\ccFLsx4o.s 			page 9
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 dhcp.c
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\ccFLsx4o.s:14     .text:00000000 $t
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\ccFLsx4o.s:19     .text:00000000 DhcpGetOption
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\ccFLsx4o.s:70     .text:0000004c $d
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\ccFLsx4o.s:72     .text:00000050 $t
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\ccFLsx4o.s:77     .text:00000050 DhcpSetOption
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\ccFLsx4o.s:109    .text:0000007c DhcpTransact
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\ccFLsx4o.s:207    .text:00000130 $d
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\ccFLsx4o.s:210    .text:00000138 $t
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\ccFLsx4o.s:215    .text:00000138 DhcpQuery
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\ccFLsx4o.s:425    .text:000002d0 $d
+                            *COM*:00000228 test
+
+UNDEFINED SYMBOLS
+rframe
+UdpOutput
+UdpInput
+sframe
+memcpy_
+confnet
+random_id
+confboot

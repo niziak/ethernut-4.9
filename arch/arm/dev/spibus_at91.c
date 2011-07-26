@@ -37,7 +37,7 @@
  * \brief General AT91 SPI bus controller routines.
  *
  * \verbatim
- * $Id: spibus_at91.c 2468 2009-02-17 09:30:38Z haraldkipp $
+ * $Id: spibus_at91.c 3329 2011-03-18 11:48:44Z olereinhardt $
  * \endverbatim
  */
 
@@ -51,8 +51,10 @@
 
 #include <dev/spibus_at91.h>
 
+#define SPI_DOUBLE_BUFFER_MIN_TRANSFER_SIZE 4
+
 #if defined(SPIBUS0_DOUBLE_BUFFER) || defined(SPIBUS1_DOUBLE_BUFFER)
-#warning Double buffered SPI not tested for AT91 targets.
+
 /*!
  * \brief AT91 SPI interrupt handler.
  */
@@ -213,7 +215,7 @@ int At91SpiBusNodeInit(NUTSPINODE * node)
     return rc;
 }
 
-#if defined(SPIBUS0_POLLING_MODE) || defined(SPIBUS1_POLLING_MODE)
+#if defined(SPIBUS0_POLLING_MODE) || defined(SPIBUS1_POLLING_MODE) || defined(SPIBUS0_DOUBLE_BUFFER_HEURISTIC) || defined(SPIBUS1_DOUBLE_BUFFER_HEURISTIC)
 /*! 
  * \brief Transfer data on the SPI bus in polling mode.
  *
@@ -265,10 +267,10 @@ int At91SpiBusPollTransfer(NUTSPINODE * node, CONST void *txbuf, void *rxbuf, in
  *
  * A device must have been selected by calling At91SpiSelect().
  *
- * Note, that the transfer may be still in progress when returning 
- * from this function.
- *
  * \todo Not yet done. Given up after SAM7SE SDRAM problems.
+ *       Currently working fine on SAM7X platform
+ * \todo Is this working asynchronously? Old comments mentioned that 
+ *       the transfer might be still active when function returns.
  *
  * \param node Specifies the SPI bus node.
  * \param txbuf Pointer to the transmit buffer. If NULL, undetermined
@@ -277,13 +279,19 @@ int At91SpiBusPollTransfer(NUTSPINODE * node, CONST void *txbuf, void *rxbuf, in
  *              data is discarded.
  * \param xlen  Number of bytes to transfer.
  *
- * \return Always -1.
+ * \return Always 0.
  */
 int At91SpiBusDblBufTransfer(NUTSPINODE * node, CONST void *txbuf, void *rxbuf, int xlen)
 {
     uintptr_t base;
     uint32_t cr;
     uint32_t ir = 0;
+
+#if defined(SPIBUS0_DOUBLE_BUFFER_HEURISTIC) || defined(SPIBUS1_DOUBLE_BUFFER_HEURISTIC)
+    if (xlen < SPI_DOUBLE_BUFFER_MIN_TRANSFER_SIZE) {
+        return At91SpiBusPollTransfer(node, txbuf, rxbuf, xlen);
+    }
+#endif
 
     /* Sanity check. */
     NUTASSERT(node != NULL);
@@ -326,11 +334,11 @@ int At91SpiBusDblBufTransfer(NUTSPINODE * node, CONST void *txbuf, void *rxbuf, 
         NutEventWait(&node->node_bus->bus_ready, NUT_WAIT_INFINITE);
         outr(base + PERIPH_PTCR_OFF, PDC_TXTDIS | PDC_RXTDIS);
     }
-    return -1;
+    return 0;
 }
 #endif
 
-#if !defined(SPIBUS0_DOUBLE_BUFFER) || !defined(SPIBUS1_DOUBLE_BUFFER)
+#if defined(SPIBUS0_DOUBLE_BUFFER) || defined(SPIBUS1_DOUBLE_BUFFER)
 /*! 
  * \brief Wait until all SPI bus transfers are done.
  *

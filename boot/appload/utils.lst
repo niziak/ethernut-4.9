@@ -1,0 +1,191 @@
+GAS LISTING C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/cc4Jy4qb.s 			page 1
+
+
+   1               		.file	"utils.c"
+   2               	__SREG__ = 0x3f
+   3               	__SP_H__ = 0x3e
+   4               	__SP_L__ = 0x3d
+   5               	__CCP__  = 0x34
+   6               	__tmp_reg__ = 0
+   7               	__zero_reg__ = 1
+   8               		.text
+   9               	.global	MicroDelay
+  10               		.type	MicroDelay, @function
+  11               	MicroDelay:
+  12               	/* prologue: function */
+  13               	/* frame size = 0 */
+  14 0000 20E0      		ldi r18,lo8(0)
+  15 0002 30E0      		ldi r19,hi8(0)
+  16 0004 00C0      		rjmp .L2
+  17               	.L3:
+  18               	/* #APP */
+  19               	 ;  49 "utils.c" 1
+  20 0006 0000      		nop
+  21               	 ;  0 "" 2
+  22               	/* #NOAPP */
+  23 0008 2F5F      		subi r18,lo8(-(1))
+  24 000a 3F4F      		sbci r19,hi8(-(1))
+  25               	.L2:
+  26 000c 2817      		cp r18,r24
+  27 000e 3907      		cpc r19,r25
+  28 0010 00F0      		brlo .L3
+  29               	/* epilogue start */
+  30 0012 0895      		ret
+  31               		.size	MicroDelay, .-MicroDelay
+  32               	.global	Delay
+  33               		.type	Delay, @function
+  34               	Delay:
+  35               	/* prologue: function */
+  36               	/* frame size = 0 */
+  37 0014 90E0      		ldi r25,lo8(0)
+  38 0016 00C0      		rjmp .L6
+  39               	.L10:
+  40 0018 20E0      		ldi r18,lo8(0)
+  41 001a 30E0      		ldi r19,hi8(0)
+  42               	.L7:
+  43               	/* #APP */
+  44               	 ;  49 "utils.c" 1
+  45 001c 0000      		nop
+  46               	 ;  0 "" 2
+  47               	/* #NOAPP */
+  48 001e 2F5F      		subi r18,lo8(-(1))
+  49 0020 3F4F      		sbci r19,hi8(-(1))
+  50 0022 4FEF      		ldi r20,hi8(-1)
+  51 0024 2F3F      		cpi r18,lo8(-1)
+  52 0026 3407      		cpc r19,r20
+  53 0028 01F4      		brne .L7
+  54 002a 20E0      		ldi r18,lo8(0)
+  55 002c 30E0      		ldi r19,hi8(0)
+  56               	.L8:
+  57               	/* #APP */
+GAS LISTING C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/cc4Jy4qb.s 			page 2
+
+
+  58               	 ;  49 "utils.c" 1
+  59 002e 0000      		nop
+  60               	 ;  0 "" 2
+  61               	/* #NOAPP */
+  62 0030 2F5F      		subi r18,lo8(-(1))
+  63 0032 3F4F      		sbci r19,hi8(-(1))
+  64 0034 4FEF      		ldi r20,hi8(-1)
+  65 0036 2F3F      		cpi r18,lo8(-1)
+  66 0038 3407      		cpc r19,r20
+  67 003a 01F4      		brne .L8
+  68 003c 20E0      		ldi r18,lo8(0)
+  69 003e 30E0      		ldi r19,hi8(0)
+  70               	.L9:
+  71               	/* #APP */
+  72               	 ;  49 "utils.c" 1
+  73 0040 0000      		nop
+  74               	 ;  0 "" 2
+  75               	/* #NOAPP */
+  76 0042 2F5F      		subi r18,lo8(-(1))
+  77 0044 3F4F      		sbci r19,hi8(-(1))
+  78 0046 4FEF      		ldi r20,hi8(-1)
+  79 0048 2F3F      		cpi r18,lo8(-1)
+  80 004a 3407      		cpc r19,r20
+  81 004c 01F4      		brne .L9
+  82 004e 9F5F      		subi r25,lo8(-(1))
+  83               	.L6:
+  84 0050 9817      		cp r25,r24
+  85 0052 00F0      		brlo .L10
+  86               	/* epilogue start */
+  87 0054 0895      		ret
+  88               		.size	Delay, .-Delay
+  89               	.global	__byte_swap2
+  90               		.type	__byte_swap2, @function
+  91               	__byte_swap2:
+  92               	/* prologue: function */
+  93               	/* frame size = 0 */
+  94 0056 9C01      		movw r18,r24
+  95               	/* #APP */
+  96               	 ;  72 "utils.c" 1
+  97 0058 022E      		mov __tmp_reg__, r18
+  98 005a 232F      		mov r18, r19
+  99 005c 302D      		mov r19, __tmp_reg__
+ 100               		
+ 101               	 ;  0 "" 2
+ 102               	/* #NOAPP */
+ 103 005e C901      		movw r24,r18
+ 104               	/* epilogue start */
+ 105 0060 0895      		ret
+ 106               		.size	__byte_swap2, .-__byte_swap2
+ 107               	.global	__byte_swap4
+ 108               		.type	__byte_swap4, @function
+ 109               	__byte_swap4:
+ 110               	/* prologue: function */
+ 111               	/* frame size = 0 */
+ 112 0062 9B01      		movw r18,r22
+ 113 0064 AC01      		movw r20,r24
+ 114               	/* #APP */
+GAS LISTING C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/cc4Jy4qb.s 			page 3
+
+
+ 115               	 ;  87 "utils.c" 1
+ 116 0066 022E      		mov __tmp_reg__, r18
+ 117 0068 252F      		mov r18, r21
+ 118 006a 502D      		mov r21, __tmp_reg__
+ 119 006c 032E      		mov __tmp_reg__, r19
+ 120 006e 342F      		mov r19, r20
+ 121 0070 402D      		mov r20, __tmp_reg__
+ 122               		
+ 123               	 ;  0 "" 2
+ 124               	/* #NOAPP */
+ 125 0072 B901      		movw r22,r18
+ 126 0074 CA01      		movw r24,r20
+ 127               	/* epilogue start */
+ 128 0076 0895      		ret
+ 129               		.size	__byte_swap4, .-__byte_swap4
+ 130               	.global	memcpy_
+ 131               		.type	memcpy_, @function
+ 132               	memcpy_:
+ 133               	/* prologue: function */
+ 134               	/* frame size = 0 */
+ 135 0078 DC01      		movw r26,r24
+ 136 007a FB01      		movw r30,r22
+ 137 007c 00C0      		rjmp .L20
+ 138               	.L21:
+ 139 007e 8191      		ld r24,Z+
+ 140 0080 8D93      		st X+,r24
+ 141 0082 4150      		subi r20,lo8(-(-1))
+ 142               	.L20:
+ 143 0084 4423      		tst r20
+ 144 0086 01F4      		brne .L21
+ 145               	/* epilogue start */
+ 146 0088 0895      		ret
+ 147               		.size	memcpy_, .-memcpy_
+ 148               	.global	memset_
+ 149               		.type	memset_, @function
+ 150               	memset_:
+ 151               	/* prologue: function */
+ 152               	/* frame size = 0 */
+ 153 008a FC01      		movw r30,r24
+ 154 008c 00C0      		rjmp .L24
+ 155               	.L25:
+ 156 008e 6193      		st Z+,r22
+ 157 0090 4150      		subi r20,lo8(-(-1))
+ 158               	.L24:
+ 159 0092 4423      		tst r20
+ 160 0094 01F4      		brne .L25
+ 161               	/* epilogue start */
+ 162 0096 0895      		ret
+ 163               		.size	memset_, .-memset_
+GAS LISTING C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/cc4Jy4qb.s 			page 4
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 utils.c
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/cc4Jy4qb.s:2      *ABS*:0000003f __SREG__
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/cc4Jy4qb.s:3      *ABS*:0000003e __SP_H__
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/cc4Jy4qb.s:4      *ABS*:0000003d __SP_L__
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/cc4Jy4qb.s:5      *ABS*:00000034 __CCP__
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/cc4Jy4qb.s:6      *ABS*:00000000 __tmp_reg__
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/cc4Jy4qb.s:7      *ABS*:00000001 __zero_reg__
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/cc4Jy4qb.s:11     .text:00000000 MicroDelay
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/cc4Jy4qb.s:34     .text:00000014 Delay
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/cc4Jy4qb.s:91     .text:00000056 __byte_swap2
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/cc4Jy4qb.s:109    .text:00000062 __byte_swap4
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/cc4Jy4qb.s:132    .text:00000078 memcpy_
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/cc4Jy4qb.s:150    .text:0000008a memset_
+
+NO UNDEFINED SYMBOLS

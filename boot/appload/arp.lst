@@ -1,0 +1,223 @@
+GAS LISTING C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/cckMb7xV.s 			page 1
+
+
+   1               		.file	"arp.c"
+   2               	__SREG__ = 0x3f
+   3               	__SP_H__ = 0x3e
+   4               	__SP_L__ = 0x3d
+   5               	__CCP__  = 0x34
+   6               	__tmp_reg__ = 0
+   7               	__zero_reg__ = 1
+   8               		.text
+   9               	.global	ArpRequest
+  10               		.type	ArpRequest, @function
+  11               	ArpRequest:
+  12 0000 DF92      		push r13
+  13 0002 EF92      		push r14
+  14 0004 FF92      		push r15
+  15 0006 0F93      		push r16
+  16 0008 1F93      		push r17
+  17 000a CF93      		push r28
+  18 000c DF93      		push r29
+  19               	/* prologue: function */
+  20               	/* frame size = 0 */
+  21 000e 7B01      		movw r14,r22
+  22 0010 8C01      		movw r16,r24
+  23 0012 EA01      		movw r28,r20
+  24 0014 CA01      		movw r24,r20
+  25 0016 6FEF      		ldi r22,lo8(-1)
+  26 0018 46E0      		ldi r20,lo8(6)
+  27 001a 0E94 0000 		call memset_
+  28 001e 2FEF      		ldi r18,lo8(-1)
+  29 0020 E216      		cp r14,r18
+  30 0022 2FEF      		ldi r18,hi8(-1)
+  31 0024 F206      		cpc r15,r18
+  32 0026 2FEF      		ldi r18,hlo8(-1)
+  33 0028 0207      		cpc r16,r18
+  34 002a 2FEF      		ldi r18,hhi8(-1)
+  35 002c 1207      		cpc r17,r18
+  36 002e 01F4      		brne .+2
+  37 0030 00C0      		rjmp .L13
+  38               	.L2:
+  39 0032 8091 0000 		lds r24,arptab_ip
+  40 0036 9091 0000 		lds r25,(arptab_ip)+1
+  41 003a A091 0000 		lds r26,(arptab_ip)+2
+  42 003e B091 0000 		lds r27,(arptab_ip)+3
+  43 0042 E816      		cp r14,r24
+  44 0044 F906      		cpc r15,r25
+  45 0046 0A07      		cpc r16,r26
+  46 0048 1B07      		cpc r17,r27
+  47 004a 01F4      		brne .L4
+  48 004c CE01      		movw r24,r28
+  49 004e 60E0      		ldi r22,lo8(arptab_ha)
+  50 0050 70E0      		ldi r23,hi8(arptab_ha)
+  51 0052 00C0      		rjmp .L12
+  52               	.L4:
+  53 0054 20E0      		ldi r18,lo8(256)
+  54 0056 31E0      		ldi r19,hi8(256)
+  55 0058 3093 0000 		sts (arpframe+14)+1,r19
+  56 005c 2093 0000 		sts arpframe+14,r18
+  57 0060 88E0      		ldi r24,lo8(8)
+GAS LISTING C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/cckMb7xV.s 			page 2
+
+
+  58 0062 90E0      		ldi r25,hi8(8)
+  59 0064 9093 0000 		sts (arpframe+16)+1,r25
+  60 0068 8093 0000 		sts arpframe+16,r24
+  61 006c 86E0      		ldi r24,lo8(6)
+  62 006e 8093 0000 		sts arpframe+18,r24
+  63 0072 84E0      		ldi r24,lo8(4)
+  64 0074 8093 0000 		sts arpframe+19,r24
+  65 0078 3093 0000 		sts (arpframe+20)+1,r19
+  66 007c 2093 0000 		sts arpframe+20,r18
+  67 0080 80E0      		ldi r24,lo8(arpframe+22)
+  68 0082 90E0      		ldi r25,hi8(arpframe+22)
+  69 0084 60E0      		ldi r22,lo8(confnet+10)
+  70 0086 70E0      		ldi r23,hi8(confnet+10)
+  71 0088 46E0      		ldi r20,lo8(6)
+  72 008a 0E94 0000 		call memcpy_
+  73 008e 80E0      		ldi r24,lo8(arpframe+32)
+  74 0090 90E0      		ldi r25,hi8(arpframe+32)
+  75 0092 6FEF      		ldi r22,lo8(-1)
+  76 0094 46E0      		ldi r20,lo8(6)
+  77 0096 0E94 0000 		call memset_
+  78 009a 8091 0000 		lds r24,confnet+16
+  79 009e 9091 0000 		lds r25,(confnet+16)+1
+  80 00a2 A091 0000 		lds r26,(confnet+16)+2
+  81 00a6 B091 0000 		lds r27,(confnet+16)+3
+  82 00aa 8093 0000 		sts arpframe+28,r24
+  83 00ae 9093 0000 		sts (arpframe+28)+1,r25
+  84 00b2 A093 0000 		sts (arpframe+28)+2,r26
+  85 00b6 B093 0000 		sts (arpframe+28)+3,r27
+  86 00ba E092 0000 		sts arpframe+38,r14
+  87 00be F092 0000 		sts (arpframe+38)+1,r15
+  88 00c2 0093 0000 		sts (arpframe+38)+2,r16
+  89 00c6 1093 0000 		sts (arpframe+38)+3,r17
+  90 00ca DD24      		clr r13
+  91 00cc 60E0      		ldi r22,lo8(0)
+  92 00ce 70E0      		ldi r23,hi8(0)
+  93               	.L9:
+  94 00d0 672B      		or r22,r23
+  95 00d2 01F4      		brne .L5
+  96 00d4 CE01      		movw r24,r28
+  97 00d6 68E0      		ldi r22,lo8(1544)
+  98 00d8 76E0      		ldi r23,hi8(1544)
+  99 00da 4CE1      		ldi r20,lo8(28)
+ 100 00dc 50E0      		ldi r21,hi8(28)
+ 101 00de 0E94 0000 		call EtherOutput
+ 102 00e2 97FD      		sbrc r25,7
+ 103 00e4 00C0      		rjmp .L6
+ 104               	.L5:
+ 105 00e6 88E0      		ldi r24,lo8(1544)
+ 106 00e8 96E0      		ldi r25,hi8(1544)
+ 107 00ea 68EE      		ldi r22,lo8(1000)
+ 108 00ec 73E0      		ldi r23,hi8(1000)
+ 109 00ee 0E94 0000 		call EtherInput
+ 110 00f2 BC01      		movw r22,r24
+ 111 00f4 1816      		cp __zero_reg__,r24
+ 112 00f6 1906      		cpc __zero_reg__,r25
+ 113 00f8 04F0      		brlt .L7
+ 114 00fa D394      		inc r13
+GAS LISTING C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/cckMb7xV.s 			page 3
+
+
+ 115 00fc 00C0      		rjmp .L8
+ 116               	.L7:
+ 117 00fe 2091 0000 		lds r18,rframe+38
+ 118 0102 3091 0000 		lds r19,(rframe+38)+1
+ 119 0106 4091 0000 		lds r20,(rframe+38)+2
+ 120 010a 5091 0000 		lds r21,(rframe+38)+3
+ 121 010e 8091 0000 		lds r24,confnet+16
+ 122 0112 9091 0000 		lds r25,(confnet+16)+1
+ 123 0116 A091 0000 		lds r26,(confnet+16)+2
+ 124 011a B091 0000 		lds r27,(confnet+16)+3
+ 125 011e 2817      		cp r18,r24
+ 126 0120 3907      		cpc r19,r25
+ 127 0122 4A07      		cpc r20,r26
+ 128 0124 5B07      		cpc r21,r27
+ 129 0126 01F4      		brne .L8
+ 130 0128 8091 0000 		lds r24,rframe+20
+ 131 012c 9091 0000 		lds r25,(rframe+20)+1
+ 132 0130 8050      		subi r24,lo8(512)
+ 133 0132 9240      		sbci r25,hi8(512)
+ 134 0134 01F4      		brne .L8
+ 135 0136 8091 0000 		lds r24,rframe+28
+ 136 013a 9091 0000 		lds r25,(rframe+28)+1
+ 137 013e A091 0000 		lds r26,(rframe+28)+2
+ 138 0142 B091 0000 		lds r27,(rframe+28)+3
+ 139 0146 8E15      		cp r24,r14
+ 140 0148 9F05      		cpc r25,r15
+ 141 014a A007      		cpc r26,r16
+ 142 014c B107      		cpc r27,r17
+ 143 014e 01F4      		brne .L8
+ 144 0150 E092 0000 		sts arptab_ip,r14
+ 145 0154 F092 0000 		sts (arptab_ip)+1,r15
+ 146 0158 0093 0000 		sts (arptab_ip)+2,r16
+ 147 015c 1093 0000 		sts (arptab_ip)+3,r17
+ 148 0160 80E0      		ldi r24,lo8(arptab_ha)
+ 149 0162 90E0      		ldi r25,hi8(arptab_ha)
+ 150 0164 60E0      		ldi r22,lo8(rframe+22)
+ 151 0166 70E0      		ldi r23,hi8(rframe+22)
+ 152 0168 46E0      		ldi r20,lo8(6)
+ 153 016a 0E94 0000 		call memcpy_
+ 154 016e CE01      		movw r24,r28
+ 155 0170 60E0      		ldi r22,lo8(rframe+22)
+ 156 0172 70E0      		ldi r23,hi8(rframe+22)
+ 157               	.L12:
+ 158 0174 46E0      		ldi r20,lo8(6)
+ 159 0176 0E94 0000 		call memcpy_
+ 160               	.L13:
+ 161 017a 20E0      		ldi r18,lo8(0)
+ 162 017c 30E0      		ldi r19,hi8(0)
+ 163 017e 00C0      		rjmp .L3
+ 164               	.L8:
+ 165 0180 82E0      		ldi r24,lo8(2)
+ 166 0182 8D15      		cp r24,r13
+ 167 0184 00F0      		brlo .+2
+ 168 0186 00C0      		rjmp .L9
+ 169               	.L6:
+ 170 0188 2FEF      		ldi r18,lo8(-1)
+ 171 018a 3FEF      		ldi r19,hi8(-1)
+GAS LISTING C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/cckMb7xV.s 			page 4
+
+
+ 172               	.L3:
+ 173 018c C901      		movw r24,r18
+ 174               	/* epilogue start */
+ 175 018e DF91      		pop r29
+ 176 0190 CF91      		pop r28
+ 177 0192 1F91      		pop r17
+ 178 0194 0F91      		pop r16
+ 179 0196 FF90      		pop r15
+ 180 0198 EF90      		pop r14
+ 181 019a DF90      		pop r13
+ 182 019c 0895      		ret
+ 183               		.size	ArpRequest, .-ArpRequest
+ 184               		.comm arpframe,42,1
+ 185               		.comm arptab_ip,4,1
+ 186               		.comm arptab_ha,6,1
+ 187               	.global __do_clear_bss
+GAS LISTING C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/cckMb7xV.s 			page 5
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 arp.c
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/cckMb7xV.s:2      *ABS*:0000003f __SREG__
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/cckMb7xV.s:3      *ABS*:0000003e __SP_H__
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/cckMb7xV.s:4      *ABS*:0000003d __SP_L__
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/cckMb7xV.s:5      *ABS*:00000034 __CCP__
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/cckMb7xV.s:6      *ABS*:00000000 __tmp_reg__
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/cckMb7xV.s:7      *ABS*:00000001 __zero_reg__
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/cckMb7xV.s:11     .text:00000000 ArpRequest
+                            *COM*:00000004 arptab_ip
+                            *COM*:00000006 arptab_ha
+                            *COM*:0000002a arpframe
+
+UNDEFINED SYMBOLS
+memset_
+confnet
+memcpy_
+EtherOutput
+EtherInput
+rframe
+__do_clear_bss

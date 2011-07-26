@@ -1,0 +1,563 @@
+ARM GAS  C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\ccURbWxm.s 			page 1
+
+
+   1              	# 1 "start_rom.S"
+   1              	/*
+   0              	
+   0              	
+   2              	 * Copyright (C) 2005-2007 by egnite Software GmbH
+   3              	 *
+   4              	 * All rights reserved.
+   5              	 *
+   6              	 * Redistribution and use in source and binary forms, with or without
+   7              	 * modification, are permitted provided that the following conditions
+   8              	 * are met:
+   9              	 *
+  10              	 * 1. Redistributions of source code must retain the above copyright
+  11              	 *    notice, this list of conditions and the following disclaimer.
+  12              	 * 2. Redistributions in binary form must reproduce the above copyright
+  13              	 *    notice, this list of conditions and the following disclaimer in the
+  14              	 *    documentation and/or other materials provided with the distribution.
+  15              	 * 3. Neither the name of the copyright holders nor the names of
+  16              	 *    contributors may be used to endorse or promote products derived
+  17              	 *    from this software without specific prior written permission.
+  18              	 *
+  19              	 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+  20              	 * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+  21              	 * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+  22              	 * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+  23              	 * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+  24              	 * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+  25              	 * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
+  26              	 * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
+  27              	 * AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+  28              	 * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
+  29              	 * THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+  30              	 * SUCH DAMAGE.
+  31              	 *
+  32              	 * For additional information see http://www.ethernut.de/
+  33              	 *
+  34              	 */
+  35              	
+  36              	/*
+  37              	 * $Id: start_rom.S 2935 2010-04-01 12:14:17Z haraldkipp $
+  38              	 */
+  39              	
+  40              	PS_BASE   = 0xFFFF4000      /* Power saving controller. */
+  41              	AIC_BASE  = 0xFFFFF000      /* Advanced interrupt controller. */
+  42              	AIC_SVR   = 0x080           /* Source Vector Register */
+  43              	AIC_EOICR = 0x130           /*  of Interrupt Command Register */
+  44              	AIC_SPU   = 0x134           /* Spurious Vector Register */
+  45              	
+  46              	FLASH_BASE = 0x01000000
+  47              	FLASH_SIZE = 0x00200000
+  48              	
+  49              	RAM_BASE  = 0x00000000
+  50              	RAM_LIMIT = 0x00000100
+  51              	RAM_SIZE  = (256*1024)
+  52              	
+  53              	IRQ_STACK_SIZE = (3*8*4)     @ 3 words per interrupt priority level
+  54              	FIQ_STACK_SIZE = (3*4)       @ 3 words
+ARM GAS  C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\ccURbWxm.s 			page 2
+
+
+  55              	ABT_STACK_SIZE = (1*4)       @ 1 word
+  56              	UND_STACK_SIZE = (1*4)       @ 1 word
+  57              	
+  58              	ARM_MODE_USER = 0x10
+  59              	ARM_MODE_FIQ = 0x11
+  60              	ARM_MODE_IRQ = 0x12
+  61              	ARM_MODE_SVC = 0x13
+  62              	ARM_MODE_ABORT = 0x17
+  63              	ARM_MODE_UNDEF = 0x1B
+  64              	ARM_MODE_SYS = 0x1F
+  65              	
+  66              	EBI_DBW_8 = 0x0002
+  67              	EBI_DBW_16 = 0x0001
+  68              	
+  69              	EBI_NWS_1 = 0x0000
+  70              	EBI_NWS_2 = 0x0004
+  71              	EBI_NWS_3 = 0x0008
+  72              	EBI_NWS_4 = 0x000C
+  73              	EBI_NWS_5 = 0x0010
+  74              	EBI_NWS_6 = 0x0014
+  75              	EBI_NWS_7 = 0x0018
+  76              	EBI_NWS_8 = 0x001C
+  77              	EBI_WSE = 0x0020
+  78              	
+  79              	EBI_PAGES_1M = 0x0000
+  80              	EBI_PAGES_4M = 0x0080
+  81              	EBI_PAGES_16M = 0x0100
+  82              	EBI_PAGES_64M = 0x0180
+  83              	
+  84              	EBI_TDF_0 = 0x0000
+  85              	EBI_TDF_1 = 0x0200
+  86              	EBI_TDF_2 = 0x0400
+  87              	EBI_TDF_3 = 0x0600
+  88              	EBI_TDF_4 = 0x0800
+  89              	EBI_TDF_5 = 0x0A00
+  90              	EBI_TDF_6 = 0x0C00
+  91              	EBI_TDF_7 = 0x0E00
+  92              	
+  93              	EBI_BAT_BYTE_WRITE = 0x0000
+  94              	EBI_BAT_BYTE_SELECT = 0x1000
+  95              	
+  96              	EBI_CSEN = 0x2000
+  97              	
+  98              	EBI_ALE_16M = 0x00
+  99              	EBI_ALE_8M = 0x04
+ 100              	EBI_ALE_4M = 0x05
+ 101              	EBI_ALE_2M = 0x06
+ 102              	EBI_ALE_1M = 0x07
+ 103              	
+ 104              	EBI_DRP_STANDARD = 0x00
+ 105              	EBI_DRP_EARLY = 0x10
+ 106              	
+ 107              	/*
+ 108              	 * Section 0: Vector table and reset entry.
+ 109              	 */
+ 110              	        .arm
+ 111              	        .section .init0,"ax",%progbits
+ARM GAS  C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\ccURbWxm.s 			page 3
+
+
+ 112              	
+ 113              	        .global __vectors
+ 114              	__vectors:
+ 115 0000 FEFFFFEA 	        b       _start                  /* Reset */
+ 116 0004 FEFFFFEA 	        b       __undef                 /* Undefined instruction */
+ 117 0008 FEFFFFEA 	        b       __swi                   /* Software interrupt */
+ 118 000c FEFFFFEA 	        b       __prefetch_abort        /* Prefetch abort */
+ 119 0010 FEFFFFEA 	        b       __data_abort            /* Data abort */
+ 120 0014 FEFFFFEA 	        b       __xcpt_dummy            /* Reserved */
+ 121              	
+ 122              	        /*
+ 123              	         * On IRQ the PC will be loaded from AIC_IVR, which
+ 124              	         * provides the address previously set in AIC_SVR.
+ 125              	         * The interrupt routine will be called in ARM_MODE_IRQ
+ 126              	         * with IRQ disabled and FIQ unchanged.
+ 127              	         */
+ 128 0018 20FF1FE5 	        ldr     pc, [pc, #-0xF20]   /* Interrupt request, auto vectoring. */
+ 129 001c 20FF1FE5 	        ldr     pc, [pc, #-0xF20]   /* Fast interrupt request, auto vectoring. */
+ 130              	
+ 131 0020 00000000 	        .word   _start
+ 132 0024 00000000 	        .word   __undef
+ 133 0028 00000000 	        .word   __swi
+ 134 002c 00000000 	        .word   __prefetch_abort
+ 135 0030 00000000 	        .word   __data_abort
+ 136              	
+ 137              	        .weak   __undef
+ 138              	        .set    __undef, __xcpt_dummy
+ 139              	        .weak   __swi
+ 140              	        .set    __swi, __xcpt_dummy
+ 141              	        .weak   __prefetch_abort
+ 142              	        .set    __prefetch_abort, __xcpt_dummy
+ 143              	        .weak   __data_abort
+ 144              	        .set    __data_abort, __xcpt_dummy
+ 145              	
+ 146              	        .global __xcpt_dummy
+ 147              	__xcpt_dummy:
+ 148 0034 FEFFFFEA 	        b       __xcpt_dummy
+ 149              	
+ 150              	_rom_start:
+ 151 0038 00000000 	        .word   0x00000000
+ 152              	
+ 153              	_rom_end:
+ 154 003c FCFF0300 	        .word   0x0003FFFC
+ 155              	
+ 156              	_ram_start:
+ 157 0040 00003000 	        .word   0x00300000
+ 158              	
+ 159              	        .ltorg
+ 160              	        .globl	_start
+ 161              	_start:
+ 162              	        /* Set supervisor mode. */
+ 163 0044 00000FE1 	        mrs     r0, cpsr
+ 164 0048 1F00C0E3 	        bic     r0, r0, #0x1f
+ 165 004c 130080E3 	        orr     r0, r0, #0x13
+ 166 0050 00F029E1 	        msr     cpsr, r0
+ 167              	
+ 168              	        /* Remapping memory. */
+ARM GAS  C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\ccURbWxm.s 			page 4
+
+
+ 169 0054 10A08FE2 	        adr     r10, _rmap_tab
+ 170              	
+ 171              	        /* Load the address where to jump */
+ 172 0058 08C09FE5 	        ldr     r12, _rmap_endp
+ 173              	
+ 174 005c FF0BBAE8 	        ldmia   r10!, {r0-r9,r11}
+ 175 0060 FF03ABE8 	        stmia   r11!, {r0-r9}
+ 176              	
+ 177              	        /* Jump and break the pipeline */
+ 178 0064 0CF0A0E1 	        mov     pc, r12                 
+ 179              	
+ 180              	_rmap_endp:
+ 181 0068 98000000 	        .long   remapmem_end
+ 182              	
+ 183              	_rmap_tab:
+ 184              	        /* Flash memory at 1000 0000. */
+ 185 006c 2D210010 	        .long   0x10000000 | EBI_CSEN | EBI_PAGES_16M | EBI_WSE | EBI_NWS_4 | EBI_DBW_16
+ 186              	        /* Ethernet controller at 2000 0000 */
+ 187 0070 29300020 	        .long   0x20000000 | EBI_CSEN | EBI_BAT_BYTE_SELECT | EBI_WSE | EBI_NWS_3 | EBI_DBW_16
+ 188              	        /* CPLD registers at 2100 0000 */
+ 189 0074 26200021 	        .long   0x21000000 | EBI_CSEN | EBI_WSE | EBI_NWS_2 | EBI_DBW_8
+ 190 0078 00000030 	        .long   0x30000000                  /* r3: unused */
+ 191              	        /* CPLD expansion port */
+ 192 007c 3E2E0022 	        .long   0x22000000 | EBI_CSEN | EBI_TDF_7 | EBI_WSE | EBI_NWS_8 | EBI_DBW_8
+ 193 0080 00000050 	        .long   0x50000000                  /* r5: unused */
+ 194 0084 00000060 	        .long   0x60000000                  /* r6: unused */
+ 195 0088 00000070 	        .long   0x70000000                  /* r7: unused */
+ 196              	
+ 197 008c 01000000 	        .long   0x00000001                  /* r8: Remap command */
+ 198 0090 05000000 	        .long   EBI_ALE_4M                  /* r9: Memory control. */
+ 199 0094 0000E0FF 	        .long   0xFFE00000                  /* r11: EBI base address */
+ 200              	
+ 201              	        .ltorg
+ 202              	remapmem_end:
+ 203              	
+ 204              	/*
+ 205              	 * Section 1: Hardware initialization.
+ 206              	 */
+ 207              	        .section .init1,"ax",%progbits
+ 208              	
+ 209              	        /*
+ 210              	         * Enable all clocks.
+ 211              	         */
+ 212 0000 0000E0E3 	        mvn     r0, #0
+ 213 0004 48109FE5 	        ldr     r1, =PS_BASE
+ 214 0008 040081E5 	        str     r0, [r1, #0x04]
+ 215              	
+ 216              	        /*
+ 217              	         * Initialize the interrupt controller.
+ 218              	         */
+ 219 000c 30008FE2 	        add     r0, pc,#-(8+.-__aic_table)
+ 220 0010 1E0090E8 	        ldmia   r0, {r1-r4}
+ 221 0014 344181E5 	        str     r4, [r1, #AIC_SPU]
+ 222              	
+ 223 0018 0800A0E3 	        mov     r0, #8
+ 224              	L0:
+ 225 001c 301181E5 	        str     r1, [r1, #AIC_EOICR]
+ARM GAS  C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\ccURbWxm.s 			page 5
+
+
+ 226 0020 010050E2 	        subs    r0, r0, #1
+ 227 0024 FCFFFF8A 	        bhi     L0
+ 228              	
+ 229 0028 802081E5 	        str     r2, [r1, #AIC_SVR]
+ 230 002c 801081E2 	        add     r1, r1, #AIC_SVR
+ 231 0030 1F00A0E3 	        mov     r0, #31
+ 232              	L1:
+ 233 0034 003181E7 	        str     r3, [r1, r0, LSL #2]
+ 234 0038 010050E2 	        subs    r0, r0, #1
+ 235 003c FCFFFF8A 	        bhi     L1
+ 236              	
+ 237 0040 FEFFFFEA 	        b       __set_stacks
+ 238              	
+ 239              	__aic_table:
+ 240 0044 00F0FFFF 	        .word   AIC_BASE
+ 241 0048 00000000 	        .word   __irq_dummy
+ 242 004c 00000000 	        .word   __irq_dummy
+ 243 0050 00000000 	        .word   __irq_dummy
+ 244              	
+ 245 0054 0040FFFF 	        .ltorg
+ 246              	
+ 247              	        /* Interrupt dummy. */
+ 248              	        .global __irq_dummy
+ 249              	__irq_dummy:
+ 250 0058 FEFFFFEA 	        b       __irq_dummy
+ 251              	
+ 252              	        .global __set_stacks
+ 253              	__set_stacks:
+ 254              	
+ 255              	/*
+ 256              	 * Section 2: Set stack pointers.
+ 257              	 */
+ 258              	        .section .init2,"ax",%progbits
+ 259              	        /*
+ 260              	         * Set exception stack pointers and enable interrupts.
+ 261              	         */
+ 262 0000 B8009FE5 	        ldr     r0, =__xcp_stack
+ 263 0004 D1F021E3 	        msr     CPSR_c, #ARM_MODE_FIQ | 0xC0
+ 264 0008 00D0A0E1 	        mov     r13, r0
+ 265 000c 0C0040E2 	        sub     r0, r0, #FIQ_STACK_SIZE
+ 266 0010 D2F021E3 	        msr     CPSR_c, #ARM_MODE_IRQ | 0xC0
+ 267 0014 00D0A0E1 	        mov     r13, r0
+ 268 0018 600040E2 	        sub     r0, r0, #IRQ_STACK_SIZE
+ 269 001c D7F021E3 	        msr     CPSR_c, #ARM_MODE_ABORT | 0xC0
+ 270 0020 00D0A0E1 	        mov     r13, r0
+ 271 0024 040040E2 	        sub     r0, r0, #ABT_STACK_SIZE
+ 272 0028 DBF021E3 	        msr     CPSR_c, #ARM_MODE_UNDEF | 0xC0
+ 273 002c 00D0A0E1 	        mov     r13, r0
+ 274 0030 040040E2 	        sub     r0, r0, #UND_STACK_SIZE
+ 275 0034 D3F021E3 	        msr     CPSR_c, #ARM_MODE_SVC | 0xC0
+ 276 0038 00D0A0E1 	        mov     r13, r0
+ 277 003c FEFFFFEA 	        b       __enter_user
+ 278              	
+ 279              	        .rept   32
+ 279 0040 00000000 	>  .long 0
+ 279              	> 
+ 279 0044 00000000 	>  .long 0
+ARM GAS  C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\ccURbWxm.s 			page 6
+
+
+ 279              	> 
+ 279 0048 00000000 	>  .long 0
+ 279              	> 
+ 279 004c 00000000 	>  .long 0
+ 279              	> 
+ 279 0050 00000000 	>  .long 0
+ 279              	> 
+ 279 0054 00000000 	>  .long 0
+ 279              	> 
+ 279 0058 00000000 	>  .long 0
+ 279              	> 
+ 279 005c 00000000 	>  .long 0
+ 279              	> 
+ 279 0060 00000000 	>  .long 0
+ 279              	> 
+ 279 0064 00000000 	>  .long 0
+ 279              	> 
+ 279 0068 00000000 	>  .long 0
+ 279              	> 
+ 279 006c 00000000 	>  .long 0
+ 279              	> 
+ 279 0070 00000000 	>  .long 0
+ 279              	> 
+ 279 0074 00000000 	>  .long 0
+ 279              	> 
+ 279 0078 00000000 	>  .long 0
+ 279              	> 
+ 279 007c 00000000 	>  .long 0
+ 279              	> 
+ 279 0080 00000000 	>  .long 0
+ 279              	> 
+ 279 0084 00000000 	>  .long 0
+ 279              	> 
+ 279 0088 00000000 	>  .long 0
+ 279              	> 
+ 279 008c 00000000 	>  .long 0
+ 279              	> 
+ 279 0090 00000000 	>  .long 0
+ 279              	> 
+ 279 0094 00000000 	>  .long 0
+ 279              	> 
+ 279 0098 00000000 	>  .long 0
+ 279              	> 
+ 279 009c 00000000 	>  .long 0
+ 279              	> 
+ 279 00a0 00000000 	>  .long 0
+ 279              	> 
+ 279 00a4 00000000 	>  .long 0
+ 279              	> 
+ 279 00a8 00000000 	>  .long 0
+ 279              	> 
+ 279 00ac 00000000 	>  .long 0
+ 279              	> 
+ 279 00b0 00000000 	>  .long 0
+ 279              	> 
+ 279 00b4 00000000 	>  .long 0
+ 279              	> 
+ARM GAS  C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\ccURbWxm.s 			page 7
+
+
+ 279 00b8 00000000 	>  .long 0
+ 279              	> 
+ 279 00bc 00000000 	>  .long 0
+ 280              	        .long   0
+ 281              	        .endr
+ 282              	
+ 283              	        .global __xcp_stack
+ 284              	__xcp_stack:
+ 285              	        
+ 286 00c0 00000000 	        .ltorg
+ 287              	
+ 288              	        .global __enter_user
+ 289              	        .align
+ 290              	__enter_user:
+ 291              	/*
+ 292              	 * Section 3: Enter user mode.
+ 293              	 */
+ 294              	        .section .init3,"ax",%progbits
+ 295              	
+ 296              	@        msr     CPSR_c, #ARM_MODE_USER
+ 297              	
+ 298 0000 FEFFFFEA 	        b       __clear_bss
+ 299              	
+ 300              	        .ltorg
+ 301              	
+ 302              	        .global __clear_bss
+ 303              	__clear_bss:
+ 304              	/*
+ 305              	 * Section 4: Clear bss.
+ 306              	 */
+ 307              	        .section .init4,"ax",%progbits
+ 308              	
+ 309 0000 3C109FE5 	        ldr     r1, =__bss_start
+ 310 0004 3C209FE5 	        ldr     r2, =__bss_end
+ 311 0008 0030A0E3 	        ldr     r3, =0
+ 312              	
+ 313              	_40:
+ 314 000c 020051E1 	        cmp     r1, r2
+ 315 0010 04308114 	        strne   r3, [r1], #+4
+ 316 0014 FCFFFF1A 	        bne     _40
+ 317              	
+ 318              	
+ 319 0018 2C009FE5 	        ldr     r0, =_text_end
+ 320 001c 2C109FE5 	        ldr     r1, =__data_start
+ 321 0020 2C209FE5 	        ldr     r2, =__data_end
+ 322 0024 012052E0 	        subs    r2, r2, r1
+ 323 0028 0300000A 	        beq     _42
+ 324              	
+ 325              	_41:
+ 326 002c 043090E4 	        ldr     r3, [r0], #4
+ 327 0030 043081E4 	        str     r3, [r1], #4
+ 328 0034 042052E2 	        subs    r2, r2, #4
+ 329 0038 FBFFFF1A 	        bne     _41
+ 330              	
+ 331              	        /*
+ 332              	         * Initialize user stack pointer.
+ 333              	         */
+ARM GAS  C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\ccURbWxm.s 			page 8
+
+
+ 334              	_42:         
+ 335 003c 14D09FE5 	        ldr     r13, =__stack
+ 336 0040 FEFFFFEA 	        b       __call_rtos
+ 337              	
+ 338 0044 00000000 	        .ltorg
+ 338      00000000 
+ 338      00000000 
+ 338      00000000 
+ 338      00000000 
+ 339              	
+ 340              	        .global __call_rtos
+ 341              	__call_rtos:
+ 342              	/*
+ 343              	 * Section 5: Call RTOS
+ 344              	 */
+ 345              	        .section .init5,"ax",%progbits
+ 346              	
+ 347              	        /*
+ 348              	         * Jump to Nut/OS initialization.
+ 349              	         */
+ 350 0000 08009FE5 	        ldr     r0, =main
+ 351 0004 10FF2FE1 	        bx      r0
+ 352              	
+ 353              	End:
+ 354 0008 0000A0E3 	        ldr     r0, =0
+ 355 000c 10FF2FE1 	        bx      r0
+ 356              	
+ 357 0010 00000000 	        .ltorg
+ARM GAS  C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\ccURbWxm.s 			page 9
+
+
+DEFINED SYMBOLS
+         start_rom.S:40     *ABS*:ffff4000 PS_BASE
+         start_rom.S:41     *ABS*:fffff000 AIC_BASE
+         start_rom.S:42     *ABS*:00000080 AIC_SVR
+         start_rom.S:43     *ABS*:00000130 AIC_EOICR
+         start_rom.S:44     *ABS*:00000134 AIC_SPU
+         start_rom.S:46     *ABS*:01000000 FLASH_BASE
+         start_rom.S:47     *ABS*:00200000 FLASH_SIZE
+         start_rom.S:49     *ABS*:00000000 RAM_BASE
+         start_rom.S:50     *ABS*:00000100 RAM_LIMIT
+         start_rom.S:51     *ABS*:00040000 RAM_SIZE
+         start_rom.S:53     *ABS*:00000060 IRQ_STACK_SIZE
+         start_rom.S:54     *ABS*:0000000c FIQ_STACK_SIZE
+         start_rom.S:55     *ABS*:00000004 ABT_STACK_SIZE
+         start_rom.S:56     *ABS*:00000004 UND_STACK_SIZE
+         start_rom.S:58     *ABS*:00000010 ARM_MODE_USER
+         start_rom.S:59     *ABS*:00000011 ARM_MODE_FIQ
+         start_rom.S:60     *ABS*:00000012 ARM_MODE_IRQ
+         start_rom.S:61     *ABS*:00000013 ARM_MODE_SVC
+         start_rom.S:62     *ABS*:00000017 ARM_MODE_ABORT
+         start_rom.S:63     *ABS*:0000001b ARM_MODE_UNDEF
+         start_rom.S:64     *ABS*:0000001f ARM_MODE_SYS
+         start_rom.S:66     *ABS*:00000002 EBI_DBW_8
+         start_rom.S:67     *ABS*:00000001 EBI_DBW_16
+         start_rom.S:69     *ABS*:00000000 EBI_NWS_1
+         start_rom.S:70     *ABS*:00000004 EBI_NWS_2
+         start_rom.S:71     *ABS*:00000008 EBI_NWS_3
+         start_rom.S:72     *ABS*:0000000c EBI_NWS_4
+         start_rom.S:73     *ABS*:00000010 EBI_NWS_5
+         start_rom.S:74     *ABS*:00000014 EBI_NWS_6
+         start_rom.S:75     *ABS*:00000018 EBI_NWS_7
+         start_rom.S:76     *ABS*:0000001c EBI_NWS_8
+         start_rom.S:77     *ABS*:00000020 EBI_WSE
+         start_rom.S:79     *ABS*:00000000 EBI_PAGES_1M
+         start_rom.S:80     *ABS*:00000080 EBI_PAGES_4M
+         start_rom.S:81     *ABS*:00000100 EBI_PAGES_16M
+         start_rom.S:82     *ABS*:00000180 EBI_PAGES_64M
+         start_rom.S:84     *ABS*:00000000 EBI_TDF_0
+         start_rom.S:85     *ABS*:00000200 EBI_TDF_1
+         start_rom.S:86     *ABS*:00000400 EBI_TDF_2
+         start_rom.S:87     *ABS*:00000600 EBI_TDF_3
+         start_rom.S:88     *ABS*:00000800 EBI_TDF_4
+         start_rom.S:89     *ABS*:00000a00 EBI_TDF_5
+         start_rom.S:90     *ABS*:00000c00 EBI_TDF_6
+         start_rom.S:91     *ABS*:00000e00 EBI_TDF_7
+         start_rom.S:93     *ABS*:00000000 EBI_BAT_BYTE_WRITE
+         start_rom.S:94     *ABS*:00001000 EBI_BAT_BYTE_SELECT
+         start_rom.S:96     *ABS*:00002000 EBI_CSEN
+         start_rom.S:98     *ABS*:00000000 EBI_ALE_16M
+         start_rom.S:99     *ABS*:00000004 EBI_ALE_8M
+         start_rom.S:100    *ABS*:00000005 EBI_ALE_4M
+         start_rom.S:101    *ABS*:00000006 EBI_ALE_2M
+         start_rom.S:102    *ABS*:00000007 EBI_ALE_1M
+         start_rom.S:104    *ABS*:00000000 EBI_DRP_STANDARD
+         start_rom.S:105    *ABS*:00000010 EBI_DRP_EARLY
+         start_rom.S:114    .init0:00000000 __vectors
+         start_rom.S:161    .init0:00000044 _start
+ARM GAS  C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\ccURbWxm.s 			page 10
+
+
+         start_rom.S:115    .init0:00000000 $a
+                           .init0:00000034 __undef
+                           .init0:00000034 __swi
+                           .init0:00000034 __prefetch_abort
+                           .init0:00000034 __data_abort
+         start_rom.S:147    .init0:00000034 __xcpt_dummy
+         start_rom.S:131    .init0:00000020 $d
+         start_rom.S:148    .init0:00000034 $a
+         start_rom.S:150    .init0:00000038 _rom_start
+         start_rom.S:151    .init0:00000038 $d
+         start_rom.S:153    .init0:0000003c _rom_end
+         start_rom.S:156    .init0:00000040 _ram_start
+         start_rom.S:163    .init0:00000044 $a
+         start_rom.S:183    .init0:0000006c _rmap_tab
+         start_rom.S:180    .init0:00000068 _rmap_endp
+         start_rom.S:181    .init0:00000068 $d
+         start_rom.S:202    .init0:00000098 remapmem_end
+         start_rom.S:212    .init1:00000000 $a
+         start_rom.S:239    .init1:00000044 __aic_table
+         start_rom.S:224    .init1:0000001c L0
+         start_rom.S:232    .init1:00000034 L1
+         start_rom.S:253    .init1:0000005c __set_stacks
+         start_rom.S:240    .init1:00000044 $d
+         start_rom.S:249    .init1:00000058 __irq_dummy
+         start_rom.S:250    .init1:00000058 $a
+         start_rom.S:284    .init2:000000c0 __xcp_stack
+         start_rom.S:262    .init2:00000000 $a
+         start_rom.S:290    .init2:000000c4 __enter_user
+         start_rom.S:281    .init2:00000040 $d
+         start_rom.S:303    .init3:00000004 __clear_bss
+         start_rom.S:298    .init3:00000000 $a
+         start_rom.S:309    .init4:00000000 $a
+         start_rom.S:313    .init4:0000000c _40
+         start_rom.S:334    .init4:0000003c _42
+         start_rom.S:325    .init4:0000002c _41
+         start_rom.S:341    .init4:0000005c __call_rtos
+         start_rom.S:338    .init4:00000044 $d
+         start_rom.S:350    .init5:00000000 $a
+         start_rom.S:353    .init5:00000008 End
+         start_rom.S:357    .init5:00000010 $d
+
+UNDEFINED SYMBOLS
+__bss_start
+__bss_end
+_text_end
+__data_start
+__data_end
+__stack
+main

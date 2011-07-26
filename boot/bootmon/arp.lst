@@ -1,0 +1,358 @@
+ARM GAS  C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\ccNXh8WZ.s 			page 1
+
+
+   1              		.cpu arm7tdmi
+   2              		.fpu softvfp
+   3              		.eabi_attribute 20, 1
+   4              		.eabi_attribute 21, 1
+   5              		.eabi_attribute 23, 3
+   6              		.eabi_attribute 24, 1
+   7              		.eabi_attribute 25, 1
+   8              		.eabi_attribute 26, 1
+   9              		.eabi_attribute 30, 4
+  10              		.eabi_attribute 18, 4
+  11              		.code	16
+  12              		.file	"arp.c"
+  13              		.text
+  14              		.align	1
+  15              		.global	ArpRequest
+  16              		.code	16
+  17              		.thumb_func
+  18              		.type	ArpRequest, %function
+  19              	ArpRequest:
+  20 0000 F0B5     		push	{r4, r5, r6, r7, lr}
+  21 0002 83B0     		sub	sp, sp, #12
+  22 0004 051C     		mov	r5, r0
+  23 0006 0F1C     		mov	r7, r1
+  24 0008 081C     		mov	r0, r1
+  25 000a 0622     		mov	r2, #6
+  26 000c FF21     		mov	r1, #255
+  27 000e FFF7FEFF 		bl	memset_
+  28 0012 0024     		mov	r4, #0
+  29 0014 6A1C     		add	r2, r5, #1
+  30 0016 00D1     		bne	.LCB13
+  31 0018 8FE0     		b	.L2	@long jump
+  32              	.LCB13:
+  33 001a 4A49     		ldr	r1, .L11
+  34 001c 0B68     		ldr	r3, [r1]
+  35 001e 9D42     		cmp	r5, r3
+  36 0020 05D1     		bne	.L3
+  37 0022 0431     		add	r1, r1, #4
+  38 0024 381C     		mov	r0, r7
+  39 0026 0622     		mov	r2, #6
+  40 0028 FFF7FEFF 		bl	memcpy_
+  41 002c 85E0     		b	.L2
+  42              	.L3:
+  43 002e 464C     		ldr	r4, .L11+4
+  44 0030 0822     		mov	r2, #8
+  45 0032 2282     		strh	r2, [r4, #16]
+  46 0034 454E     		ldr	r6, .L11+8
+  47 0036 0622     		mov	r2, #6
+  48 0038 8023     		mov	r3, #128
+  49 003a 5B00     		lsl	r3, r3, #1
+  50 003c A274     		strb	r2, [r4, #18]
+  51 003e 201C     		mov	r0, r4
+  52 0040 0422     		mov	r2, #4
+  53 0042 E381     		strh	r3, [r4, #14]
+  54 0044 A382     		strh	r3, [r4, #20]
+  55 0046 E274     		strb	r2, [r4, #19]
+  56 0048 311C     		mov	r1, r6
+  57 004a 1630     		add	r0, r0, #22
+ARM GAS  C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\ccNXh8WZ.s 			page 2
+
+
+  58 004c 0622     		mov	r2, #6
+  59 004e FFF7FEFF 		bl	memcpy_
+  60 0052 201C     		mov	r0, r4
+  61 0054 0A3E     		sub	r6, r6, #10
+  62 0056 2030     		add	r0, r0, #32
+  63 0058 0622     		mov	r2, #6
+  64 005a FF21     		mov	r1, #255
+  65 005c FFF7FEFF 		bl	memset_
+  66 0060 737C     		ldrb	r3, [r6, #17]
+  67 0062 327C     		ldrb	r2, [r6, #16]
+  68 0064 1B02     		lsl	r3, r3, #8
+  69 0066 1343     		orr	r3, r3, r2
+  70 0068 B27C     		ldrb	r2, [r6, #18]
+  71 006a 1204     		lsl	r2, r2, #16
+  72 006c 1343     		orr	r3, r3, r2
+  73 006e F27C     		ldrb	r2, [r6, #19]
+  74 0070 1206     		lsl	r2, r2, #24
+  75 0072 1343     		orr	r3, r3, r2
+  76 0074 E361     		str	r3, [r4, #28]
+  77 0076 2B0C     		lsr	r3, r5, #16
+  78 0078 E584     		strh	r5, [r4, #38]
+  79 007a 2385     		strh	r3, [r4, #40]
+  80 007c 344C     		ldr	r4, .L11+12
+  81 007e 0020     		mov	r0, #0
+  82 0080 0026     		mov	r6, #0
+  83              	.L7:
+  84 0082 0028     		cmp	r0, #0
+  85 0084 07D1     		bne	.L4
+  86 0086 C121     		mov	r1, #193
+  87 0088 381C     		mov	r0, r7
+  88 008a C900     		lsl	r1, r1, #3
+  89 008c 1C22     		mov	r2, #28
+  90 008e FFF7FEFF 		bl	EtherOutput
+  91 0092 0028     		cmp	r0, #0
+  92 0094 4FDB     		blt	.L9
+  93              	.L4:
+  94 0096 C120     		mov	r0, #193
+  95 0098 FA21     		mov	r1, #250
+  96 009a C000     		lsl	r0, r0, #3
+  97 009c 8900     		lsl	r1, r1, #2
+  98 009e FFF7FEFF 		bl	EtherInput
+  99 00a2 0028     		cmp	r0, #0
+ 100 00a4 03DC     		bgt	.L5
+ 101 00a6 0136     		add	r6, r6, #1
+ 102 00a8 3606     		lsl	r6, r6, #24
+ 103 00aa 360E     		lsr	r6, r6, #24
+ 104 00ac 41E0     		b	.L6
+ 105              	.L5:
+ 106 00ae 294A     		ldr	r2, .L11+16
+ 107 00b0 D37F     		ldrb	r3, [r2, #31]
+ 108 00b2 221C     		mov	r2, r4
+ 109 00b4 0832     		add	r2, r2, #8
+ 110 00b6 D27F     		ldrb	r2, [r2, #31]
+ 111 00b8 1202     		lsl	r2, r2, #8
+ 112 00ba 1A43     		orr	r2, r2, r3
+ 113 00bc 231C     		mov	r3, r4
+ 114 00be 2833     		add	r3, r3, #40
+ARM GAS  C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\ccNXh8WZ.s 			page 3
+
+
+ 115 00c0 1B78     		ldrb	r3, [r3]
+ 116 00c2 1B04     		lsl	r3, r3, #16
+ 117 00c4 1A43     		orr	r2, r2, r3
+ 118 00c6 231C     		mov	r3, r4
+ 119 00c8 2933     		add	r3, r3, #41
+ 120 00ca 1B78     		ldrb	r3, [r3]
+ 121 00cc 1B06     		lsl	r3, r3, #24
+ 122 00ce 1A43     		orr	r2, r2, r3
+ 123 00d0 0192     		str	r2, [sp, #4]
+ 124 00d2 214B     		ldr	r3, .L11+20
+ 125 00d4 5A7C     		ldrb	r2, [r3, #17]
+ 126 00d6 197C     		ldrb	r1, [r3, #16]
+ 127 00d8 1202     		lsl	r2, r2, #8
+ 128 00da 1143     		orr	r1, r1, r2
+ 129 00dc 9A7C     		ldrb	r2, [r3, #18]
+ 130 00de DB7C     		ldrb	r3, [r3, #19]
+ 131 00e0 1204     		lsl	r2, r2, #16
+ 132 00e2 1143     		orr	r1, r1, r2
+ 133 00e4 1B06     		lsl	r3, r3, #24
+ 134 00e6 019A     		ldr	r2, [sp, #4]
+ 135 00e8 0B43     		orr	r3, r3, r1
+ 136 00ea 9A42     		cmp	r2, r3
+ 137 00ec 21D1     		bne	.L6
+ 138 00ee 627D     		ldrb	r2, [r4, #21]
+ 139 00f0 217D     		ldrb	r1, [r4, #20]
+ 140 00f2 1202     		lsl	r2, r2, #8
+ 141 00f4 8023     		mov	r3, #128
+ 142 00f6 9B00     		lsl	r3, r3, #2
+ 143 00f8 0A43     		orr	r2, r2, r1
+ 144 00fa 9A42     		cmp	r2, r3
+ 145 00fc 19D1     		bne	.L6
+ 146 00fe 637F     		ldrb	r3, [r4, #29]
+ 147 0100 227F     		ldrb	r2, [r4, #28]
+ 148 0102 1B02     		lsl	r3, r3, #8
+ 149 0104 1343     		orr	r3, r3, r2
+ 150 0106 A27F     		ldrb	r2, [r4, #30]
+ 151 0108 1204     		lsl	r2, r2, #16
+ 152 010a 1343     		orr	r3, r3, r2
+ 153 010c E27F     		ldrb	r2, [r4, #31]
+ 154 010e 1206     		lsl	r2, r2, #24
+ 155 0110 1343     		orr	r3, r3, r2
+ 156 0112 AB42     		cmp	r3, r5
+ 157 0114 0DD1     		bne	.L6
+ 158 0116 0B48     		ldr	r0, .L11
+ 159 0118 1634     		add	r4, r4, #22
+ 160 011a 211C     		mov	r1, r4
+ 161 011c 20C0     		stmia	r0!, {r5}
+ 162 011e 0622     		mov	r2, #6
+ 163 0120 FFF7FEFF 		bl	memcpy_
+ 164 0124 211C     		mov	r1, r4
+ 165 0126 381C     		mov	r0, r7
+ 166 0128 0622     		mov	r2, #6
+ 167 012a FFF7FEFF 		bl	memcpy_
+ 168 012e 0024     		mov	r4, #0
+ 169 0130 03E0     		b	.L2
+ 170              	.L6:
+ 171 0132 022E     		cmp	r6, #2
+ARM GAS  C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\ccNXh8WZ.s 			page 4
+
+
+ 172 0134 A5D9     		bls	.L7
+ 173              	.L9:
+ 174 0136 0124     		mov	r4, #1
+ 175 0138 6442     		neg	r4, r4
+ 176              	.L2:
+ 177 013a 03B0     		add	sp, sp, #12
+ 178 013c 201C     		mov	r0, r4
+ 179              		@ sp needed for prologue
+ 180 013e F0BC     		pop	{r4, r5, r6, r7}
+ 181 0140 02BC     		pop	{r1}
+ 182 0142 0847     		bx	r1
+ 183              	.L12:
+ 184              		.align	2
+ 185              	.L11:
+ 186 0144 00000000 		.word	.LANCHOR0
+ 187 0148 00000000 		.word	arpframe
+ 188 014c 0A000000 		.word	confnet+10
+ 189 0150 00000000 		.word	rframe
+ 190 0154 07000000 		.word	rframe+7
+ 191 0158 00000000 		.word	confnet
+ 192              		.size	ArpRequest, .-ArpRequest
+ 193              		.align	1
+ 194              		.global	ArpRespond
+ 195              		.code	16
+ 196              		.thumb_func
+ 197              		.type	ArpRespond, %function
+ 198              	ArpRespond:
+ 199 015c 70B5     		push	{r4, r5, r6, lr}
+ 200 015e 304D     		ldr	r5, .L16
+ 201 0160 6B7C     		ldrb	r3, [r5, #17]
+ 202 0162 2A7C     		ldrb	r2, [r5, #16]
+ 203 0164 1B02     		lsl	r3, r3, #8
+ 204 0166 1343     		orr	r3, r3, r2
+ 205 0168 AA7C     		ldrb	r2, [r5, #18]
+ 206 016a 1204     		lsl	r2, r2, #16
+ 207 016c 1343     		orr	r3, r3, r2
+ 208 016e EA7C     		ldrb	r2, [r5, #19]
+ 209 0170 2C4C     		ldr	r4, .L16+4
+ 210 0172 1206     		lsl	r2, r2, #24
+ 211 0174 1343     		orr	r3, r3, r2
+ 212 0176 228D     		ldrh	r2, [r4, #40]
+ 213 0178 E18C     		ldrh	r1, [r4, #38]
+ 214 017a 1204     		lsl	r2, r2, #16
+ 215 017c 0A43     		orr	r2, r2, r1
+ 216 017e 9A42     		cmp	r2, r3
+ 217 0180 11D1     		bne	.L14
+ 218 0182 A38A     		ldrh	r3, [r4, #20]
+ 219 0184 1A06     		lsl	r2, r3, #24
+ 220 0186 120C     		lsr	r2, r2, #16
+ 221 0188 1B0A     		lsr	r3, r3, #8
+ 222 018a 1A43     		orr	r2, r2, r3
+ 223 018c 8023     		mov	r3, #128
+ 224 018e 9B00     		lsl	r3, r3, #2
+ 225 0190 9A42     		cmp	r2, r3
+ 226 0192 41D1     		bne	.L13
+ 227 0194 E369     		ldr	r3, [r4, #28]
+ 228 0196 2448     		ldr	r0, .L16+8
+ARM GAS  C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\ccNXh8WZ.s 			page 5
+
+
+ 229 0198 211C     		mov	r1, r4
+ 230 019a 08C0     		stmia	r0!, {r3}
+ 231 019c 1631     		add	r1, r1, #22
+ 232 019e 0622     		mov	r2, #6
+ 233 01a0 FFF7FEFF 		bl	memcpy_
+ 234 01a4 38E0     		b	.L13
+ 235              	.L14:
+ 236 01a6 E269     		ldr	r2, [r4, #28]
+ 237 01a8 9A42     		cmp	r2, r3
+ 238 01aa 35D1     		bne	.L13
+ 239 01ac A38A     		ldrh	r3, [r4, #20]
+ 240 01ae 1A06     		lsl	r2, r3, #24
+ 241 01b0 120C     		lsr	r2, r2, #16
+ 242 01b2 1B0A     		lsr	r3, r3, #8
+ 243 01b4 1A43     		orr	r2, r2, r3
+ 244 01b6 8023     		mov	r3, #128
+ 245 01b8 5B00     		lsl	r3, r3, #1
+ 246 01ba 9A42     		cmp	r2, r3
+ 247 01bc 2CD1     		bne	.L13
+ 248 01be 0123     		mov	r3, #1
+ 249 01c0 E381     		strh	r3, [r4, #14]
+ 250 01c2 0823     		mov	r3, #8
+ 251 01c4 2382     		strh	r3, [r4, #16]
+ 252 01c6 0623     		mov	r3, #6
+ 253 01c8 A374     		strb	r3, [r4, #18]
+ 254 01ca 261C     		mov	r6, r4
+ 255 01cc 0423     		mov	r3, #4
+ 256 01ce E374     		strb	r3, [r4, #19]
+ 257 01d0 1636     		add	r6, r6, #22
+ 258 01d2 0223     		mov	r3, #2
+ 259 01d4 201C     		mov	r0, r4
+ 260 01d6 A382     		strh	r3, [r4, #20]
+ 261 01d8 2030     		add	r0, r0, #32
+ 262 01da 311C     		mov	r1, r6
+ 263 01dc 0622     		mov	r2, #6
+ 264 01de FFF7FEFF 		bl	memcpy_
+ 265 01e2 A38B     		ldrh	r3, [r4, #28]
+ 266 01e4 E384     		strh	r3, [r4, #38]
+ 267 01e6 E38B     		ldrh	r3, [r4, #30]
+ 268 01e8 291C     		mov	r1, r5
+ 269 01ea 2385     		strh	r3, [r4, #40]
+ 270 01ec 0A31     		add	r1, r1, #10
+ 271 01ee 301C     		mov	r0, r6
+ 272 01f0 0622     		mov	r2, #6
+ 273 01f2 FFF7FEFF 		bl	memcpy_
+ 274 01f6 6B7C     		ldrb	r3, [r5, #17]
+ 275 01f8 2A7C     		ldrb	r2, [r5, #16]
+ 276 01fa 1B02     		lsl	r3, r3, #8
+ 277 01fc 1343     		orr	r3, r3, r2
+ 278 01fe AA7C     		ldrb	r2, [r5, #18]
+ 279 0200 1204     		lsl	r2, r2, #16
+ 280 0202 1343     		orr	r3, r3, r2
+ 281 0204 EA7C     		ldrb	r2, [r5, #19]
+ 282 0206 1206     		lsl	r2, r2, #24
+ 283 0208 1343     		orr	r3, r3, r2
+ 284 020a C121     		mov	r1, #193
+ 285 020c E361     		str	r3, [r4, #28]
+ARM GAS  C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\ccNXh8WZ.s 			page 6
+
+
+ 286 020e 0020     		mov	r0, #0
+ 287 0210 C900     		lsl	r1, r1, #3
+ 288 0212 1C22     		mov	r2, #28
+ 289 0214 FFF7FEFF 		bl	EtherOutput
+ 290              	.L13:
+ 291              		@ sp needed for prologue
+ 292 0218 70BC     		pop	{r4, r5, r6}
+ 293 021a 01BC     		pop	{r0}
+ 294 021c 0047     		bx	r0
+ 295              	.L17:
+ 296 021e C046     		.align	2
+ 297              	.L16:
+ 298 0220 00000000 		.word	confnet
+ 299 0224 00000000 		.word	arpframe
+ 300 0228 00000000 		.word	ae
+ 301              		.size	ArpRespond, .-ArpRespond
+ 302              		.comm	arpframe,42,4
+ 303              		.comm	ae,12,4
+ 304              		.bss
+ 305              		.align	2
+ 306              		.set	.LANCHOR0,. + 0
+ 307              		.type	arptab_ip, %object
+ 308              		.size	arptab_ip, 4
+ 309              	arptab_ip:
+ 310 0000 00000000 		.space	4
+ 311              		.type	arptab_ha, %object
+ 312              		.size	arptab_ha, 6
+ 313              	arptab_ha:
+ 314 0004 00000000 		.space	6
+ 314      0000
+ 315 000a 0000     		.ident	"GCC: (GNU) 4.5.2"
+ARM GAS  C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\ccNXh8WZ.s 			page 7
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 arp.c
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\ccNXh8WZ.s:14     .text:00000000 $t
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\ccNXh8WZ.s:19     .text:00000000 ArpRequest
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\ccNXh8WZ.s:186    .text:00000144 $d
+                            *COM*:0000002a arpframe
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\ccNXh8WZ.s:193    .text:0000015c $t
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\ccNXh8WZ.s:198    .text:0000015c ArpRespond
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\ccNXh8WZ.s:298    .text:00000220 $d
+                            *COM*:0000000c ae
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\ccNXh8WZ.s:305    .bss:00000000 $d
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\ccNXh8WZ.s:309    .bss:00000000 arptab_ip
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\ccNXh8WZ.s:313    .bss:00000004 arptab_ha
+
+UNDEFINED SYMBOLS
+memset_
+memcpy_
+EtherOutput
+EtherInput
+confnet
+rframe

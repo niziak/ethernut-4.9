@@ -1,0 +1,425 @@
+ARM GAS  C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\cc1YsOei.s 			page 1
+
+
+   1              		.cpu arm7tdmi
+   2              		.fpu softvfp
+   3              		.eabi_attribute 20, 1
+   4              		.eabi_attribute 21, 1
+   5              		.eabi_attribute 23, 3
+   6              		.eabi_attribute 24, 1
+   7              		.eabi_attribute 25, 1
+   8              		.eabi_attribute 26, 1
+   9              		.eabi_attribute 30, 4
+  10              		.eabi_attribute 18, 4
+  11              		.code	16
+  12              		.file	"nvmem.c"
+  13              		.text
+  14              		.align	1
+  15              		.code	16
+  16              		.thumb_func
+  17              		.type	NplSpiTransfer, %function
+  18              	NplSpiTransfer:
+  19 0000 70B5     		push	{r4, r5, r6, lr}
+  20 0002 0225     		mov	r5, #2
+  21 0004 0E4B     		ldr	r3, .L9
+  22 0006 0F4C     		ldr	r4, .L9+4
+  23 0008 0F4E     		ldr	r6, .L9+8
+  24 000a 2840     		and	r0, r0, r5
+  25 000c 0FE0     		b	.L2
+  26              	.L7:
+  27 000e 0D78     		ldrb	r5, [r1]
+  28 0010 2570     		strb	r5, [r4]
+  29 0012 02E0     		b	.L3
+  30              	.L5:
+  31 0014 002B     		cmp	r3, #0
+  32 0016 0EDD     		ble	.L8
+  33 0018 013B     		sub	r3, r3, #1
+  34              	.L3:
+  35 001a 3578     		ldrb	r5, [r6]
+  36 001c 2D06     		lsl	r5, r5, #24
+  37 001e 002D     		cmp	r5, #0
+  38 0020 F8DA     		bge	.L5
+  39 0022 2578     		ldrb	r5, [r4]
+  40 0024 0028     		cmp	r0, #0
+  41 0026 00D0     		beq	.L6
+  42 0028 0D70     		strb	r5, [r1]
+  43              	.L6:
+  44 002a 0131     		add	r1, r1, #1
+  45 002c 013A     		sub	r2, r2, #1
+  46              	.L2:
+  47 002e 002A     		cmp	r2, #0
+  48 0030 EDD1     		bne	.L7
+  49 0032 0020     		mov	r0, #0
+  50 0034 01E0     		b	.L4
+  51              	.L8:
+  52 0036 0120     		mov	r0, #1
+  53 0038 4042     		neg	r0, r0
+  54              	.L4:
+  55              		@ sp needed for prologue
+  56 003a 70BC     		pop	{r4, r5, r6}
+  57 003c 02BC     		pop	{r1}
+ARM GAS  C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\cc1YsOei.s 			page 2
+
+
+  58 003e 0847     		bx	r1
+  59              	.L10:
+  60              		.align	2
+  61              	.L9:
+  62 0040 204E0000 		.word	20000
+  63 0044 14000021 		.word	553648148
+  64 0048 0C000021 		.word	553648140
+  65              		.size	NplSpiTransfer, .-NplSpiTransfer
+  66              		.align	1
+  67              		.code	16
+  68              		.thumb_func
+  69              		.type	At45dCommand, %function
+  70              	At45dCommand:
+  71 004c F0B5     		push	{r4, r5, r6, r7, lr}
+  72 004e 85B0     		sub	sp, sp, #20
+  73 0050 02AC     		add	r4, sp, #8
+  74 0052 171C     		mov	r7, r2
+  75 0054 1206     		lsl	r2, r2, #24
+  76 0056 0190     		str	r0, [sp, #4]
+  77 0058 120E     		lsr	r2, r2, #24
+  78 005a 0D1C     		mov	r5, r1
+  79 005c 201C     		mov	r0, r4
+  80 005e 0021     		mov	r1, #0
+  81 0060 0093     		str	r3, [sp]
+  82 0062 0A9E     		ldr	r6, [sp, #40]
+  83 0064 FFF7FEFF 		bl	memset_
+  84 0068 6A46     		mov	r2, sp
+  85 006a 131D     		add	r3, r2, #4
+  86 006c 1A78     		ldrb	r2, [r3]
+  87 006e 2270     		strb	r2, [r4]
+  88 0070 002D     		cmp	r5, #0
+  89 0072 04D0     		beq	.L12
+  90 0074 2B0C     		lsr	r3, r5, #16
+  91 0076 6370     		strb	r3, [r4, #1]
+  92 0078 2B0A     		lsr	r3, r5, #8
+  93 007a A370     		strb	r3, [r4, #2]
+  94 007c E570     		strb	r5, [r4, #3]
+  95              	.L12:
+  96 007e 124B     		ldr	r3, .L16
+  97 0080 1A78     		ldrb	r2, [r3]
+  98 0082 0821     		mov	r1, #8
+  99 0084 8A43     		bic	r2, r2, r1
+ 100 0086 1A70     		strb	r2, [r3]
+ 101 0088 0120     		mov	r0, #1
+ 102 008a 02A9     		add	r1, sp, #8
+ 103 008c 3A1C     		mov	r2, r7
+ 104 008e FFF7B7FF 		bl	NplSpiTransfer
+ 105 0092 0028     		cmp	r0, #0
+ 106 0094 0CD1     		bne	.L13
+ 107 0096 002E     		cmp	r6, #0
+ 108 0098 03DD     		ble	.L14
+ 109 009a 0120     		mov	r0, #1
+ 110 009c 0099     		ldr	r1, [sp]
+ 111 009e 321C     		mov	r2, r6
+ 112 00a0 04E0     		b	.L15
+ 113              	.L14:
+ 114 00a2 002E     		cmp	r6, #0
+ARM GAS  C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\cc1YsOei.s 			page 3
+
+
+ 115 00a4 04D0     		beq	.L13
+ 116 00a6 0099     		ldr	r1, [sp]
+ 117 00a8 7242     		neg	r2, r6
+ 118 00aa 0220     		mov	r0, #2
+ 119              	.L15:
+ 120 00ac FFF7A8FF 		bl	NplSpiTransfer
+ 121              	.L13:
+ 122 00b0 054B     		ldr	r3, .L16
+ 123 00b2 1978     		ldrb	r1, [r3]
+ 124 00b4 0822     		mov	r2, #8
+ 125 00b6 0A43     		orr	r2, r2, r1
+ 126 00b8 1206     		lsl	r2, r2, #24
+ 127 00ba 120E     		lsr	r2, r2, #24
+ 128 00bc 05B0     		add	sp, sp, #20
+ 129 00be 1A70     		strb	r2, [r3]
+ 130              		@ sp needed for prologue
+ 131 00c0 F0BC     		pop	{r4, r5, r6, r7}
+ 132 00c2 02BC     		pop	{r1}
+ 133 00c4 0847     		bx	r1
+ 134              	.L17:
+ 135 00c6 C046     		.align	2
+ 136              	.L16:
+ 137 00c8 18000021 		.word	553648152
+ 138              		.size	At45dCommand, .-At45dCommand
+ 139              		.align	1
+ 140              		.global	NvMemRead
+ 141              		.code	16
+ 142              		.thumb_func
+ 143              		.type	NvMemRead, %function
+ 144              	NvMemRead:
+ 145 00cc 10B5     		push	{r4, lr}
+ 146 00ce 031C     		mov	r3, r0
+ 147 00d0 0948     		ldr	r0, .L21
+ 148 00d2 0468     		ldr	r4, [r0]
+ 149 00d4 002C     		cmp	r4, #0
+ 150 00d6 09D0     		beq	.L20
+ 151 00d8 0430     		add	r0, r0, #4
+ 152 00da C318     		add	r3, r0, r3
+ 153 00dc 1206     		lsl	r2, r2, #24
+ 154 00de 081C     		mov	r0, r1
+ 155 00e0 120E     		lsr	r2, r2, #24
+ 156 00e2 191C     		mov	r1, r3
+ 157 00e4 FFF7FEFF 		bl	memcpy_
+ 158 00e8 0020     		mov	r0, #0
+ 159 00ea 01E0     		b	.L19
+ 160              	.L20:
+ 161 00ec 0120     		mov	r0, #1
+ 162 00ee 4042     		neg	r0, r0
+ 163              	.L19:
+ 164              		@ sp needed for prologue
+ 165 00f0 10BC     		pop	{r4}
+ 166 00f2 02BC     		pop	{r1}
+ 167 00f4 0847     		bx	r1
+ 168              	.L22:
+ 169 00f6 C046     		.align	2
+ 170              	.L21:
+ 171 00f8 00000000 		.word	.LANCHOR0
+ARM GAS  C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\cc1YsOei.s 			page 4
+
+
+ 172              		.size	NvMemRead, .-NvMemRead
+ 173              		.align	1
+ 174              		.global	NvMemWrite
+ 175              		.code	16
+ 176              		.thumb_func
+ 177              		.type	NvMemWrite, %function
+ 178              	NvMemWrite:
+ 179 00fc 10B5     		push	{r4, lr}
+ 180 00fe 164C     		ldr	r4, .L30
+ 181 0100 2368     		ldr	r3, [r4]
+ 182 0102 82B0     		sub	sp, sp, #8
+ 183 0104 002B     		cmp	r3, #0
+ 184 0106 20D0     		beq	.L26
+ 185 0108 0434     		add	r4, r4, #4
+ 186 010a 1206     		lsl	r2, r2, #24
+ 187 010c 2018     		add	r0, r4, r0
+ 188 010e 120E     		lsr	r2, r2, #24
+ 189 0110 FFF7FEFF 		bl	memcpy_
+ 190 0114 8423     		mov	r3, #132
+ 191 0116 9B00     		lsl	r3, r3, #2
+ 192 0118 0093     		str	r3, [sp]
+ 193 011a 8420     		mov	r0, #132
+ 194 011c 231C     		mov	r3, r4
+ 195 011e 0021     		mov	r1, #0
+ 196 0120 0422     		mov	r2, #4
+ 197 0122 FFF793FF 		bl	At45dCommand
+ 198 0126 0124     		mov	r4, #1
+ 199 0128 0028     		cmp	r0, #0
+ 200 012a 09D1     		bne	.L29
+ 201 012c 0090     		str	r0, [sp]
+ 202 012e 0B49     		ldr	r1, .L30+4
+ 203 0130 8320     		mov	r0, #131
+ 204 0132 0422     		mov	r2, #4
+ 205 0134 0023     		mov	r3, #0
+ 206 0136 FFF789FF 		bl	At45dCommand
+ 207 013a 041C     		mov	r4, r0
+ 208 013c 601E     		sub	r0, r4, #1
+ 209 013e 8441     		sbc	r4, r4, r0
+ 210              	.L29:
+ 211 0140 0A20     		mov	r0, #10
+ 212 0142 6442     		neg	r4, r4
+ 213 0144 FFF7FEFF 		bl	Delay
+ 214 0148 01E0     		b	.L24
+ 215              	.L26:
+ 216 014a 0124     		mov	r4, #1
+ 217 014c 6442     		neg	r4, r4
+ 218              	.L24:
+ 219 014e 02B0     		add	sp, sp, #8
+ 220 0150 201C     		mov	r0, r4
+ 221              		@ sp needed for prologue
+ 222 0152 10BC     		pop	{r4}
+ 223 0154 02BC     		pop	{r1}
+ 224 0156 0847     		bx	r1
+ 225              	.L31:
+ 226              		.align	2
+ 227              	.L30:
+ 228 0158 00000000 		.word	.LANCHOR0
+ARM GAS  C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\cc1YsOei.s 			page 5
+
+
+ 229 015c 00FC7F00 		.word	8387584
+ 230              		.size	NvMemWrite, .-NvMemWrite
+ 231              		.align	1
+ 232              		.global	NvMemInit
+ 233              		.code	16
+ 234              		.thumb_func
+ 235              		.type	NvMemInit, %function
+ 236              	NvMemInit:
+ 237 0160 30B5     		push	{r4, r5, lr}
+ 238 0162 85B0     		sub	sp, sp, #20
+ 239 0164 FFF7FEFF 		bl	TwInit
+ 240 0168 03AC     		add	r4, sp, #12
+ 241 016a 0923     		mov	r3, #9
+ 242 016c 2370     		strb	r3, [r4]
+ 243 016e 0123     		mov	r3, #1
+ 244 0170 0093     		str	r3, [sp]
+ 245 0172 6B46     		mov	r3, sp
+ 246 0174 0025     		mov	r5, #0
+ 247 0176 6920     		mov	r0, #105
+ 248 0178 211C     		mov	r1, r4
+ 249 017a 0122     		mov	r2, #1
+ 250 017c 0D33     		add	r3, r3, #13
+ 251 017e 0195     		str	r5, [sp, #4]
+ 252 0180 FFF7FEFF 		bl	TwMasterTransact
+ 253 0184 0128     		cmp	r0, #1
+ 254 0186 0DD1     		bne	.L33
+ 255 0188 6378     		ldrb	r3, [r4, #1]
+ 256 018a 7F22     		mov	r2, #127
+ 257 018c 9343     		bic	r3, r3, r2
+ 258 018e 0222     		mov	r2, #2
+ 259 0190 1343     		orr	r3, r3, r2
+ 260 0192 6370     		strb	r3, [r4, #1]
+ 261 0194 6920     		mov	r0, #105
+ 262 0196 211C     		mov	r1, r4
+ 263 0198 0222     		mov	r2, #2
+ 264 019a 0023     		mov	r3, #0
+ 265 019c 0095     		str	r5, [sp]
+ 266 019e 0195     		str	r5, [sp, #4]
+ 267 01a0 FFF7FEFF 		bl	TwMasterTransact
+ 268              	.L33:
+ 269 01a4 03AC     		add	r4, sp, #12
+ 270 01a6 0823     		mov	r3, #8
+ 271 01a8 2370     		strb	r3, [r4]
+ 272 01aa 0123     		mov	r3, #1
+ 273 01ac 0093     		str	r3, [sp]
+ 274 01ae 6B46     		mov	r3, sp
+ 275 01b0 0025     		mov	r5, #0
+ 276 01b2 6920     		mov	r0, #105
+ 277 01b4 211C     		mov	r1, r4
+ 278 01b6 0122     		mov	r2, #1
+ 279 01b8 0D33     		add	r3, r3, #13
+ 280 01ba 0195     		str	r5, [sp, #4]
+ 281 01bc FFF7FEFF 		bl	TwMasterTransact
+ 282 01c0 0128     		cmp	r0, #1
+ 283 01c2 0DD1     		bne	.L34
+ 284 01c4 6378     		ldrb	r3, [r4, #1]
+ 285 01c6 7F22     		mov	r2, #127
+ARM GAS  C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\cc1YsOei.s 			page 6
+
+
+ 286 01c8 9343     		bic	r3, r3, r2
+ 287 01ca 0222     		mov	r2, #2
+ 288 01cc 1343     		orr	r3, r3, r2
+ 289 01ce 6370     		strb	r3, [r4, #1]
+ 290 01d0 6920     		mov	r0, #105
+ 291 01d2 211C     		mov	r1, r4
+ 292 01d4 0222     		mov	r2, #2
+ 293 01d6 0023     		mov	r3, #0
+ 294 01d8 0095     		str	r5, [sp]
+ 295 01da 0195     		str	r5, [sp, #4]
+ 296 01dc FFF7FEFF 		bl	TwMasterTransact
+ 297              	.L34:
+ 298 01e0 144B     		ldr	r3, .L36
+ 299 01e2 1B88     		ldrh	r3, [r3]
+ 300 01e4 02AD     		add	r5, sp, #8
+ 301 01e6 144C     		ldr	r4, .L36+4
+ 302 01e8 2B80     		strh	r3, [r5]
+ 303 01ea 2378     		ldrb	r3, [r4]
+ 304 01ec 0822     		mov	r2, #8
+ 305 01ee 9343     		bic	r3, r3, r2
+ 306 01f0 2370     		strb	r3, [r4]
+ 307 01f2 0222     		mov	r2, #2
+ 308 01f4 0320     		mov	r0, #3
+ 309 01f6 291C     		mov	r1, r5
+ 310 01f8 FFF702FF 		bl	NplSpiTransfer
+ 311 01fc 2278     		ldrb	r2, [r4]
+ 312 01fe 0823     		mov	r3, #8
+ 313 0200 1343     		orr	r3, r3, r2
+ 314 0202 1B06     		lsl	r3, r3, #24
+ 315 0204 1B0E     		lsr	r3, r3, #24
+ 316 0206 2370     		strb	r3, [r4]
+ 317 0208 6B78     		ldrb	r3, [r5, #1]
+ 318 020a 3D22     		mov	r2, #61
+ 319 020c 1340     		and	r3, r3, r2
+ 320 020e 342B     		cmp	r3, #52
+ 321 0210 0CD1     		bne	.L32
+ 322 0212 0A4A     		ldr	r2, .L36+8
+ 323 0214 0A4C     		ldr	r4, .L36+12
+ 324 0216 0092     		str	r2, [sp]
+ 325 0218 231D     		add	r3, r4, #4
+ 326 021a E820     		mov	r0, #232
+ 327 021c 0949     		ldr	r1, .L36+16
+ 328 021e 0822     		mov	r2, #8
+ 329 0220 FFF714FF 		bl	At45dCommand
+ 330 0224 0028     		cmp	r0, #0
+ 331 0226 01D1     		bne	.L32
+ 332 0228 0123     		mov	r3, #1
+ 333 022a 2360     		str	r3, [r4]
+ 334              	.L32:
+ 335 022c 05B0     		add	sp, sp, #20
+ 336              		@ sp needed for prologue
+ 337 022e 30BC     		pop	{r4, r5}
+ 338 0230 01BC     		pop	{r0}
+ 339 0232 0047     		bx	r0
+ 340              	.L37:
+ 341              		.align	2
+ 342              	.L36:
+ARM GAS  C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\cc1YsOei.s 			page 7
+
+
+ 343 0234 00000000 		.word	.LANCHOR1
+ 344 0238 18000021 		.word	553648152
+ 345 023c F0FDFFFF 		.word	-528
+ 346 0240 00000000 		.word	.LANCHOR0
+ 347 0244 00FC7F00 		.word	8387584
+ 348              		.size	NvMemInit, .-NvMemInit
+ 349              		.section	.rodata
+ 350              		.align	2
+ 351              		.set	.LANCHOR1,. + 0
+ 352              		.type	C.0.2121, %object
+ 353              		.size	C.0.2121, 2
+ 354              	C.0.2121:
+ 355 0000 D7       		.byte	-41
+ 356 0001 FF       		.byte	-1
+ 357 0002 0000     		.bss
+ 358              		.align	2
+ 359              		.set	.LANCHOR0,. + 0
+ 360              		.type	at45d_avail, %object
+ 361              		.size	at45d_avail, 4
+ 362              	at45d_avail:
+ 363 0000 00000000 		.space	4
+ 364              		.type	page_buf, %object
+ 365              		.size	page_buf, 528
+ 366              	page_buf:
+ 367 0004 00000000 		.space	528
+ 367      00000000 
+ 367      00000000 
+ 367      00000000 
+ 367      00000000 
+ 368              		.ident	"GCC: (GNU) 4.5.2"
+ARM GAS  C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\cc1YsOei.s 			page 8
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 nvmem.c
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\cc1YsOei.s:14     .text:00000000 $t
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\cc1YsOei.s:18     .text:00000000 NplSpiTransfer
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\cc1YsOei.s:62     .text:00000040 $d
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\cc1YsOei.s:66     .text:0000004c $t
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\cc1YsOei.s:70     .text:0000004c At45dCommand
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\cc1YsOei.s:137    .text:000000c8 $d
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\cc1YsOei.s:139    .text:000000cc $t
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\cc1YsOei.s:144    .text:000000cc NvMemRead
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\cc1YsOei.s:171    .text:000000f8 $d
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\cc1YsOei.s:173    .text:000000fc $t
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\cc1YsOei.s:178    .text:000000fc NvMemWrite
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\cc1YsOei.s:228    .text:00000158 $d
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\cc1YsOei.s:231    .text:00000160 $t
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\cc1YsOei.s:236    .text:00000160 NvMemInit
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\cc1YsOei.s:343    .text:00000234 $d
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\cc1YsOei.s:350    .rodata:00000000 $d
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\cc1YsOei.s:354    .rodata:00000000 C.0.2121
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\cc1YsOei.s:358    .bss:00000000 $d
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\cc1YsOei.s:362    .bss:00000000 at45d_avail
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\cc1YsOei.s:366    .bss:00000004 page_buf
+
+UNDEFINED SYMBOLS
+memset_
+memcpy_
+Delay
+TwInit
+TwMasterTransact

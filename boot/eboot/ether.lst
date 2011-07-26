@@ -1,0 +1,629 @@
+GAS LISTING C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/ccEZwfBq.s 			page 1
+
+
+   1               		.file	"ether.c"
+   2               	__SREG__ = 0x3f
+   3               	__SP_H__ = 0x3e
+   4               	__SP_L__ = 0x3d
+   5               	__CCP__  = 0x34
+   6               	__tmp_reg__ = 0
+   7               	__zero_reg__ = 1
+   8               		.text
+   9               	.global	EEPROM_read
+  10               		.type	EEPROM_read, @function
+  11               	EEPROM_read:
+  12               	/* prologue: function */
+  13               	/* frame size = 0 */
+  14               	.L2:
+  15 0000 E199      		sbic 60-32,1
+  16 0002 00C0      		rjmp .L2
+  17 0004 9FBB      		out (62)+1-32,r25
+  18 0006 8EBB      		out 62-32,r24
+  19 0008 E09A      		sbi 60-32,0
+  20 000a 8DB3      		in r24,61-32
+  21               	/* epilogue start */
+  22 000c 0895      		ret
+  23               		.size	EEPROM_read, .-EEPROM_read
+  24               	.global	EtherOutput
+  25               		.type	EtherOutput, @function
+  26               	EtherOutput:
+  27 000e EF92      		push r14
+  28 0010 FF92      		push r15
+  29 0012 0F93      		push r16
+  30 0014 1F93      		push r17
+  31 0016 CF93      		push r28
+  32 0018 DF93      		push r29
+  33               	/* prologue: function */
+  34               	/* frame size = 0 */
+  35 001a 7C01      		movw r14,r24
+  36 001c 86E0      		ldi r24,hi8(1544)
+  37 001e 6830      		cpi r22,lo8(1544)
+  38 0020 7807      		cpc r23,r24
+  39 0022 01F0      		breq .L6
+  40 0024 C0E0      		ldi r28,lo8(sframe)
+  41 0026 D0E0      		ldi r29,hi8(sframe)
+  42 0028 00C0      		rjmp .L24
+  43               	.L6:
+  44 002a C0E0      		ldi r28,lo8(arpframe)
+  45 002c D0E0      		ldi r29,hi8(arpframe)
+  46               	.L24:
+  47 002e 8E01      		movw r16,r28
+  48 0030 8091 0000 		lds r24,confnet+10
+  49 0034 8E83      		std Y+6,r24
+  50 0036 8091 0000 		lds r24,confnet+11
+  51 003a 8F83      		std Y+7,r24
+  52 003c 8091 0000 		lds r24,confnet+12
+  53 0040 8887      		std Y+8,r24
+  54 0042 8091 0000 		lds r24,confnet+13
+  55 0046 8987      		std Y+9,r24
+  56 0048 8091 0000 		lds r24,confnet+14
+  57 004c 8A87      		std Y+10,r24
+GAS LISTING C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/ccEZwfBq.s 			page 2
+
+
+  58 004e 8091 0000 		lds r24,confnet+15
+  59 0052 8B87      		std Y+11,r24
+  60 0054 E114      		cp r14,__zero_reg__
+  61 0056 F104      		cpc r15,__zero_reg__
+  62 0058 01F0      		breq .L8
+  63 005a 20E0      		ldi r18,lo8(0)
+  64 005c 30E0      		ldi r19,hi8(0)
+  65               	.L9:
+  66 005e FE01      		movw r30,r28
+  67 0060 E20F      		add r30,r18
+  68 0062 F31F      		adc r31,r19
+  69 0064 D701      		movw r26,r14
+  70 0066 A20F      		add r26,r18
+  71 0068 B31F      		adc r27,r19
+  72 006a 8C91      		ld r24,X
+  73 006c 8083      		st Z,r24
+  74 006e 2F5F      		subi r18,lo8(-(1))
+  75 0070 3F4F      		sbci r19,hi8(-(1))
+  76 0072 2630      		cpi r18,6
+  77 0074 3105      		cpc r19,__zero_reg__
+  78 0076 01F4      		brne .L9
+  79 0078 00C0      		rjmp .L10
+  80               	.L8:
+  81 007a 8FEF      		ldi r24,lo8(-1)
+  82 007c 8883      		st Y,r24
+  83 007e 8983      		std Y+1,r24
+  84 0080 8A83      		std Y+2,r24
+  85 0082 8B83      		std Y+3,r24
+  86 0084 8C83      		std Y+4,r24
+  87 0086 8D83      		std Y+5,r24
+  88               	.L10:
+  89 0088 7D87      		std Y+13,r23
+  90 008a 6C87      		std Y+12,r22
+  91 008c 425F      		subi r20,lo8(-(14))
+  92 008e 5F4F      		sbci r21,hi8(-(14))
+  93 0090 4C33      		cpi r20,60
+  94 0092 5105      		cpc r21,__zero_reg__
+  95 0094 00F0      		brlo .L11
+  96 0096 BA01      		movw r22,r20
+  97 0098 00C0      		rjmp .L12
+  98               	.L11:
+  99 009a 6CE3      		ldi r22,lo8(60)
+ 100 009c 70E0      		ldi r23,hi8(60)
+ 101               	.L12:
+ 102 009e 82E2      		ldi r24,lo8(34)
+ 103 00a0 8093 0083 		sts -32000,r24
+ 104 00a4 E62F      		mov r30,r22
+ 105 00a6 6093 0A83 		sts -31990,r22
+ 106 00aa 972F      		mov r25,r23
+ 107 00ac 7093 0B83 		sts -31989,r23
+ 108 00b0 1092 0883 		sts -31992,__zero_reg__
+ 109 00b4 80E4      		ldi r24,lo8(64)
+ 110 00b6 8093 0983 		sts -31991,r24
+ 111 00ba 82E1      		ldi r24,lo8(18)
+ 112 00bc 8093 0083 		sts -32000,r24
+ 113 00c0 20E0      		ldi r18,lo8(0)
+ 114 00c2 30E0      		ldi r19,hi8(0)
+GAS LISTING C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/ccEZwfBq.s 			page 3
+
+
+ 115 00c4 00C0      		rjmp .L13
+ 116               	.L14:
+ 117 00c6 D801      		movw r26,r16
+ 118 00c8 8D91      		ld r24,X+
+ 119 00ca 8D01      		movw r16,r26
+ 120 00cc 8093 1083 		sts -31984,r24
+ 121 00d0 2F5F      		subi r18,lo8(-(1))
+ 122 00d2 3F4F      		sbci r19,hi8(-(1))
+ 123               	.L13:
+ 124 00d4 2417      		cp r18,r20
+ 125 00d6 3507      		cpc r19,r21
+ 126 00d8 00F0      		brlo .L14
+ 127 00da 00C0      		rjmp .L15
+ 128               	.L16:
+ 129 00dc 1092 1083 		sts -31984,__zero_reg__
+ 130 00e0 4F5F      		subi r20,lo8(-(1))
+ 131 00e2 5F4F      		sbci r21,hi8(-(1))
+ 132               	.L15:
+ 133 00e4 4617      		cp r20,r22
+ 134 00e6 5707      		cpc r21,r23
+ 135 00e8 00F0      		brlo .L16
+ 136 00ea 82E2      		ldi r24,lo8(34)
+ 137 00ec 8093 0083 		sts -32000,r24
+ 138 00f0 20E0      		ldi r18,lo8(0)
+ 139 00f2 30E0      		ldi r19,hi8(0)
+ 140               	.L18:
+ 141 00f4 8091 0783 		lds r24,-31993
+ 142 00f8 86FD      		sbrc r24,6
+ 143 00fa 00C0      		rjmp .L17
+ 144 00fc 2F5F      		subi r18,lo8(-(1))
+ 145 00fe 3F4F      		sbci r19,hi8(-(1))
+ 146 0100 2531      		cpi r18,21
+ 147 0102 3105      		cpc r19,__zero_reg__
+ 148 0104 01F4      		brne .L18
+ 149               	.L17:
+ 150 0106 80E4      		ldi r24,lo8(64)
+ 151 0108 8093 0783 		sts -31993,r24
+ 152 010c E093 0583 		sts -31995,r30
+ 153 0110 9093 0683 		sts -31994,r25
+ 154 0114 8093 0483 		sts -31996,r24
+ 155 0118 86E2      		ldi r24,lo8(38)
+ 156 011a 8093 0083 		sts -32000,r24
+ 157               	.L19:
+ 158 011e 8091 0083 		lds r24,-32000
+ 159 0122 82FD      		sbrc r24,2
+ 160 0124 00C0      		rjmp .L19
+ 161 0126 80E0      		ldi r24,lo8(0)
+ 162 0128 90E0      		ldi r25,hi8(0)
+ 163               	/* epilogue start */
+ 164 012a DF91      		pop r29
+ 165 012c CF91      		pop r28
+ 166 012e 1F91      		pop r17
+ 167 0130 0F91      		pop r16
+ 168 0132 FF90      		pop r15
+ 169 0134 EF90      		pop r14
+ 170 0136 0895      		ret
+ 171               		.size	EtherOutput, .-EtherOutput
+GAS LISTING C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/ccEZwfBq.s 			page 4
+
+
+ 172               	.global	NicInit
+ 173               		.type	NicInit, @function
+ 174               	NicInit:
+ 175 0138 FF92      		push r15
+ 176 013a 0F93      		push r16
+ 177 013c 1F93      		push r17
+ 178               	/* prologue: function */
+ 179               	/* frame size = 0 */
+ 180 013e 10EC      		ldi r17,lo8(-64)
+ 181 0140 15BF      		out 85-32,r17
+ 182 0142 0091 1F83 		lds r16,-31969
+ 183 0146 65E0      		ldi r22,lo8(5)
+ 184 0148 70E0      		ldi r23,hi8(5)
+ 185 014a 80E0      		ldi r24,hlo8(5)
+ 186 014c 90E0      		ldi r25,hhi8(5)
+ 187 014e 0E94 0000 		call Delay
+ 188 0152 0093 1F83 		sts -31969,r16
+ 189 0156 68EE      		ldi r22,lo8(1000)
+ 190 0158 73E0      		ldi r23,hi8(1000)
+ 191 015a 80E0      		ldi r24,hlo8(1000)
+ 192 015c 90E0      		ldi r25,hhi8(1000)
+ 193 015e 0E94 0000 		call Delay
+ 194 0162 15BB      		out 53-32,r17
+ 195 0164 14BB      		out 52-32,r17
+ 196 0166 64E1      		ldi r22,lo8(20)
+ 197 0168 70E0      		ldi r23,hi8(20)
+ 198 016a 80E0      		ldi r24,hlo8(20)
+ 199 016c 90E0      		ldi r25,hhi8(20)
+ 200 016e 0E94 0000 		call Delay
+ 201 0172 81EE      		ldi r24,lo8(-31)
+ 202 0174 8093 0083 		sts -32000,r24
+ 203 0178 80E4      		ldi r24,lo8(64)
+ 204 017a 8093 0183 		sts -31999,r24
+ 205 017e 85B7      		in r24,85-32
+ 206 0180 8F77      		andi r24,lo8(127)
+ 207 0182 85BF      		out 85-32,r24
+ 208               	.L36:
+ 209 0184 9D99      		sbic 51-32,5
+ 210 0186 00C0      		rjmp .L26
+ 211 0188 8FEF      		ldi r24,lo8(-1)
+ 212 018a 9FEF      		ldi r25,hi8(-1)
+ 213 018c 00C0      		rjmp .L27
+ 214               	.L26:
+ 215 018e 8FEF      		ldi r24,lo8(-1)
+ 216 0190 9FEF      		ldi r25,hi8(-1)
+ 217 0192 00C0      		rjmp .L28
+ 218               	.L30:
+ 219 0194 0097      		sbiw r24,0
+ 220 0196 01F0      		breq .L29
+ 221               	.L28:
+ 222 0198 0197      		sbiw r24,1
+ 223 019a 9D99      		sbic 51-32,5
+ 224 019c 00C0      		rjmp .L30
+ 225 019e 00C0      		rjmp .L36
+ 226               	.L32:
+ 227 01a0 0097      		sbiw r24,0
+ 228 01a2 01F0      		breq .L29
+GAS LISTING C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/ccEZwfBq.s 			page 5
+
+
+ 229               	.L27:
+ 230 01a4 0197      		sbiw r24,1
+ 231 01a6 9D9B      		sbis 51-32,5
+ 232 01a8 00C0      		rjmp .L32
+ 233 01aa 00C0      		rjmp .L36
+ 234               	.L29:
+ 235 01ac 85B7      		in r24,85-32
+ 236 01ae 8068      		ori r24,lo8(-128)
+ 237 01b0 85BF      		out 85-32,r24
+ 238 01b2 15BA      		out 53-32,__zero_reg__
+ 239 01b4 14BA      		out 52-32,__zero_reg__
+ 240               	.L33:
+ 241 01b6 F090 0083 		lds r15,-32000
+ 242 01ba 81E2      		ldi r24,lo8(33)
+ 243 01bc F816      		cp r15,r24
+ 244 01be 01F4      		brne .L33
+ 245 01c0 1092 0F83 		sts -31985,__zero_reg__
+ 246 01c4 0FEF      		ldi r16,lo8(-1)
+ 247 01c6 0093 0783 		sts -31993,r16
+ 248 01ca 81EE      		ldi r24,lo8(-31)
+ 249 01cc 8093 0083 		sts -32000,r24
+ 250 01d0 80EC      		ldi r24,lo8(-64)
+ 251 01d2 8093 0183 		sts -31999,r24
+ 252 01d6 1092 0683 		sts -31994,__zero_reg__
+ 253 01da 10E2      		ldi r17,lo8(32)
+ 254 01dc 1093 0583 		sts -31995,r17
+ 255 01e0 1092 0183 		sts -31999,__zero_reg__
+ 256 01e4 68EC      		ldi r22,lo8(200)
+ 257 01e6 70E0      		ldi r23,hi8(200)
+ 258 01e8 80E0      		ldi r24,hlo8(200)
+ 259 01ea 90E0      		ldi r25,hhi8(200)
+ 260 01ec 0E94 0000 		call Delay
+ 261 01f0 F092 0083 		sts -32000,r15
+ 262 01f4 88E4      		ldi r24,lo8(72)
+ 263 01f6 8093 0E83 		sts -31986,r24
+ 264 01fa 1092 0A83 		sts -31990,__zero_reg__
+ 265 01fe 1092 0B83 		sts -31989,__zero_reg__
+ 266 0202 1093 0C83 		sts -31988,r17
+ 267 0206 82E0      		ldi r24,lo8(2)
+ 268 0208 8093 0D83 		sts -31987,r24
+ 269 020c 80E4      		ldi r24,lo8(64)
+ 270 020e 8093 0483 		sts -31996,r24
+ 271 0212 8FE5      		ldi r24,lo8(95)
+ 272 0214 8093 0383 		sts -31997,r24
+ 273 0218 9CE4      		ldi r25,lo8(76)
+ 274 021a 9093 0183 		sts -31999,r25
+ 275 021e 80E6      		ldi r24,lo8(96)
+ 276 0220 8093 0283 		sts -31998,r24
+ 277 0224 0093 0783 		sts -31993,r16
+ 278 0228 81E6      		ldi r24,lo8(97)
+ 279 022a 8093 0083 		sts -32000,r24
+ 280 022e 8091 0000 		lds r24,confnet+10
+ 281 0232 8093 0183 		sts -31999,r24
+ 282 0236 8091 0000 		lds r24,confnet+11
+ 283 023a 8093 0283 		sts -31998,r24
+ 284 023e 8091 0000 		lds r24,confnet+12
+ 285 0242 8093 0383 		sts -31997,r24
+GAS LISTING C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/ccEZwfBq.s 			page 6
+
+
+ 286 0246 8091 0000 		lds r24,confnet+13
+ 287 024a 8093 0483 		sts -31996,r24
+ 288 024e 8091 0000 		lds r24,confnet+14
+ 289 0252 8093 0583 		sts -31995,r24
+ 290 0256 8091 0000 		lds r24,confnet+15
+ 291 025a 8093 0683 		sts -31994,r24
+ 292 025e 1092 0883 		sts -31992,__zero_reg__
+ 293 0262 1092 0983 		sts -31991,__zero_reg__
+ 294 0266 1092 0A83 		sts -31990,__zero_reg__
+ 295 026a 1092 0B83 		sts -31989,__zero_reg__
+ 296 026e 1092 0C83 		sts -31988,__zero_reg__
+ 297 0272 1092 0D83 		sts -31987,__zero_reg__
+ 298 0276 1092 0E83 		sts -31986,__zero_reg__
+ 299 027a 1092 0F83 		sts -31985,__zero_reg__
+ 300 027e 9093 0783 		sts -31993,r25
+ 301 0282 F092 0083 		sts -32000,r15
+ 302 0286 84E0      		ldi r24,lo8(4)
+ 303 0288 8093 0C83 		sts -31988,r24
+ 304 028c 0093 0783 		sts -31993,r16
+ 305 0290 1092 0F83 		sts -31985,__zero_reg__
+ 306 0294 82E2      		ldi r24,lo8(34)
+ 307 0296 8093 0083 		sts -32000,r24
+ 308 029a 1092 0D83 		sts -31987,__zero_reg__
+ 309 029e 68EE      		ldi r22,lo8(1000)
+ 310 02a0 73E0      		ldi r23,hi8(1000)
+ 311 02a2 80E0      		ldi r24,hlo8(1000)
+ 312 02a4 90E0      		ldi r25,hhi8(1000)
+ 313 02a6 0E94 0000 		call Delay
+ 314 02aa 80E0      		ldi r24,lo8(0)
+ 315 02ac 90E0      		ldi r25,hi8(0)
+ 316               	/* epilogue start */
+ 317 02ae 1F91      		pop r17
+ 318 02b0 0F91      		pop r16
+ 319 02b2 FF90      		pop r15
+ 320 02b4 0895      		ret
+ 321               		.size	NicInit, .-NicInit
+ 322               	.global	EtherInput
+ 323               		.type	EtherInput, @function
+ 324               	EtherInput:
+ 325 02b6 4F92      		push r4
+ 326 02b8 5F92      		push r5
+ 327 02ba 6F92      		push r6
+ 328 02bc 7F92      		push r7
+ 329 02be 8F92      		push r8
+ 330 02c0 9F92      		push r9
+ 331 02c2 AF92      		push r10
+ 332 02c4 BF92      		push r11
+ 333 02c6 CF92      		push r12
+ 334 02c8 DF92      		push r13
+ 335 02ca EF92      		push r14
+ 336 02cc FF92      		push r15
+ 337 02ce 0F93      		push r16
+ 338 02d0 1F93      		push r17
+ 339 02d2 DF93      		push r29
+ 340 02d4 CF93      		push r28
+ 341 02d6 00D0      		rcall .
+ 342 02d8 00D0      		rcall .
+GAS LISTING C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/ccEZwfBq.s 			page 7
+
+
+ 343 02da CDB7      		in r28,__SP_L__
+ 344 02dc DEB7      		in r29,__SP_H__
+ 345               	/* prologue: function */
+ 346               	/* frame size = 4 */
+ 347 02de 6C01      		movw r12,r24
+ 348 02e0 8B01      		movw r16,r22
+ 349 02e2 20E0      		ldi r18,lo8(0)
+ 350 02e4 30E0      		ldi r19,hi8(0)
+ 351 02e6 E2E6      		ldi r30,lo8(98)
+ 352 02e8 4E2E      		mov r4,r30
+ 353 02ea 72E2      		ldi r23,lo8(34)
+ 354 02ec F72E      		mov r15,r23
+ 355 02ee 64E0      		ldi r22,lo8(4)
+ 356 02f0 662E      		mov r6,r22
+ 357 02f2 5AE0      		ldi r21,lo8(10)
+ 358 02f4 752E      		mov r7,r21
+ 359 02f6 4E01      		movw r8,r28
+ 360 02f8 0894      		sec
+ 361 02fa 811C      		adc r8,__zero_reg__
+ 362 02fc 911C      		adc r9,__zero_reg__
+ 363 02fe 45E0      		ldi r20,lo8(5)
+ 364 0300 A42E      		mov r10,r20
+ 365 0302 B12C      		mov r11,__zero_reg__
+ 366 0304 AC0E      		add r10,r28
+ 367 0306 BD1E      		adc r11,r29
+ 368 0308 90E4      		ldi r25,lo8(64)
+ 369 030a E92E      		mov r14,r25
+ 370 030c 8FE5      		ldi r24,lo8(95)
+ 371 030e 582E      		mov r5,r24
+ 372 0310 00C0      		rjmp .L38
+ 373               	.L42:
+ 374 0312 9F5F      		subi r25,lo8(-(1))
+ 375               	.L63:
+ 376 0314 4091 0783 		lds r20,-31993
+ 377 0318 42FD      		sbrc r20,2
+ 378 031a 00C0      		rjmp .L39
+ 379 031c 40FD      		sbrc r20,0
+ 380 031e 00C0      		rjmp .L40
+ 381 0320 9923      		tst r25
+ 382 0322 01F4      		brne .L41
+ 383 0324 0150      		subi r16,lo8(-(-1))
+ 384 0326 1040      		sbci r17,hi8(-(-1))
+ 385               	.L41:
+ 386 0328 0115      		cp r16,__zero_reg__
+ 387 032a 1105      		cpc r17,__zero_reg__
+ 388 032c 01F4      		brne .L42
+ 389               	.L40:
+ 390 032e 40FD      		sbrc r20,0
+ 391 0330 00C0      		rjmp .L43
+ 392 0332 4093 0783 		sts -31993,r20
+ 393 0336 00C0      		rjmp .L44
+ 394               	.L43:
+ 395 0338 4092 0083 		sts -32000,r4
+ 396 033c 8091 0783 		lds r24,-31993
+ 397 0340 F092 0083 		sts -32000,r15
+ 398 0344 6091 0383 		lds r22,-31997
+ 399 0348 6F5F      		subi r22,lo8(-(1))
+GAS LISTING C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/ccEZwfBq.s 			page 8
+
+
+ 400 034a 6036      		cpi r22,lo8(96)
+ 401 034c 00F0      		brlo .L45
+ 402 034e 6CE4      		ldi r22,lo8(76)
+ 403               	.L45:
+ 404 0350 6817      		cp r22,r24
+ 405 0352 01F4      		brne .L46
+ 406 0354 4093 0783 		sts -31993,r20
+ 407 0358 00C0      		rjmp .L68
+ 408               	.L46:
+ 409 035a 6092 0A83 		sts -31990,r6
+ 410 035e 1092 0B83 		sts -31989,__zero_reg__
+ 411 0362 1092 0883 		sts -31992,__zero_reg__
+ 412 0366 6093 0983 		sts -31991,r22
+ 413 036a 7092 0083 		sts -32000,r7
+ 414 036e F401      		movw r30,r8
+ 415               	.L48:
+ 416 0370 8091 1083 		lds r24,-31984
+ 417 0374 8193      		st Z+,r24
+ 418 0376 EA15      		cp r30,r10
+ 419 0378 FB05      		cpc r31,r11
+ 420 037a 01F4      		brne .L48
+ 421 037c F092 0083 		sts -32000,r15
+ 422 0380 20E0      		ldi r18,lo8(0)
+ 423 0382 30E0      		ldi r19,hi8(0)
+ 424               	.L50:
+ 425 0384 8091 0783 		lds r24,-31993
+ 426 0388 86FD      		sbrc r24,6
+ 427 038a 00C0      		rjmp .L49
+ 428 038c 2F5F      		subi r18,lo8(-(1))
+ 429 038e 3F4F      		sbci r19,hi8(-(1))
+ 430 0390 2531      		cpi r18,21
+ 431 0392 3105      		cpc r19,__zero_reg__
+ 432 0394 01F4      		brne .L50
+ 433               	.L49:
+ 434 0396 E092 0783 		sts -31993,r14
+ 435 039a 2B81      		ldd r18,Y+3
+ 436 039c 3C81      		ldd r19,Y+4
+ 437 039e C901      		movw r24,r18
+ 438 03a0 8054      		subi r24,lo8(-(-64))
+ 439 03a2 9040      		sbci r25,hi8(-(-64))
+ 440 03a4 835B      		subi r24,lo8(1459)
+ 441 03a6 9540      		sbci r25,hi8(1459)
+ 442 03a8 00F0      		brlo .L51
+ 443 03aa 0E94 0000 		call NicInit
+ 444 03ae 00C0      		rjmp .L68
+ 445               	.L51:
+ 446 03b0 8981      		ldd r24,Y+1
+ 447 03b2 8F70      		andi r24,lo8(15)
+ 448 03b4 8130      		cpi r24,lo8(1)
+ 449 03b6 01F0      		breq .L52
+ 450 03b8 B0E0      		ldi r27,lo8(0)
+ 451 03ba A0E0      		ldi r26,lo8(0)
+ 452 03bc 00C0      		rjmp .L53
+ 453               	.L52:
+ 454 03be A901      		movw r20,r18
+ 455 03c0 4450      		subi r20,lo8(-(-4))
+ 456 03c2 5040      		sbci r21,hi8(-(-4))
+GAS LISTING C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/ccEZwfBq.s 			page 9
+
+
+ 457 03c4 B42F      		mov r27,r20
+ 458 03c6 A52F      		mov r26,r21
+ 459 03c8 4093 0A83 		sts -31990,r20
+ 460 03cc 5093 0B83 		sts -31989,r21
+ 461 03d0 6092 0883 		sts -31992,r6
+ 462 03d4 6093 0983 		sts -31991,r22
+ 463 03d8 7092 0083 		sts -32000,r7
+ 464 03dc BA01      		movw r22,r20
+ 465 03de 82E0      		ldi r24,hi8(595)
+ 466 03e0 4335      		cpi r20,lo8(595)
+ 467 03e2 5807      		cpc r21,r24
+ 468 03e4 00F0      		brlo .L54
+ 469 03e6 62E5      		ldi r22,lo8(594)
+ 470 03e8 72E0      		ldi r23,hi8(594)
+ 471               	.L54:
+ 472 03ea E0E0      		ldi r30,lo8(rframe)
+ 473 03ec F0E0      		ldi r31,hi8(rframe)
+ 474 03ee 20E0      		ldi r18,lo8(0)
+ 475 03f0 30E0      		ldi r19,hi8(0)
+ 476 03f2 00C0      		rjmp .L55
+ 477               	.L56:
+ 478 03f4 8091 1083 		lds r24,-31984
+ 479 03f8 8193      		st Z+,r24
+ 480 03fa 2F5F      		subi r18,lo8(-(1))
+ 481 03fc 3F4F      		sbci r19,hi8(-(1))
+ 482               	.L55:
+ 483 03fe 2617      		cp r18,r22
+ 484 0400 3707      		cpc r19,r23
+ 485 0402 00F0      		brlo .L56
+ 486 0404 9B01      		movw r18,r22
+ 487 0406 00C0      		rjmp .L57
+ 488               	.L58:
+ 489 0408 8091 1083 		lds r24,-31984
+ 490 040c 2F5F      		subi r18,lo8(-(1))
+ 491 040e 3F4F      		sbci r19,hi8(-(1))
+ 492               	.L57:
+ 493 0410 2417      		cp r18,r20
+ 494 0412 3507      		cpc r19,r21
+ 495 0414 00F0      		brlo .L58
+ 496 0416 F092 0083 		sts -32000,r15
+ 497 041a 20E0      		ldi r18,lo8(0)
+ 498 041c 30E0      		ldi r19,hi8(0)
+ 499               	.L60:
+ 500 041e 8091 0783 		lds r24,-31993
+ 501 0422 86FD      		sbrc r24,6
+ 502 0424 00C0      		rjmp .L59
+ 503 0426 2F5F      		subi r18,lo8(-(1))
+ 504 0428 3F4F      		sbci r19,hi8(-(1))
+ 505 042a 2531      		cpi r18,21
+ 506 042c 3105      		cpc r19,__zero_reg__
+ 507 042e 01F4      		brne .L60
+ 508               	.L59:
+ 509 0430 E092 0783 		sts -31993,r14
+ 510               	.L53:
+ 511 0434 8A81      		ldd r24,Y+2
+ 512 0436 8150      		subi r24,lo8(-(-1))
+ 513 0438 8A83      		std Y+2,r24
+GAS LISTING C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/ccEZwfBq.s 			page 10
+
+
+ 514 043a 8C34      		cpi r24,lo8(76)
+ 515 043c 00F4      		brsh .L61
+ 516 043e 5A82      		std Y+2,r5
+ 517               	.L61:
+ 518 0440 8A81      		ldd r24,Y+2
+ 519 0442 8093 0383 		sts -31997,r24
+ 520 0446 8091 0000 		lds r24,rframe+12
+ 521 044a 9091 0000 		lds r25,(rframe+12)+1
+ 522 044e 8C15      		cp r24,r12
+ 523 0450 9D05      		cpc r25,r13
+ 524 0452 01F0      		breq .L47
+ 525 0454 8850      		subi r24,lo8(1544)
+ 526 0456 9640      		sbci r25,hi8(1544)
+ 527 0458 01F4      		brne .L68
+ 528               	.L62:
+ 529 045a 0E94 0000 		call ArpRespond
+ 530               	.L68:
+ 531 045e B0E0      		ldi r27,lo8(0)
+ 532 0460 A0E0      		ldi r26,lo8(0)
+ 533               	.L47:
+ 534 0462 8B2F      		mov r24,r27
+ 535 0464 9A2F      		mov r25,r26
+ 536 0466 9C01      		movw r18,r24
+ 537               	.L38:
+ 538 0468 0115      		cp r16,__zero_reg__
+ 539 046a 1105      		cpc r17,__zero_reg__
+ 540 046c 01F0      		breq .L44
+ 541 046e 2115      		cp r18,__zero_reg__
+ 542 0470 3105      		cpc r19,__zero_reg__
+ 543 0472 01F4      		brne .L44
+ 544 0474 91E0      		ldi r25,lo8(1)
+ 545 0476 00C0      		rjmp .L63
+ 546               	.L39:
+ 547 0478 2FEF      		ldi r18,lo8(-1)
+ 548 047a 3FEF      		ldi r19,hi8(-1)
+ 549               	.L44:
+ 550 047c C901      		movw r24,r18
+ 551               	/* epilogue start */
+ 552 047e 0F90      		pop __tmp_reg__
+ 553 0480 0F90      		pop __tmp_reg__
+ 554 0482 0F90      		pop __tmp_reg__
+ 555 0484 0F90      		pop __tmp_reg__
+ 556 0486 CF91      		pop r28
+ 557 0488 DF91      		pop r29
+ 558 048a 1F91      		pop r17
+ 559 048c 0F91      		pop r16
+ 560 048e FF90      		pop r15
+ 561 0490 EF90      		pop r14
+ 562 0492 DF90      		pop r13
+ 563 0494 CF90      		pop r12
+ 564 0496 BF90      		pop r11
+ 565 0498 AF90      		pop r10
+ 566 049a 9F90      		pop r9
+ 567 049c 8F90      		pop r8
+ 568 049e 7F90      		pop r7
+ 569 04a0 6F90      		pop r6
+ 570 04a2 5F90      		pop r5
+GAS LISTING C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/ccEZwfBq.s 			page 11
+
+
+ 571 04a4 4F90      		pop r4
+ 572 04a6 0895      		ret
+ 573               		.size	EtherInput, .-EtherInput
+GAS LISTING C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/ccEZwfBq.s 			page 12
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 ether.c
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/ccEZwfBq.s:2      *ABS*:0000003f __SREG__
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/ccEZwfBq.s:3      *ABS*:0000003e __SP_H__
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/ccEZwfBq.s:4      *ABS*:0000003d __SP_L__
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/ccEZwfBq.s:5      *ABS*:00000034 __CCP__
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/ccEZwfBq.s:6      *ABS*:00000000 __tmp_reg__
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/ccEZwfBq.s:7      *ABS*:00000001 __zero_reg__
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/ccEZwfBq.s:11     .text:00000000 EEPROM_read
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/ccEZwfBq.s:26     .text:0000000e EtherOutput
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/ccEZwfBq.s:174    .text:00000138 NicInit
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/ccEZwfBq.s:324    .text:000002b6 EtherInput
+
+UNDEFINED SYMBOLS
+sframe
+arpframe
+confnet
+Delay
+rframe
+ArpRespond

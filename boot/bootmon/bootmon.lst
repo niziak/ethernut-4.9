@@ -1,0 +1,495 @@
+ARM GAS  C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\cc4ypWHF.s 			page 1
+
+
+   1              		.cpu arm7tdmi
+   2              		.fpu softvfp
+   3              		.eabi_attribute 20, 1
+   4              		.eabi_attribute 21, 1
+   5              		.eabi_attribute 23, 3
+   6              		.eabi_attribute 24, 1
+   7              		.eabi_attribute 25, 1
+   8              		.eabi_attribute 26, 1
+   9              		.eabi_attribute 30, 4
+  10              		.eabi_attribute 18, 4
+  11              		.code	16
+  12              		.file	"bootmon.c"
+  13              		.text
+  14              		.align	1
+  15              		.global	NplUledCntl
+  16              		.code	16
+  17              		.thumb_func
+  18              		.type	NplUledCntl, %function
+  19              	NplUledCntl:
+  20 0000 00B5     		push	{lr}
+  21 0002 0128     		cmp	r0, #1
+  22 0004 04D1     		bne	.L2
+  23 0006 084B     		ldr	r3, .L5
+  24 0008 1A78     		ldrb	r2, [r3]
+  25 000a 0421     		mov	r1, #4
+  26 000c 8A43     		bic	r2, r2, r1
+  27 000e 07E0     		b	.L4
+  28              	.L2:
+  29 0010 0028     		cmp	r0, #0
+  30 0012 06D1     		bne	.L1
+  31 0014 044B     		ldr	r3, .L5
+  32 0016 1978     		ldrb	r1, [r3]
+  33 0018 0422     		mov	r2, #4
+  34 001a 0A43     		orr	r2, r2, r1
+  35 001c 1206     		lsl	r2, r2, #24
+  36 001e 120E     		lsr	r2, r2, #24
+  37              	.L4:
+  38 0020 1A70     		strb	r2, [r3]
+  39              	.L1:
+  40              		@ sp needed for prologue
+  41 0022 01BC     		pop	{r0}
+  42 0024 0047     		bx	r0
+  43              	.L6:
+  44 0026 C046     		.align	2
+  45              	.L5:
+  46 0028 18000021 		.word	553648152
+  47              		.size	NplUledCntl, .-NplUledCntl
+  48              		.align	1
+  49              		.global	main
+  50              		.code	16
+  51              		.thumb_func
+  52              		.type	main, %function
+  53              	main:
+  54 002c F8B5     		push	{r3, r4, r5, r6, r7, lr}
+  55 002e 0120     		mov	r0, #1
+  56 0030 FFF7FEFF 		bl	NplUledCntl
+  57 0034 FFF7FEFF 		bl	UartInit
+ARM GAS  C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\cc4ypWHF.s 			page 2
+
+
+  58 0038 FFF7FEFF 		bl	BootConfigRead
+  59 003c 0028     		cmp	r0, #0
+  60 003e 01D0     		beq	.L8
+  61 0040 FFF7FEFF 		bl	BootConfigRead
+  62              	.L8:
+  63 0044 874B     		ldr	r3, .L21
+  64 0046 5A7D     		ldrb	r2, [r3, #21]
+  65 0048 197D     		ldrb	r1, [r3, #20]
+  66 004a 1202     		lsl	r2, r2, #8
+  67 004c 0A43     		orr	r2, r2, r1
+  68 004e 997D     		ldrb	r1, [r3, #22]
+  69 0050 0904     		lsl	r1, r1, #16
+  70 0052 0A43     		orr	r2, r2, r1
+  71 0054 D97D     		ldrb	r1, [r3, #23]
+  72 0056 0906     		lsl	r1, r1, #24
+  73 0058 1143     		orr	r1, r2
+  74 005a 05D1     		bne	.L9
+  75 005c 0122     		mov	r2, #1
+  76 005e 5242     		neg	r2, r2
+  77 0060 1A75     		strb	r2, [r3, #20]
+  78 0062 5A75     		strb	r2, [r3, #21]
+  79 0064 9A75     		strb	r2, [r3, #22]
+  80 0066 D975     		strb	r1, [r3, #23]
+  81              	.L9:
+  82 0068 7F4D     		ldr	r5, .L21+4
+  83 006a 8048     		ldr	r0, .L21+8
+  84 006c 291C     		mov	r1, r5
+  85 006e 0422     		mov	r2, #4
+  86 0070 FFF7FEFF 		bl	memcpy_
+  87 0074 0024     		mov	r4, #0
+  88 0076 0C3D     		sub	r5, r5, #12
+  89 0078 C4E0     		b	.L20
+  90              	.L15:
+  91 007a 7D48     		ldr	r0, .L21+12
+  92 007c FFF7FEFF 		bl	UartRxWait
+  93 0080 0028     		cmp	r0, #0
+  94 0082 00D0     		beq	.LCB95
+  95 0084 BDE0     		b	.L11	@long jump
+  96              	.LCB95:
+  97 0086 FFF7FEFF 		bl	UartRx
+  98 008a 2028     		cmp	r0, #32
+  99 008c 00D0     		beq	.LCB98
+ 100 008e B8E0     		b	.L11	@long jump
+ 101              	.LCB98:
+ 102 0090 7848     		ldr	r0, .L21+16
+ 103 0092 FFF7FEFF 		bl	PutString
+ 104 0096 0020     		mov	r0, #0
+ 105 0098 FFF7FEFF 		bl	NplUledCntl
+ 106 009c 764F     		ldr	r7, .L21+20
+ 107 009e 0622     		mov	r2, #6
+ 108 00a0 7649     		ldr	r1, .L21+24
+ 109 00a2 381C     		mov	r0, r7
+ 110 00a4 FFF7FEFF 		bl	memcpy_
+ 111 00a8 687F     		ldrb	r0, [r5, #29]
+ 112 00aa 2B7F     		ldrb	r3, [r5, #28]
+ 113 00ac 0002     		lsl	r0, r0, #8
+ 114 00ae 1843     		orr	r0, r0, r3
+ARM GAS  C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\cc4ypWHF.s 			page 3
+
+
+ 115 00b0 AB7F     		ldrb	r3, [r5, #30]
+ 116 00b2 1B04     		lsl	r3, r3, #16
+ 117 00b4 1843     		orr	r0, r0, r3
+ 118 00b6 EB7F     		ldrb	r3, [r5, #31]
+ 119 00b8 1B06     		lsl	r3, r3, #24
+ 120 00ba 1843     		orr	r0, r0, r3
+ 121 00bc FFF7FEFF 		bl	inet_ntoa
+ 122 00c0 011C     		mov	r1, r0
+ 123 00c2 6F48     		ldr	r0, .L21+28
+ 124 00c4 FFF7FEFF 		bl	strcpy_
+ 125 00c8 687D     		ldrb	r0, [r5, #21]
+ 126 00ca 2B7D     		ldrb	r3, [r5, #20]
+ 127 00cc 0002     		lsl	r0, r0, #8
+ 128 00ce 1843     		orr	r0, r0, r3
+ 129 00d0 AB7D     		ldrb	r3, [r5, #22]
+ 130 00d2 1B04     		lsl	r3, r3, #16
+ 131 00d4 1843     		orr	r0, r0, r3
+ 132 00d6 EB7D     		ldrb	r3, [r5, #23]
+ 133 00d8 1B06     		lsl	r3, r3, #24
+ 134 00da 1843     		orr	r0, r0, r3
+ 135 00dc FFF7FEFF 		bl	inet_ntoa
+ 136 00e0 011C     		mov	r1, r0
+ 137 00e2 6848     		ldr	r0, .L21+32
+ 138 00e4 FFF7FEFF 		bl	strcpy_
+ 139 00e8 687E     		ldrb	r0, [r5, #25]
+ 140 00ea 2B7E     		ldrb	r3, [r5, #24]
+ 141 00ec 0002     		lsl	r0, r0, #8
+ 142 00ee 1843     		orr	r0, r0, r3
+ 143 00f0 AB7E     		ldrb	r3, [r5, #26]
+ 144 00f2 1B04     		lsl	r3, r3, #16
+ 145 00f4 1843     		orr	r0, r0, r3
+ 146 00f6 EB7E     		ldrb	r3, [r5, #27]
+ 147 00f8 1B06     		lsl	r3, r3, #24
+ 148 00fa 1843     		orr	r0, r0, r3
+ 149 00fc FFF7FEFF 		bl	inet_ntoa
+ 150 0100 011C     		mov	r1, r0
+ 151 0102 6148     		ldr	r0, .L21+36
+ 152 0104 FFF7FEFF 		bl	strcpy_
+ 153 0108 604E     		ldr	r6, .L21+40
+ 154 010a F078     		ldrb	r0, [r6, #3]
+ 155 010c B378     		ldrb	r3, [r6, #2]
+ 156 010e 0002     		lsl	r0, r0, #8
+ 157 0110 1843     		orr	r0, r0, r3
+ 158 0112 3379     		ldrb	r3, [r6, #4]
+ 159 0114 1B04     		lsl	r3, r3, #16
+ 160 0116 1843     		orr	r0, r0, r3
+ 161 0118 7379     		ldrb	r3, [r6, #5]
+ 162 011a 1B06     		lsl	r3, r3, #24
+ 163 011c 1843     		orr	r0, r0, r3
+ 164 011e FFF7FEFF 		bl	inet_ntoa
+ 165 0122 5B4C     		ldr	r4, .L21+44
+ 166 0124 011C     		mov	r1, r0
+ 167 0126 201C     		mov	r0, r4
+ 168 0128 FFF7FEFF 		bl	strcpy_
+ 169 012c 201C     		mov	r0, r4
+ 170 012e B11D     		add	r1, r6, #6
+ 171 0130 2030     		add	r0, r0, #32
+ARM GAS  C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\cc4ypWHF.s 			page 4
+
+
+ 172 0132 FFF7FEFF 		bl	strcpy_
+ 173 0136 381C     		mov	r0, r7
+ 174 0138 FFF7FEFF 		bl	GetMac
+ 175 013c 5548     		ldr	r0, .L21+48
+ 176 013e 5049     		ldr	r1, .L21+28
+ 177 0140 FFF7FEFF 		bl	GetIP
+ 178 0144 4E48     		ldr	r0, .L21+28
+ 179 0146 FFF7FEFF 		bl	inet_addr
+ 180 014a 0028     		cmp	r0, #0
+ 181 014c 07D0     		beq	.L12
+ 182 014e 5248     		ldr	r0, .L21+52
+ 183 0150 4C49     		ldr	r1, .L21+32
+ 184 0152 FFF7FEFF 		bl	GetIP
+ 185 0156 5148     		ldr	r0, .L21+56
+ 186 0158 4B49     		ldr	r1, .L21+36
+ 187 015a FFF7FEFF 		bl	GetIP
+ 188              	.L12:
+ 189 015e 4C4C     		ldr	r4, .L21+44
+ 190 0160 4F48     		ldr	r0, .L21+60
+ 191 0162 211C     		mov	r1, r4
+ 192 0164 FFF7FEFF 		bl	GetIP
+ 193 0168 201C     		mov	r0, r4
+ 194 016a FFF7FEFF 		bl	inet_addr
+ 195 016e 0028     		cmp	r0, #0
+ 196 0170 07D0     		beq	.L13
+ 197 0172 4C48     		ldr	r0, .L21+64
+ 198 0174 FFF7FEFF 		bl	PutString
+ 199 0178 201C     		mov	r0, r4
+ 200 017a 2030     		add	r0, r0, #32
+ 201 017c 1F21     		mov	r1, #31
+ 202 017e FFF7FEFF 		bl	GetLine
+ 203              	.L13:
+ 204 0182 4948     		ldr	r0, .L21+68
+ 205 0184 FFF7FEFF 		bl	PutString
+ 206 0188 3B4E     		ldr	r6, .L21+20
+ 207 018a 3C4C     		ldr	r4, .L21+24
+ 208 018c 311C     		mov	r1, r6
+ 209 018e 0622     		mov	r2, #6
+ 210 0190 201C     		mov	r0, r4
+ 211 0192 FFF7FEFF 		bl	memcpy_
+ 212 0196 301C     		mov	r0, r6
+ 213 0198 2030     		add	r0, r0, #32
+ 214 019a FFF7FEFF 		bl	inet_addr
+ 215 019e 0A3C     		sub	r4, r4, #10
+ 216 01a0 030A     		lsr	r3, r0, #8
+ 217 01a2 2077     		strb	r0, [r4, #28]
+ 218 01a4 6377     		strb	r3, [r4, #29]
+ 219 01a6 030C     		lsr	r3, r0, #16
+ 220 01a8 000E     		lsr	r0, r0, #24
+ 221 01aa E077     		strb	r0, [r4, #31]
+ 222 01ac 301C     		mov	r0, r6
+ 223 01ae A377     		strb	r3, [r4, #30]
+ 224 01b0 4030     		add	r0, r0, #64
+ 225 01b2 FFF7FEFF 		bl	inet_addr
+ 226 01b6 030A     		lsr	r3, r0, #8
+ 227 01b8 2075     		strb	r0, [r4, #20]
+ 228 01ba 6375     		strb	r3, [r4, #21]
+ARM GAS  C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\cc4ypWHF.s 			page 5
+
+
+ 229 01bc 030C     		lsr	r3, r0, #16
+ 230 01be 000E     		lsr	r0, r0, #24
+ 231 01c0 E075     		strb	r0, [r4, #23]
+ 232 01c2 301C     		mov	r0, r6
+ 233 01c4 A375     		strb	r3, [r4, #22]
+ 234 01c6 6030     		add	r0, r0, #96
+ 235 01c8 FFF7FEFF 		bl	inet_addr
+ 236 01cc 030A     		lsr	r3, r0, #8
+ 237 01ce 2076     		strb	r0, [r4, #24]
+ 238 01d0 6376     		strb	r3, [r4, #25]
+ 239 01d2 030C     		lsr	r3, r0, #16
+ 240 01d4 000E     		lsr	r0, r0, #24
+ 241 01d6 A376     		strb	r3, [r4, #26]
+ 242 01d8 E076     		strb	r0, [r4, #27]
+ 243 01da 2D4C     		ldr	r4, .L21+44
+ 244 01dc 201C     		mov	r0, r4
+ 245 01de FFF7FEFF 		bl	inet_addr
+ 246 01e2 2A4B     		ldr	r3, .L21+40
+ 247 01e4 020A     		lsr	r2, r0, #8
+ 248 01e6 9870     		strb	r0, [r3, #2]
+ 249 01e8 DA70     		strb	r2, [r3, #3]
+ 250 01ea 211C     		mov	r1, r4
+ 251 01ec 020C     		lsr	r2, r0, #16
+ 252 01ee 000E     		lsr	r0, r0, #24
+ 253 01f0 5871     		strb	r0, [r3, #5]
+ 254 01f2 1A71     		strb	r2, [r3, #4]
+ 255 01f4 981D     		add	r0, r3, #6
+ 256 01f6 2031     		add	r1, r1, #32
+ 257 01f8 FFF7FEFF 		bl	strcpy_
+ 258 01fc FFF7FEFF 		bl	BootConfigWrite
+ 259 0200 03E0     		b	.L14
+ 260              	.L11:
+ 261 0202 0134     		add	r4, r4, #1
+ 262              	.L20:
+ 263 0204 632C     		cmp	r4, #99
+ 264 0206 00DC     		bgt	.LCB282
+ 265 0208 37E7     		b	.L15	@long jump
+ 266              	.LCB282:
+ 267              	.L14:
+ 268 020a 0020     		mov	r0, #0
+ 269 020c FFF7FEFF 		bl	NplUledCntl
+ 270 0210 1E49     		ldr	r1, .L21+40
+ 271 0212 CB78     		ldrb	r3, [r1, #3]
+ 272 0214 8A78     		ldrb	r2, [r1, #2]
+ 273 0216 1B02     		lsl	r3, r3, #8
+ 274 0218 1343     		orr	r3, r3, r2
+ 275 021a 0A79     		ldrb	r2, [r1, #4]
+ 276 021c 1204     		lsl	r2, r2, #16
+ 277 021e 1343     		orr	r3, r3, r2
+ 278 0220 4A79     		ldrb	r2, [r1, #5]
+ 279 0222 1206     		lsl	r2, r2, #24
+ 280 0224 1A43     		orr	r2, r3
+ 281 0226 06D1     		bne	.L16
+ 282 0228 204B     		ldr	r3, .L21+72
+ 283 022a 1A68     		ldr	r2, [r3]
+ 284 022c 204B     		ldr	r3, .L21+76
+ 285 022e 9A42     		cmp	r2, r3
+ARM GAS  C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\cc4ypWHF.s 			page 6
+
+
+ 286 0230 01D1     		bne	.L16
+ 287              	@ 163 "bootmon.c" 1
+ 288              		@ Start Application
+ 289 0232 2048     		ldr r0, =0x10020000
+ 290 0234 0047     		bx  r0
+ 291              		
+ 292              	@ 0 "" 2
+ 293              		.code	16
+ 294              	.L16:
+ 295 0236 FFF7FEFF 		bl	EtherInit
+ 296 023a 0028     		cmp	r0, #0
+ 297 023c 07D1     		bne	.L17
+ 298 023e FFF7FEFF 		bl	DhcpQuery
+ 299 0242 0028     		cmp	r0, #0
+ 300 0244 03D1     		bne	.L17
+ 301 0246 FFF7FEFF 		bl	TftpRecv
+ 302 024a 0028     		cmp	r0, #0
+ 303 024c 04D0     		beq	.L18
+ 304              	.L17:
+ 305 024e 0120     		mov	r0, #1
+ 306 0250 FFF7FEFF 		bl	NplUledCntl
+ 307 0254 0024     		mov	r4, #0
+ 308 0256 10E7     		b	.L15
+ 309              	.L18:
+ 310              	@ 194 "bootmon.c" 1
+ 311              		@ Start Application
+ 312 0258 0020     		ldr r0, =0
+ 313 025a 0047     		bx  r0
+ 314              		
+ 315              	@ 0 "" 2
+ 316              		.code	16
+ 317 025c 0020     		mov	r0, #0
+ 318              		@ sp needed for prologue
+ 319 025e F8BC     		pop	{r3, r4, r5, r6, r7}
+ 320 0260 02BC     		pop	{r1}
+ 321 0262 0847     		bx	r1
+ 322              	.L22:
+ 323              		.align	2
+ 324              	.L21:
+ 325 0264 00000000 		.word	confnet
+ 326 0268 0C000000 		.word	confnet+12
+ 327 026c 00000000 		.word	random_id
+ 328 0270 70170000 		.word	6000
+ 329 0274 00000000 		.word	.LC3
+ 330 0278 00000000 		.word	.LANCHOR0
+ 331 027c 0A000000 		.word	confnet+10
+ 332 0280 20000000 		.word	.LANCHOR0+32
+ 333 0284 40000000 		.word	.LANCHOR0+64
+ 334 0288 60000000 		.word	.LANCHOR0+96
+ 335 028c 00000000 		.word	confboot
+ 336 0290 80000000 		.word	.LANCHOR1
+ 337 0294 10000000 		.word	.LC10
+ 338 0298 1B000000 		.word	.LC12
+ 339 029c 24000000 		.word	.LC14
+ 340 02a0 32000000 		.word	.LC16
+ 341 02a4 3A000000 		.word	.LC18
+ 342 02a8 47000000 		.word	.LC20
+ARM GAS  C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\cc4ypWHF.s 			page 7
+
+
+ 343 02ac 00000210 		.word	268566528
+ 344 02b0 18F09FE5 		.word	-442503144
+ 345              		.size	main, .-main
+ 346              		.comm	random_id,4,4
+ 347              		.comm	sframe,594,4
+ 348              		.comm	rframe,594,4
+ 349              		.section	.rodata.str1.1,"aMS",%progbits,1
+ 350              	.LC3:
+ 351 0000 0A426F6F 		.ascii	"\012BootMon 1.2.0\012\000"
+ 351      744D6F6E 
+ 351      20312E32 
+ 351      2E300A00 
+ 352              	.LC10:
+ 353 0010 49502061 		.ascii	"IP address\000"
+ 353      64647265 
+ 353      737300
+ 354              	.LC12:
+ 355 001b 4E657420 		.ascii	"Net mask\000"
+ 355      6D61736B 
+ 355      00
+ 356              	.LC14:
+ 357 0024 44656661 		.ascii	"Default route\000"
+ 357      756C7420 
+ 357      726F7574 
+ 357      6500
+ 358              	.LC16:
+ 359 0032 54465450 		.ascii	"TFTP IP\000"
+ 359      20495000 
+ 360              	.LC18:
+ 361 003a 54465450 		.ascii	"TFTP Image: \000"
+ 361      20496D61 
+ 361      67653A20 
+ 361      00
+ 362              	.LC20:
+ 363 0047 0A00     		.ascii	"\012\000"
+ 364              		.bss
+ 365              		.align	2
+ 366              		.set	.LANCHOR0,. + 0
+ 367              		.set	.LANCHOR1,. + 128
+ 368              		.type	my_mac, %object
+ 369              		.size	my_mac, 32
+ 370              	my_mac:
+ 371 0000 00000000 		.space	32
+ 371      00000000 
+ 371      00000000 
+ 371      00000000 
+ 371      00000000 
+ 372              		.type	my_ip, %object
+ 373              		.size	my_ip, 32
+ 374              	my_ip:
+ 375 0020 00000000 		.space	32
+ 375      00000000 
+ 375      00000000 
+ 375      00000000 
+ 375      00000000 
+ 376              		.type	my_mask, %object
+ 377              		.size	my_mask, 32
+ARM GAS  C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\cc4ypWHF.s 			page 8
+
+
+ 378              	my_mask:
+ 379 0040 00000000 		.space	32
+ 379      00000000 
+ 379      00000000 
+ 379      00000000 
+ 379      00000000 
+ 380              		.type	my_gate, %object
+ 381              		.size	my_gate, 32
+ 382              	my_gate:
+ 383 0060 00000000 		.space	32
+ 383      00000000 
+ 383      00000000 
+ 383      00000000 
+ 383      00000000 
+ 384              		.type	my_tftpd, %object
+ 385              		.size	my_tftpd, 32
+ 386              	my_tftpd:
+ 387 0080 00000000 		.space	32
+ 387      00000000 
+ 387      00000000 
+ 387      00000000 
+ 387      00000000 
+ 388              		.type	my_image, %object
+ 389              		.size	my_image, 64
+ 390              	my_image:
+ 391 00a0 00000000 		.space	64
+ 391      00000000 
+ 391      00000000 
+ 391      00000000 
+ 391      00000000 
+ 392              		.ident	"GCC: (GNU) 4.5.2"
+ARM GAS  C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\cc4ypWHF.s 			page 9
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 bootmon.c
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\cc4ypWHF.s:14     .text:00000000 $t
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\cc4ypWHF.s:19     .text:00000000 NplUledCntl
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\cc4ypWHF.s:46     .text:00000028 $d
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\cc4ypWHF.s:48     .text:0000002c $t
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\cc4ypWHF.s:53     .text:0000002c main
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\cc4ypWHF.s:325    .text:00000264 $d
+                            *COM*:00000004 random_id
+                            *COM*:00000252 sframe
+                            *COM*:00000252 rframe
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\cc4ypWHF.s:365    .bss:00000000 $d
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\cc4ypWHF.s:370    .bss:00000000 my_mac
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\cc4ypWHF.s:374    .bss:00000020 my_ip
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\cc4ypWHF.s:378    .bss:00000040 my_mask
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\cc4ypWHF.s:382    .bss:00000060 my_gate
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\cc4ypWHF.s:386    .bss:00000080 my_tftpd
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\cc4ypWHF.s:390    .bss:000000a0 my_image
+
+UNDEFINED SYMBOLS
+UartInit
+BootConfigRead
+memcpy_
+UartRxWait
+UartRx
+PutString
+inet_ntoa
+strcpy_
+GetMac
+GetIP
+inet_addr
+GetLine
+BootConfigWrite
+EtherInit
+DhcpQuery
+TftpRecv
+confnet
+confboot

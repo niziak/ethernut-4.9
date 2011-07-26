@@ -1,0 +1,168 @@
+ARM GAS  C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\cceYFaod.s 			page 1
+
+
+   1              		.cpu arm7tdmi
+   2              		.fpu softvfp
+   3              		.eabi_attribute 20, 1
+   4              		.eabi_attribute 21, 1
+   5              		.eabi_attribute 23, 3
+   6              		.eabi_attribute 24, 1
+   7              		.eabi_attribute 25, 1
+   8              		.eabi_attribute 26, 1
+   9              		.eabi_attribute 30, 4
+  10              		.eabi_attribute 18, 4
+  11              		.code	16
+  12              		.file	"config.c"
+  13              		.text
+  14              		.align	1
+  15              		.code	16
+  16              		.thumb_func
+  17              		.type	ConfigGet, %function
+  18              	ConfigGet:
+  19 0000 10B5     		push	{r4, lr}
+  20 0002 82B0     		sub	sp, sp, #8
+  21 0004 6C46     		mov	r4, sp
+  22 0006 0734     		add	r4, r4, #7
+  23 0008 211C     		mov	r1, r4
+  24 000a 0122     		mov	r2, #1
+  25 000c FFF7FEFF 		bl	NvMemRead
+  26 0010 0023     		mov	r3, #0
+  27 0012 0028     		cmp	r0, #0
+  28 0014 00D1     		bne	.L2
+  29 0016 2378     		ldrb	r3, [r4]
+  30              	.L2:
+  31 0018 02B0     		add	sp, sp, #8
+  32 001a 181C     		mov	r0, r3
+  33              		@ sp needed for prologue
+  34 001c 10BC     		pop	{r4}
+  35 001e 02BC     		pop	{r1}
+  36 0020 0847     		bx	r1
+  37              		.size	ConfigGet, .-ConfigGet
+  38              		.align	1
+  39              		.global	BootConfigRead
+  40              		.code	16
+  41              		.thumb_func
+  42              		.type	BootConfigRead, %function
+  43              	BootConfigRead:
+  44 0022 10B5     		push	{r4, lr}
+  45 0024 FFF7FEFF 		bl	NvMemInit
+  46 0028 4020     		mov	r0, #64
+  47 002a FFF7E9FF 		bl	ConfigGet
+  48 002e 2028     		cmp	r0, #32
+  49 0030 12D1     		bne	.L6
+  50 0032 4020     		mov	r0, #64
+  51 0034 0B49     		ldr	r1, .L7
+  52 0036 2022     		mov	r2, #32
+  53 0038 FFF7FEFF 		bl	NvMemRead
+  54 003c 041E     		sub	r4, r0, #0
+  55 003e 0DD1     		bne	.L5
+  56 0040 8020     		mov	r0, #128
+  57 0042 FFF7DDFF 		bl	ConfigGet
+ARM GAS  C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\cceYFaod.s 			page 2
+
+
+  58 0046 4028     		cmp	r0, #64
+  59 0048 08D1     		bne	.L5
+  60 004a 8020     		mov	r0, #128
+  61 004c 0649     		ldr	r1, .L7+4
+  62 004e 4022     		mov	r2, #64
+  63 0050 FFF7FEFF 		bl	NvMemRead
+  64 0054 041C     		mov	r4, r0
+  65 0056 01E0     		b	.L5
+  66              	.L6:
+  67 0058 0124     		mov	r4, #1
+  68 005a 6442     		neg	r4, r4
+  69              	.L5:
+  70 005c 201C     		mov	r0, r4
+  71              		@ sp needed for prologue
+  72 005e 10BC     		pop	{r4}
+  73 0060 02BC     		pop	{r1}
+  74 0062 0847     		bx	r1
+  75              	.L8:
+  76              		.align	2
+  77              	.L7:
+  78 0064 00000000 		.word	.LANCHOR0
+  79 0068 00000000 		.word	confboot
+  80              		.size	BootConfigRead, .-BootConfigRead
+  81              		.align	1
+  82              		.global	BootConfigWrite
+  83              		.code	16
+  84              		.thumb_func
+  85              		.type	BootConfigWrite, %function
+  86              	BootConfigWrite:
+  87 006c 08B5     		push	{r3, lr}
+  88 006e FFF7FEFF 		bl	NvMemInit
+  89 0072 0849     		ldr	r1, .L10
+  90 0074 2023     		mov	r3, #32
+  91 0076 0B70     		strb	r3, [r1]
+  92 0078 2022     		mov	r2, #32
+  93 007a 4020     		mov	r0, #64
+  94 007c FFF7FEFF 		bl	NvMemWrite
+  95 0080 0549     		ldr	r1, .L10+4
+  96 0082 4023     		mov	r3, #64
+  97 0084 0B70     		strb	r3, [r1]
+  98 0086 8020     		mov	r0, #128
+  99 0088 4022     		mov	r2, #64
+ 100 008a FFF7FEFF 		bl	NvMemWrite
+ 101              		@ sp needed for prologue
+ 102 008e 08BC     		pop	{r3}
+ 103 0090 01BC     		pop	{r0}
+ 104 0092 0047     		bx	r0
+ 105              	.L11:
+ 106              		.align	2
+ 107              	.L10:
+ 108 0094 00000000 		.word	.LANCHOR0
+ 109 0098 00000000 		.word	confboot
+ 110              		.size	BootConfigWrite, .-BootConfigWrite
+ 111              		.global	confnet
+ 112              		.comm	confboot,64,4
+ 113              		.data
+ 114              		.align	2
+ARM GAS  C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\cceYFaod.s 			page 3
+
+
+ 115              		.set	.LANCHOR0,. + 0
+ 116              		.type	confnet, %object
+ 117              		.size	confnet, 32
+ 118              	confnet:
+ 119 0000 00       		.byte	0
+ 120 0001 45       		.byte	69
+ 121 0002 54       		.byte	84
+ 122 0003 48       		.byte	72
+ 123 0004 45       		.byte	69
+ 124 0005 52       		.byte	82
+ 125 0006 4E       		.byte	78
+ 126 0007 55       		.byte	85
+ 127 0008 54       		.byte	84
+ 128 0009 00       		.byte	0
+ 129 000a 00       		.byte	0
+ 130 000b 06       		.byte	6
+ 131 000c 98       		.byte	-104
+ 132 000d 30       		.byte	48
+ 133 000e 00       		.byte	0
+ 134 000f 00       		.byte	0
+ 135 0010 00000000 		.word	0
+ 136 0014 00000000 		.word	0
+ 137 0018 00000000 		.word	0
+ 138 001c 00000000 		.word	0
+ 139              		.ident	"GCC: (GNU) 4.5.2"
+ARM GAS  C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\cceYFaod.s 			page 4
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 config.c
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\cceYFaod.s:14     .text:00000000 $t
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\cceYFaod.s:18     .text:00000000 ConfigGet
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\cceYFaod.s:43     .text:00000022 BootConfigRead
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\cceYFaod.s:78     .text:00000064 $d
+                            *COM*:00000040 confboot
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\cceYFaod.s:81     .text:0000006c $t
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\cceYFaod.s:86     .text:0000006c BootConfigWrite
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\cceYFaod.s:108    .text:00000094 $d
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\cceYFaod.s:118    .data:00000000 confnet
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\cceYFaod.s:114    .data:00000000 $d
+
+UNDEFINED SYMBOLS
+NvMemRead
+NvMemInit
+NvMemWrite

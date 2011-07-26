@@ -1,0 +1,388 @@
+GAS LISTING C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/ccs8fy3I.s 			page 1
+
+
+   1               		.file	"tftp.c"
+   2               	__SREG__ = 0x3f
+   3               	__SP_H__ = 0x3e
+   4               	__SP_L__ = 0x3d
+   5               	__CCP__  = 0x34
+   6               	__tmp_reg__ = 0
+   7               	__zero_reg__ = 1
+   8               		.text
+   9               	.global	FlashPage
+  10               		.type	FlashPage, @function
+  11               	FlashPage:
+  12 0000 AF92      		push r10
+  13 0002 BF92      		push r11
+  14 0004 CF92      		push r12
+  15 0006 DF92      		push r13
+  16 0008 EF92      		push r14
+  17 000a FF92      		push r15
+  18 000c 0F93      		push r16
+  19 000e 1F93      		push r17
+  20 0010 CF93      		push r28
+  21 0012 DF93      		push r29
+  22               	/* prologue: function */
+  23               	/* frame size = 0 */
+  24 0014 EB01      		movw r28,r22
+  25 0016 A0E0      		ldi r26,lo8(0)
+  26 0018 B0E0      		ldi r27,hi8(0)
+  27 001a EE24      		clr r14
+  28 001c F82E      		mov r15,r24
+  29 001e 092F      		mov r16,r25
+  30 0020 1A2F      		mov r17,r26
+  31 0022 83E0      		ldi r24,lo8(3)
+  32               	/* #APP */
+  33               	 ;  81 "tftp.c" 1
+  34 0024 F701      		movw r30, r14
+  35 0026 0093 5B00 		sts  91, r16
+  36 002a 8093 6800 		sts 104, r24
+  37 002e E895      		spm
+  38               		
+  39               	 ;  0 "" 2
+  40               	/* #NOAPP */
+  41 0030 91E1      		ldi r25,lo8(17)
+  42 0032 00C0      		rjmp .L2
+  43               	.L3:
+  44               	/* #APP */
+  45               	 ;  83 "tftp.c" 1
+  46 0034 9093 6800 		sts 104, r25
+  47 0038 E895      		spm
+  48               		
+  49               	 ;  0 "" 2
+  50               	/* #NOAPP */
+  51               	.L2:
+  52 003a 8091 6800 		lds r24,104
+  53 003e 86FD      		sbrc r24,6
+  54 0040 00C0      		rjmp .L3
+  55 0042 A801      		movw r20,r16
+  56 0044 9701      		movw r18,r14
+  57 0046 A12C      		mov r10,__zero_reg__
+GAS LISTING C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/ccs8fy3I.s 			page 2
+
+
+  58 0048 81E0      		ldi r24,hi8(256)
+  59 004a B82E      		mov r11,r24
+  60 004c C12C      		mov r12,__zero_reg__
+  61 004e D12C      		mov r13,__zero_reg__
+  62 0050 AE0C      		add r10,r14
+  63 0052 BF1C      		adc r11,r15
+  64 0054 C01E      		adc r12,r16
+  65 0056 D11E      		adc r13,r17
+  66 0058 A1E0      		ldi r26,lo8(1)
+  67 005a 00C0      		rjmp .L4
+  68               	.L5:
+  69 005c 7981      		ldd r23,Y+1
+  70 005e 60E0      		ldi r22,lo8(0)
+  71 0060 8881      		ld r24,Y
+  72 0062 FB01      		movw r30,r22
+  73 0064 E80F      		add r30,r24
+  74 0066 F11D      		adc r31,__zero_reg__
+  75 0068 CF01      		movw r24,r30
+  76               	/* #APP */
+  77               	 ;  90 "tftp.c" 1
+  78 006a 0C01      		movw  r0, r24
+  79 006c F901      		movw r30, r18
+  80 006e 4093 5B00 		sts 91, r20
+  81 0072 A093 6800 		sts 104, r26
+  82 0076 E895      		spm
+  83 0078 1124      		clr  r1
+  84               		
+  85               	 ;  0 "" 2
+  86               	/* #NOAPP */
+  87 007a 2296      		adiw r28,2
+  88 007c 2E5F      		subi r18,lo8(-(2))
+  89 007e 3F4F      		sbci r19,hi8(-(2))
+  90 0080 4F4F      		sbci r20,hlo8(-(2))
+  91 0082 5F4F      		sbci r21,hhi8(-(2))
+  92               	.L4:
+  93 0084 2A15      		cp r18,r10
+  94 0086 3B05      		cpc r19,r11
+  95 0088 4C05      		cpc r20,r12
+  96 008a 5D05      		cpc r21,r13
+  97 008c 00F0      		brlo .L5
+  98 008e 85E0      		ldi r24,lo8(5)
+  99               	/* #APP */
+ 100               	 ;  97 "tftp.c" 1
+ 101 0090 F701      		movw r30, r14
+ 102 0092 0093 5B00 		sts 91, r16
+ 103 0096 8093 6800 		sts 104, r24
+ 104 009a E895      		spm
+ 105               		
+ 106               	 ;  0 "" 2
+ 107               	/* #NOAPP */
+ 108 009c 91E1      		ldi r25,lo8(17)
+ 109 009e 00C0      		rjmp .L6
+ 110               	.L7:
+ 111               	/* #APP */
+ 112               	 ;  99 "tftp.c" 1
+ 113 00a0 9093 6800 		sts 104, r25
+ 114 00a4 E895      		spm
+GAS LISTING C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/ccs8fy3I.s 			page 3
+
+
+ 115               		
+ 116               	 ;  0 "" 2
+ 117               	/* #NOAPP */
+ 118               	.L6:
+ 119 00a6 8091 6800 		lds r24,104
+ 120 00aa 86FD      		sbrc r24,6
+ 121 00ac 00C0      		rjmp .L7
+ 122               	/* epilogue start */
+ 123 00ae DF91      		pop r29
+ 124 00b0 CF91      		pop r28
+ 125 00b2 1F91      		pop r17
+ 126 00b4 0F91      		pop r16
+ 127 00b6 FF90      		pop r15
+ 128 00b8 EF90      		pop r14
+ 129 00ba DF90      		pop r13
+ 130 00bc CF90      		pop r12
+ 131 00be BF90      		pop r11
+ 132 00c0 AF90      		pop r10
+ 133 00c2 0895      		ret
+ 134               		.size	FlashPage, .-FlashPage
+ 135               		.data
+ 136               	.LC0:
+ 137 0000 656E 7574 		.string	"enut.bin"
+ 137      2E62 696E 
+ 137      00
+ 138               	.LC1:
+ 139 0009 6F63 7465 		.string	"octet"
+ 139      7400 
+ 140               		.text
+ 141               	.global	TftpRecv
+ 142               		.type	TftpRecv, @function
+ 143               	TftpRecv:
+ 144 00c4 6F92      		push r6
+ 145 00c6 7F92      		push r7
+ 146 00c8 8F92      		push r8
+ 147 00ca 9F92      		push r9
+ 148 00cc AF92      		push r10
+ 149 00ce BF92      		push r11
+ 150 00d0 DF92      		push r13
+ 151 00d2 EF92      		push r14
+ 152 00d4 FF92      		push r15
+ 153 00d6 0F93      		push r16
+ 154 00d8 1F93      		push r17
+ 155 00da CF93      		push r28
+ 156 00dc DF93      		push r29
+ 157               	/* prologue: function */
+ 158               	/* frame size = 0 */
+ 159 00de 8091 0000 		lds r24,confboot+2
+ 160 00e2 9091 0000 		lds r25,(confboot+2)+1
+ 161 00e6 A091 0000 		lds r26,(confboot+2)+2
+ 162 00ea B091 0000 		lds r27,(confboot+2)+3
+ 163 00ee 0097      		sbiw r24,0
+ 164 00f0 A105      		cpc r26,__zero_reg__
+ 165 00f2 B105      		cpc r27,__zero_reg__
+ 166 00f4 01F4      		brne .+2
+ 167 00f6 00C0      		rjmp .L29
+ 168               	.L10:
+GAS LISTING C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/ccs8fy3I.s 			page 4
+
+
+ 169 00f8 80E0      		ldi r24,lo8(256)
+ 170 00fa 91E0      		ldi r25,hi8(256)
+ 171 00fc 9093 0000 		sts (sframe+42)+1,r25
+ 172 0100 8093 0000 		sts sframe+42,r24
+ 173 0104 8091 0000 		lds r24,confboot+6
+ 174 0108 8823      		tst r24
+ 175 010a 01F0      		breq .L12
+ 176 010c A0E0      		ldi r26,lo8(confboot+6)
+ 177 010e B0E0      		ldi r27,hi8(confboot+6)
+ 178 0110 00C0      		rjmp .L13
+ 179               	.L12:
+ 180 0112 A0E0      		ldi r26,lo8(.LC0)
+ 181 0114 B0E0      		ldi r27,hi8(.LC0)
+ 182               	.L13:
+ 183 0116 E0E0      		ldi r30,lo8(sframe+44)
+ 184 0118 F0E0      		ldi r31,hi8(sframe+44)
+ 185 011a 02E0      		ldi r16,lo8(2)
+ 186 011c 10E0      		ldi r17,hi8(2)
+ 187               	.L14:
+ 188 011e 8D91      		ld r24,X+
+ 189 0120 8193      		st Z+,r24
+ 190 0122 0F5F      		subi r16,lo8(-(1))
+ 191 0124 1F4F      		sbci r17,hi8(-(1))
+ 192 0126 8823      		tst r24
+ 193 0128 01F4      		brne .L14
+ 194 012a CF01      		movw r24,r30
+ 195 012c 60E0      		ldi r22,lo8(.LC1)
+ 196 012e 70E0      		ldi r23,hi8(.LC1)
+ 197 0130 46E0      		ldi r20,lo8(6)
+ 198 0132 0E94 0000 		call memcpy_
+ 199 0136 76E0      		ldi r23,lo8(6)
+ 200 0138 872E      		mov r8,r23
+ 201 013a 912C      		mov r9,__zero_reg__
+ 202 013c 800E      		add r8,r16
+ 203 013e 911E      		adc r9,r17
+ 204 0140 A12C      		mov r10,__zero_reg__
+ 205 0142 65E4      		ldi r22,hi8(17664)
+ 206 0144 B62E      		mov r11,r22
+ 207 0146 C0E0      		ldi r28,lo8(0)
+ 208 0148 D0E0      		ldi r29,hi8(0)
+ 209 014a 612C      		mov r6,__zero_reg__
+ 210 014c 54E0      		ldi r21,hi8(1024)
+ 211 014e 752E      		mov r7,r21
+ 212               	.L24:
+ 213 0150 DD24      		clr r13
+ 214               	.L18:
+ 215 0152 6091 0000 		lds r22,confboot+2
+ 216 0156 7091 0000 		lds r23,(confboot+2)+1
+ 217 015a 8091 0000 		lds r24,(confboot+2)+2
+ 218 015e 9091 0000 		lds r25,(confboot+2)+3
+ 219 0162 A501      		movw r20,r10
+ 220 0164 24E0      		ldi r18,lo8(4)
+ 221 0166 30E0      		ldi r19,hi8(4)
+ 222 0168 8401      		movw r16,r8
+ 223 016a 0E94 0000 		call UdpOutput
+ 224 016e 97FD      		sbrc r25,7
+ 225 0170 00C0      		rjmp .L15
+GAS LISTING C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/ccs8fy3I.s 			page 5
+
+
+ 226 0172 84E0      		ldi r24,lo8(4)
+ 227 0174 90E0      		ldi r25,hi8(4)
+ 228 0176 68E8      		ldi r22,lo8(5000)
+ 229 0178 73E1      		ldi r23,hi8(5000)
+ 230 017a 0E94 0000 		call UdpInput
+ 231 017e 7C01      		movw r14,r24
+ 232 0180 84E0      		ldi r24,lo8(4)
+ 233 0182 E816      		cp r14,r24
+ 234 0184 F104      		cpc r15,__zero_reg__
+ 235 0186 04F0      		brlt .L15
+ 236 0188 8091 0000 		lds r24,rframe+42
+ 237 018c 9091 0000 		lds r25,(rframe+42)+1
+ 238 0190 0E94 0000 		call __byte_swap2
+ 239 0194 0397      		sbiw r24,3
+ 240 0196 01F0      		breq .L28
+ 241 0198 00C0      		rjmp .L16
+ 242               	.L15:
+ 243 019a D394      		inc r13
+ 244 019c 83E0      		ldi r24,lo8(3)
+ 245 019e D816      		cp r13,r24
+ 246 01a0 01F4      		brne .L18
+ 247 01a2 00C0      		rjmp .L16
+ 248               	.L28:
+ 249 01a4 2097      		sbiw r28,0
+ 250 01a6 01F4      		brne .L19
+ 251 01a8 A090 0000 		lds r10,rframe+34
+ 252 01ac B090 0000 		lds r11,(rframe+34)+1
+ 253 01b0 7092 0000 		sts (sframe+42)+1,r7
+ 254 01b4 6092 0000 		sts sframe+42,r6
+ 255 01b8 44E0      		ldi r20,lo8(4)
+ 256 01ba 842E      		mov r8,r20
+ 257 01bc 912C      		mov r9,__zero_reg__
+ 258               	.L19:
+ 259 01be 8091 0000 		lds r24,rframe+44
+ 260 01c2 9091 0000 		lds r25,(rframe+44)+1
+ 261 01c6 0E94 0000 		call __byte_swap2
+ 262 01ca 8C01      		movw r16,r24
+ 263 01cc CE01      		movw r24,r28
+ 264 01ce 0196      		adiw r24,1
+ 265 01d0 0817      		cp r16,r24
+ 266 01d2 1907      		cpc r17,r25
+ 267 01d4 01F0      		breq .L20
+ 268 01d6 2097      		sbiw r28,0
+ 269 01d8 01F0      		breq .L16
+ 270 01da 8E01      		movw r16,r28
+ 271 01dc 00C0      		rjmp .L21
+ 272               	.L20:
+ 273 01de 84E0      		ldi r24,lo8(4)
+ 274 01e0 E816      		cp r14,r24
+ 275 01e2 F104      		cpc r15,__zero_reg__
+ 276 01e4 01F0      		breq .L22
+ 277 01e6 CC0F      		lsl r28
+ 278 01e8 DD1F      		rol r29
+ 279 01ea CE01      		movw r24,r28
+ 280 01ec 60E0      		ldi r22,lo8(rframe+46)
+ 281 01ee 70E0      		ldi r23,hi8(rframe+46)
+ 282 01f0 0E94 0000 		call FlashPage
+GAS LISTING C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/ccs8fy3I.s 			page 6
+
+
+ 283 01f4 85E0      		ldi r24,lo8(261)
+ 284 01f6 E816      		cp r14,r24
+ 285 01f8 81E0      		ldi r24,hi8(261)
+ 286 01fa F806      		cpc r15,r24
+ 287 01fc 04F0      		brlt .L22
+ 288 01fe CE01      		movw r24,r28
+ 289 0200 0196      		adiw r24,1
+ 290 0202 60E0      		ldi r22,lo8(rframe+302)
+ 291 0204 70E0      		ldi r23,hi8(rframe+302)
+ 292 0206 0E94 0000 		call FlashPage
+ 293               	.L22:
+ 294 020a C801      		movw r24,r16
+ 295 020c 0E94 0000 		call __byte_swap2
+ 296 0210 9093 0000 		sts (sframe+44)+1,r25
+ 297 0214 8093 0000 		sts sframe+44,r24
+ 298               	.L21:
+ 299 0218 84E0      		ldi r24,lo8(516)
+ 300 021a E816      		cp r14,r24
+ 301 021c 82E0      		ldi r24,hi8(516)
+ 302 021e F806      		cpc r15,r24
+ 303 0220 04F0      		brlt .L23
+ 304 0222 E801      		movw r28,r16
+ 305 0224 00C0      		rjmp .L24
+ 306               	.L23:
+ 307 0226 6091 0000 		lds r22,confboot+2
+ 308 022a 7091 0000 		lds r23,(confboot+2)+1
+ 309 022e 8091 0000 		lds r24,(confboot+2)+2
+ 310 0232 9091 0000 		lds r25,(confboot+2)+3
+ 311 0236 A501      		movw r20,r10
+ 312 0238 24E0      		ldi r18,lo8(4)
+ 313 023a 30E0      		ldi r19,hi8(4)
+ 314 023c 8401      		movw r16,r8
+ 315 023e 0E94 0000 		call UdpOutput
+ 316               	.L29:
+ 317 0242 20E0      		ldi r18,lo8(0)
+ 318 0244 30E0      		ldi r19,hi8(0)
+ 319 0246 00C0      		rjmp .L11
+ 320               	.L16:
+ 321 0248 2FEF      		ldi r18,lo8(-1)
+ 322 024a 3FEF      		ldi r19,hi8(-1)
+ 323               	.L11:
+ 324 024c C901      		movw r24,r18
+ 325               	/* epilogue start */
+ 326 024e DF91      		pop r29
+ 327 0250 CF91      		pop r28
+ 328 0252 1F91      		pop r17
+ 329 0254 0F91      		pop r16
+ 330 0256 FF90      		pop r15
+ 331 0258 EF90      		pop r14
+ 332 025a DF90      		pop r13
+ 333 025c BF90      		pop r11
+ 334 025e AF90      		pop r10
+ 335 0260 9F90      		pop r9
+ 336 0262 8F90      		pop r8
+ 337 0264 7F90      		pop r7
+ 338 0266 6F90      		pop r6
+ 339 0268 0895      		ret
+GAS LISTING C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/ccs8fy3I.s 			page 7
+
+
+ 340               		.size	TftpRecv, .-TftpRecv
+ 341               	.global __do_copy_data
+GAS LISTING C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/ccs8fy3I.s 			page 8
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 tftp.c
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/ccs8fy3I.s:2      *ABS*:0000003f __SREG__
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/ccs8fy3I.s:3      *ABS*:0000003e __SP_H__
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/ccs8fy3I.s:4      *ABS*:0000003d __SP_L__
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/ccs8fy3I.s:5      *ABS*:00000034 __CCP__
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/ccs8fy3I.s:6      *ABS*:00000000 __tmp_reg__
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/ccs8fy3I.s:7      *ABS*:00000001 __zero_reg__
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/ccs8fy3I.s:11     .text:00000000 FlashPage
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/ccs8fy3I.s:143    .text:000000c4 TftpRecv
+
+UNDEFINED SYMBOLS
+confboot
+sframe
+memcpy_
+UdpOutput
+UdpInput
+rframe
+__byte_swap2
+__do_copy_data

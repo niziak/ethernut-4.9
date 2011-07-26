@@ -1,0 +1,482 @@
+Archive member included because of file (symbol)
+
+c:/winappl/yagarto/bin/../lib/gcc/arm-none-eabi/4.5.2\libgcc.a(_udivsi3.o)
+                              utils.o (__aeabi_uidiv)
+c:/winappl/yagarto/bin/../lib/gcc/arm-none-eabi/4.5.2\libgcc.a(_dvmd_tls.o)
+                              c:/winappl/yagarto/bin/../lib/gcc/arm-none-eabi/4.5.2\libgcc.a(_udivsi3.o) (__aeabi_idiv0)
+
+Allocating common symbols
+Common symbol       size              file
+
+rframe              0x252             bootmon.o
+test                0x228             dhcp.o
+arpframe            0x2a              arp.o
+sframe              0x252             bootmon.o
+confboot            0x40              config.o
+ae                  0xc               arp.o
+random_id           0x4               bootmon.o
+
+Memory Configuration
+
+Name             Origin             Length             Attributes
+ram              0x0003f000         0x00001000         rw
+rom              0x10000000         0x00400000         xr
+*default*        0x00000000         0xffffffff
+
+Linker script and memory map
+
+LOAD start_rom.o
+LOAD bootmon.o
+LOAD config.o
+LOAD twbbi.o
+LOAD nvmem.o
+LOAD dhcp.o
+LOAD tftp.o
+LOAD udp.o
+LOAD ip.o
+LOAD arp.o
+LOAD ether.o
+LOAD dialog.o
+LOAD uart.o
+LOAD utils.o
+START GROUP
+LOAD c:/winappl/yagarto/bin/../lib/gcc/arm-none-eabi/4.5.2\libgcc.a
+LOAD c:/winappl/yagarto/bin/../lib/gcc/arm-none-eabi/4.5.2/../../../../arm-none-eabi/lib\libc.a
+END GROUP
+
+.text           0x10000000     0x1da0
+ *(.vectors)
+                0x10000000                . = ALIGN (0x4)
+ *(.init0)
+ .init0         0x10000000       0x98 start_rom.o
+                0x10000000                __vectors
+                0x10000034                __undef
+                0x10000034                __swi
+                0x10000034                __data_abort
+                0x10000034                __prefetch_abort
+                0x10000034                __xcpt_dummy
+                0x10000044                _start
+                0x10000098                . = ALIGN (0x4)
+ *(.init1)
+ .init1         0x10000098       0x5c start_rom.o
+                0x100000f0                __irq_dummy
+                0x100000f4                __set_stacks
+                0x100000f4                . = ALIGN (0x4)
+ *(.init2)
+ .init2         0x100000f4       0xc4 start_rom.o
+                0x100001b4                __xcp_stack
+                0x100001b8                __enter_user
+                0x100001b8                . = ALIGN (0x4)
+ *(.init3)
+ .init3         0x100001b8        0x4 start_rom.o
+                0x100001bc                __clear_bss
+                0x100001bc                . = ALIGN (0x4)
+ *(.init4)
+ .init4         0x100001bc       0x5c start_rom.o
+                0x10000218                __call_rtos
+                0x10000218                . = ALIGN (0x4)
+ *(.init5)
+ .init5         0x10000218       0x14 start_rom.o
+                0x1000022c                . = ALIGN (0x4)
+ *(.text)
+ .text          0x1000022c        0x0 start_rom.o
+ .text          0x1000022c      0x2b8 bootmon.o
+                0x1000022c                NplUledCntl
+                0x10000258                main
+ .text          0x100004e4       0x9c config.o
+                0x10000506                BootConfigRead
+                0x10000550                BootConfigWrite
+ .text          0x10000580      0x20c twbbi.o
+                0x10000650                TwMasterTransact
+                0x1000076c                TwInit
+ .text          0x1000078c      0x248 nvmem.o
+                0x10000858                NvMemRead
+                0x10000888                NvMemWrite
+                0x100008ec                NvMemInit
+ .text          0x100009d4      0x2ec dhcp.o
+                0x100009d4                DhcpGetOption
+                0x10000a24                DhcpSetOption
+                0x10000a50                DhcpTransact
+                0x10000b0c                DhcpQuery
+ .text          0x10000cc0      0x1d8 tftp.o
+                0x10000cc0                StoreBlock
+                0x10000cec                TftpRecv
+ .text          0x10000e98       0x8c udp.o
+                0x10000e98                UdpInput
+                0x10000ee4                UdpOutput
+ .text          0x10000f24      0x1d8 ip.o
+                0x10000f24                IpChkSum
+                0x10000f6a                IpInput
+                0x10001034                IpOutput
+ .text          0x100010fc      0x22c arp.o
+                0x100010fc                ArpRequest
+                0x10001258                ArpRespond
+ .text          0x10001328      0x38c ether.o
+                0x10001398                NicReset
+                0x100013e4                EtherInit
+                0x1000150c                EtherOutput
+                0x100015a4                EtherInput
+ .text          0x100016b4      0x28c dialog.o
+                0x100016b4                PutString
+                0x100016e0                GetLine
+                0x10001748                GetIP
+                0x100017b0                PutHex
+                0x100017e4                PutShortHex
+                0x10001824                PutLongHex
+                0x10001864                GetMac
+ .text          0x10001940       0xc0 uart.o
+                0x10001940                UartInit
+                0x100019a0                UartRxWait
+                0x100019c4                UartRx
+                0x100019e4                UartTx
+ .text          0x10001a00      0x1d4 utils.o
+                0x10001a00                MicroDelay
+                0x10001a1e                Delay
+                0x10001a4c                strcpy_
+                0x10001a62                memcpy_
+                0x10001a7e                memcmp_
+                0x10001aa2                memset_
+                0x10001ab8                hex2bin
+                0x10001aea                inet_addr
+                0x10001b56                inet_ntoa
+ .text          0x10001bd4      0x114 c:/winappl/yagarto/bin/../lib/gcc/arm-none-eabi/4.5.2\libgcc.a(_udivsi3.o)
+                0x10001bd4                __aeabi_uidiv
+                0x10001bd4                __udivsi3
+                0x10001cc8                __aeabi_uidivmod
+ .text          0x10001ce8        0x4 c:/winappl/yagarto/bin/../lib/gcc/arm-none-eabi/4.5.2\libgcc.a(_dvmd_tls.o)
+                0x10001ce8                __aeabi_idiv0
+                0x10001ce8                __aeabi_ldiv0
+ *fill*         0x10001cec        0x4 00
+ .text.stub     0x10001cf0       0x10 linker stubs
+                0x10001d00                . = ALIGN (0x4)
+ *(.rodata*)
+ .rodata.str1.1
+                0x10001d00       0x47 bootmon.o
+                                 0x49 (size before relaxing)
+ *fill*         0x10001d47        0x1 00
+ .rodata        0x10001d48        0x4 nvmem.o
+ .rodata.str1.1
+                0x10001d4c        0xf tftp.o
+ *fill*         0x10001d5b        0x1 00
+ .rodata        0x10001d5c       0x14 dialog.o
+ .rodata.str1.1
+                0x10001d70       0x2f dialog.o
+                                 0x34 (size before relaxing)
+                0x10001da0                . = ALIGN (0x4)
+ *fill*         0x10001d9f        0x1 00
+ *(.glue_7t)
+ .glue_7t       0x00000000        0x0 linker stubs
+                0x10001da0                . = ALIGN (0x4)
+ *(.glue_7)
+ .glue_7        0x00000000        0x0 linker stubs
+                0x10001da0                . = ALIGN (0x4)
+                0x10001da0                _mdata = .
+                0x10001da0                . = ALIGN (0x4)
+                0x10001da0                etext = .
+                0x10001da0                _text_end = .
+                0x10001da0                . = ALIGN (0x4)
+                0x10001da0                __data_load_start = .
+
+.vfp11_veneer   0x10001da0        0x0
+ .vfp11_veneer  0x00000000        0x0 linker stubs
+
+.v4_bx          0x10001da0        0x0
+ .v4_bx         0x00000000        0x0 linker stubs
+
+.bss            0x0003f000      0xea4
+                0x0003f400                . = (. + 0x400)
+ *fill*         0x0003f000      0x400 00
+                0x0003f400                PROVIDE (__stack, .)
+                0x0003f400                PROVIDE (__bss_start, .)
+ *(.bss)
+ .bss           0x0003f400        0x0 start_rom.o
+ .bss           0x0003f400       0xe0 bootmon.o
+ .bss           0x0003f4e0        0x0 config.o
+ .bss           0x0003f4e0        0x0 twbbi.o
+ .bss           0x0003f4e0      0x214 nvmem.o
+ .bss           0x0003f6f4        0x0 dhcp.o
+ .bss           0x0003f6f4        0x0 tftp.o
+ .bss           0x0003f6f4        0x0 udp.o
+ .bss           0x0003f6f4        0x0 ip.o
+ .bss           0x0003f6f4        0xc arp.o
+ .bss           0x0003f700        0x0 ether.o
+ .bss           0x0003f700       0x48 dialog.o
+ .bss           0x0003f748        0x0 uart.o
+ .bss           0x0003f748       0x10 utils.o
+ .bss           0x0003f758        0x0 c:/winappl/yagarto/bin/../lib/gcc/arm-none-eabi/4.5.2\libgcc.a(_udivsi3.o)
+ .bss           0x0003f758        0x0 c:/winappl/yagarto/bin/../lib/gcc/arm-none-eabi/4.5.2\libgcc.a(_dvmd_tls.o)
+ *(COMMON)
+ COMMON         0x0003f758      0x4ac bootmon.o
+                0x0003f758                rframe
+                0x0003f9ac                sframe
+                0x0003fc00                random_id
+ COMMON         0x0003fc04       0x40 config.o
+                0x0003fc04                confboot
+ COMMON         0x0003fc44      0x228 dhcp.o
+                0x0003fc44                test
+ COMMON         0x0003fe6c       0x38 arp.o
+                0x0003fe6c                arpframe
+                0x0003fe98                ae
+                0x0003fea4                . = ALIGN (0x4)
+                0x0003fea4                PROVIDE (__bss_end, .)
+                0x0003fea4                PROVIDE (__heap_start, .)
+
+.data           0x0003fea4       0x20 load address 0x10001da0
+                0x0003fea4                PROVIDE (__data_start, .)
+ *(.data)
+ .data          0x0003fea4        0x0 start_rom.o
+ .data          0x0003fea4        0x0 bootmon.o
+ .data          0x0003fea4       0x20 config.o
+                0x0003fea4                confnet
+ .data          0x0003fec4        0x0 twbbi.o
+ .data          0x0003fec4        0x0 nvmem.o
+ .data          0x0003fec4        0x0 dhcp.o
+ .data          0x0003fec4        0x0 tftp.o
+ .data          0x0003fec4        0x0 udp.o
+ .data          0x0003fec4        0x0 ip.o
+ .data          0x0003fec4        0x0 arp.o
+ .data          0x0003fec4        0x0 ether.o
+ .data          0x0003fec4        0x0 dialog.o
+ .data          0x0003fec4        0x0 uart.o
+ .data          0x0003fec4        0x0 utils.o
+ .data          0x0003fec4        0x0 c:/winappl/yagarto/bin/../lib/gcc/arm-none-eabi/4.5.2\libgcc.a(_udivsi3.o)
+ .data          0x0003fec4        0x0 c:/winappl/yagarto/bin/../lib/gcc/arm-none-eabi/4.5.2\libgcc.a(_dvmd_tls.o)
+                0x0003fec4                . = ALIGN (0x4)
+                0x0003fec4                edata = .
+                0x0003fec4                _edata = .
+                0x0003fec4                PROVIDE (__data_end, .)
+
+.stab
+ *(.stab)
+
+.stabstr
+ *(.stabstr)
+OUTPUT(bootmon.elf elf32-littlearm)
+
+.ARM.attributes
+                0x00000000       0x2e
+ .ARM.attributes
+                0x00000000       0x22 start_rom.o
+ .ARM.attributes
+                0x00000022       0x32 bootmon.o
+ .ARM.attributes
+                0x00000054       0x32 config.o
+ .ARM.attributes
+                0x00000086       0x32 twbbi.o
+ .ARM.attributes
+                0x000000b8       0x32 nvmem.o
+ .ARM.attributes
+                0x000000ea       0x32 dhcp.o
+ .ARM.attributes
+                0x0000011c       0x32 tftp.o
+ .ARM.attributes
+                0x0000014e       0x32 udp.o
+ .ARM.attributes
+                0x00000180       0x32 ip.o
+ .ARM.attributes
+                0x000001b2       0x32 arp.o
+ .ARM.attributes
+                0x000001e4       0x32 ether.o
+ .ARM.attributes
+                0x00000216       0x32 dialog.o
+ .ARM.attributes
+                0x00000248       0x32 uart.o
+ .ARM.attributes
+                0x0000027a       0x32 utils.o
+ .ARM.attributes
+                0x000002ac       0x1a c:/winappl/yagarto/bin/../lib/gcc/arm-none-eabi/4.5.2\libgcc.a(_udivsi3.o)
+ .ARM.attributes
+                0x000002c6       0x18 c:/winappl/yagarto/bin/../lib/gcc/arm-none-eabi/4.5.2\libgcc.a(_dvmd_tls.o)
+
+.comment        0x00000000       0x11
+ .comment       0x00000000       0x11 bootmon.o
+                                 0x12 (size before relaxing)
+ .comment       0x00000000       0x12 config.o
+ .comment       0x00000000       0x12 twbbi.o
+ .comment       0x00000000       0x12 nvmem.o
+ .comment       0x00000000       0x12 dhcp.o
+ .comment       0x00000000       0x12 tftp.o
+ .comment       0x00000000       0x12 udp.o
+ .comment       0x00000000       0x12 ip.o
+ .comment       0x00000000       0x12 arp.o
+ .comment       0x00000000       0x12 ether.o
+ .comment       0x00000000       0x12 dialog.o
+ .comment       0x00000000       0x12 uart.o
+ .comment       0x00000000       0x12 utils.o
+
+.debug_frame    0x00000000       0x20
+ .debug_frame   0x00000000       0x20 c:/winappl/yagarto/bin/../lib/gcc/arm-none-eabi/4.5.2\libgcc.a(_udivsi3.o)
+
+.debug_line     0x00000000       0xfd
+ .debug_line    0x00000000       0x93 c:/winappl/yagarto/bin/../lib/gcc/arm-none-eabi/4.5.2\libgcc.a(_udivsi3.o)
+ .debug_line    0x00000093       0x6a c:/winappl/yagarto/bin/../lib/gcc/arm-none-eabi/4.5.2\libgcc.a(_dvmd_tls.o)
+
+.debug_info     0x00000000      0x130
+ .debug_info    0x00000000       0x98 c:/winappl/yagarto/bin/../lib/gcc/arm-none-eabi/4.5.2\libgcc.a(_udivsi3.o)
+ .debug_info    0x00000098       0x98 c:/winappl/yagarto/bin/../lib/gcc/arm-none-eabi/4.5.2\libgcc.a(_dvmd_tls.o)
+
+.debug_abbrev   0x00000000       0x28
+ .debug_abbrev  0x00000000       0x14 c:/winappl/yagarto/bin/../lib/gcc/arm-none-eabi/4.5.2\libgcc.a(_udivsi3.o)
+ .debug_abbrev  0x00000014       0x14 c:/winappl/yagarto/bin/../lib/gcc/arm-none-eabi/4.5.2\libgcc.a(_dvmd_tls.o)
+
+.debug_aranges  0x00000000       0x40
+ .debug_aranges
+                0x00000000       0x20 c:/winappl/yagarto/bin/../lib/gcc/arm-none-eabi/4.5.2\libgcc.a(_udivsi3.o)
+ .debug_aranges
+                0x00000020       0x20 c:/winappl/yagarto/bin/../lib/gcc/arm-none-eabi/4.5.2\libgcc.a(_dvmd_tls.o)
+
+Cross Reference Table
+
+Symbol                                            File
+ArpRequest                                        arp.o
+                                                  ip.o
+ArpRespond                                        arp.o
+                                                  ether.o
+BootConfigRead                                    config.o
+                                                  bootmon.o
+BootConfigWrite                                   config.o
+                                                  bootmon.o
+Delay                                             utils.o
+                                                  nvmem.o
+DhcpGetOption                                     dhcp.o
+DhcpQuery                                         dhcp.o
+                                                  bootmon.o
+DhcpSetOption                                     dhcp.o
+DhcpTransact                                      dhcp.o
+EtherInit                                         ether.o
+                                                  bootmon.o
+EtherInput                                        ether.o
+                                                  arp.o
+                                                  ip.o
+EtherOutput                                       ether.o
+                                                  arp.o
+                                                  ip.o
+GetIP                                             dialog.o
+                                                  bootmon.o
+GetLine                                           dialog.o
+                                                  bootmon.o
+GetMac                                            dialog.o
+                                                  bootmon.o
+IpChkSum                                          ip.o
+IpInput                                           ip.o
+                                                  udp.o
+IpOutput                                          ip.o
+                                                  udp.o
+MicroDelay                                        utils.o
+                                                  uart.o
+                                                  ether.o
+NicReset                                          ether.o
+NplUledCntl                                       bootmon.o
+NvMemInit                                         nvmem.o
+                                                  config.o
+NvMemRead                                         nvmem.o
+                                                  config.o
+NvMemWrite                                        nvmem.o
+                                                  config.o
+PutHex                                            dialog.o
+PutLongHex                                        dialog.o
+PutShortHex                                       dialog.o
+PutString                                         dialog.o
+                                                  bootmon.o
+StoreBlock                                        tftp.o
+TftpRecv                                          tftp.o
+                                                  bootmon.o
+TwInit                                            twbbi.o
+                                                  nvmem.o
+TwMasterTransact                                  twbbi.o
+                                                  nvmem.o
+UartInit                                          uart.o
+                                                  bootmon.o
+UartRx                                            uart.o
+                                                  dialog.o
+                                                  bootmon.o
+UartRxWait                                        uart.o
+                                                  bootmon.o
+UartTx                                            uart.o
+                                                  dialog.o
+UdpInput                                          udp.o
+                                                  tftp.o
+                                                  dhcp.o
+UdpOutput                                         udp.o
+                                                  tftp.o
+                                                  dhcp.o
+__aeabi_idiv0                                     c:/winappl/yagarto/bin/../lib/gcc/arm-none-eabi/4.5.2\libgcc.a(_dvmd_tls.o)
+                                                  c:/winappl/yagarto/bin/../lib/gcc/arm-none-eabi/4.5.2\libgcc.a(_udivsi3.o)
+__aeabi_ldiv0                                     c:/winappl/yagarto/bin/../lib/gcc/arm-none-eabi/4.5.2\libgcc.a(_dvmd_tls.o)
+__aeabi_uidiv                                     c:/winappl/yagarto/bin/../lib/gcc/arm-none-eabi/4.5.2\libgcc.a(_udivsi3.o)
+                                                  utils.o
+__aeabi_uidivmod                                  c:/winappl/yagarto/bin/../lib/gcc/arm-none-eabi/4.5.2\libgcc.a(_udivsi3.o)
+                                                  utils.o
+__bss_end                                         start_rom.o
+__bss_start                                       start_rom.o
+__call_rtos                                       start_rom.o
+__clear_bss                                       start_rom.o
+__data_abort                                      start_rom.o
+__data_end                                        start_rom.o
+__data_start                                      start_rom.o
+__enter_user                                      start_rom.o
+__irq_dummy                                       start_rom.o
+__prefetch_abort                                  start_rom.o
+__set_stacks                                      start_rom.o
+__stack                                           start_rom.o
+__swi                                             start_rom.o
+__udivsi3                                         c:/winappl/yagarto/bin/../lib/gcc/arm-none-eabi/4.5.2\libgcc.a(_udivsi3.o)
+__undef                                           start_rom.o
+__vectors                                         start_rom.o
+__xcp_stack                                       start_rom.o
+__xcpt_dummy                                      start_rom.o
+_start                                            start_rom.o
+_text_end                                         start_rom.o
+ae                                                arp.o
+arpframe                                          ether.o
+                                                  arp.o
+confboot                                          tftp.o
+                                                  dhcp.o
+                                                  config.o
+                                                  bootmon.o
+confnet                                           config.o
+                                                  ether.o
+                                                  arp.o
+                                                  ip.o
+                                                  dhcp.o
+                                                  bootmon.o
+hex2bin                                           utils.o
+                                                  dialog.o
+inet_addr                                         utils.o
+                                                  dialog.o
+                                                  bootmon.o
+inet_ntoa                                         utils.o
+                                                  bootmon.o
+main                                              bootmon.o
+                                                  start_rom.o
+memcmp_                                           utils.o
+memcpy_                                           utils.o
+                                                  ether.o
+                                                  arp.o
+                                                  tftp.o
+                                                  dhcp.o
+                                                  nvmem.o
+                                                  bootmon.o
+memset_                                           utils.o
+                                                  arp.o
+                                                  nvmem.o
+random_id                                         ether.o
+                                                  dhcp.o
+                                                  bootmon.o
+rframe                                            ether.o
+                                                  arp.o
+                                                  ip.o
+                                                  udp.o
+                                                  tftp.o
+                                                  dhcp.o
+                                                  bootmon.o
+sframe                                            ether.o
+                                                  ip.o
+                                                  udp.o
+                                                  tftp.o
+                                                  dhcp.o
+                                                  bootmon.o
+strcpy_                                           utils.o
+                                                  dialog.o
+                                                  bootmon.o
+test                                              dhcp.o

@@ -33,6 +33,9 @@
 -- ARM Architecture
 --
 -- $Log$
+-- Revision 1.41  2010/12/15 21:46:28  ve2yag
+-- Add PWM interrupt support for AT91SAM7S and SE.
+--
 -- Revision 1.40  2009/09/20 13:24:58  ulrichprinz
 -- Added limited USART support for DBGU on SAM.
 --
@@ -562,12 +565,14 @@ nutarch_arm =
             "arm/dev/ih_at91irq1.c",
             "arm/dev/ih_at91irq2.c",
             "arm/dev/ih_at91pio.c",
+            "arm/dev/ih_at91pioa.c",
             "arm/dev/ih_at91spi0.c",
             "arm/dev/ih_at91ssc.c",
             "arm/dev/ih_at91swirq.c",
             "arm/dev/ih_at91tc0.c",
             "arm/dev/ih_at91tc1.c",
             "arm/dev/ih_at91tc2.c",
+            "arm/dev/ih_at91pwmc.c",
             "arm/dev/ih_at91adc.c",
             "arm/dev/ih_at91twi.c",
             "arm/dev/ih_at91uart0.c",
@@ -588,12 +593,16 @@ nutarch_arm =
             "arm/dev/ih_at91irq1.c",
             "arm/dev/ih_at91irq2.c",
             "arm/dev/ih_at91pio.c",
+            "arm/dev/ih_at91pioa.c",
+            "arm/dev/ih_at91piob.c",
+            "arm/dev/ih_at91pioc.c",
             "arm/dev/ih_at91spi0.c",
             "arm/dev/ih_at91ssc.c",
             "arm/dev/ih_at91swirq.c",
             "arm/dev/ih_at91tc0.c",
             "arm/dev/ih_at91tc1.c",
             "arm/dev/ih_at91tc2.c",
+            "arm/dev/ih_at91pwmc.c",
             "arm/dev/ih_at91adc.c",
             "arm/dev/ih_at91twi.c",
             "arm/dev/ih_at91uart0.c",
@@ -1413,11 +1422,21 @@ nutarch_arm =
                 macro = "SPIBUS0_DOUBLE_BUFFER",
                 brief = "PDC Mode (First Controller)",
                 description = "If enabled, the controller will use PDC mode.\n\n"..
-                              "Under development.",
-                requires = { "NOT_AVAILABLE" },
+                              "Under development. Works fine on SAM7X",
+		provides = { "SPIBUS0_DOUBLE_BUFFER" },
                 flavor = "boolean",
                 file = "include/cfg/spi.h"
             },
+            {
+                macro = "SPIBUS0_DOUBLE_BUFFER_HEURISTIC",
+                brief = "Heuristicaly use polling mode for short transfers instead of PDC",
+                description = "If enabled, the controller will use the polling mode instead of PDC mode for short "..
+                              "transfers (currently less that 4 byte), as setup of PDC might result in larger overhead. ".. 
+                              "Depends on the selected SPI clock\n\n",
+		requires = { "SPIBUS0_DOUBLE_BUFFER" },
+                flavor = "boolean",
+                file = "include/cfg/spi.h"
+            },	
             {
                 macro = "SPI0_CS0_PIO_ID",
                 brief = "CS0 Port ID (First Controller)",
@@ -1498,11 +1517,21 @@ nutarch_arm =
                 macro = "SPIBUS1_DOUBLE_BUFFER",
                 brief = "PDC Mode (Second Controller)",
                 description = "If enabled, the controller will use PDC mode.\n\n"..
-                              "Under development.",
-                requires = { "NOT_AVAILABLE" },
+                              "Under development. Works fine on SAM7X",
+		provides = { "SPIBUS1_DOUBLE_BUFFER" },
                 flavor = "boolean",
                 file = "include/cfg/spi.h"
             },
+            {
+                macro = "SPIBUS1_DOUBLE_BUFFER_HEURISTIC",
+                brief = "Heuristicaly use polling mode for short transfers instead of PDC",
+                description = "If enabled, the controller will use the polling mode instead of PDC mode for short "..
+                              "transfers (currently less that 4 byte), as setup of PDC might result in larger overhead. ".. 
+                              "Depends on the selected SPI clock\n\n",
+		requires = { "SPIBUS1_DOUBLE_BUFFER" },
+                flavor = "boolean",
+                file = "include/cfg/spi.h"
+            },	
             {
                 macro = "SPI1_CS0_PIO_ID",
                 brief = "CS0 Port ID (Second Controller)",

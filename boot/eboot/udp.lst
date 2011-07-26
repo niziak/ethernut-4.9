@@ -1,0 +1,134 @@
+GAS LISTING C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/ccOQI9vf.s 			page 1
+
+
+   1               		.file	"udp.c"
+   2               	__SREG__ = 0x3f
+   3               	__SP_H__ = 0x3e
+   4               	__SP_L__ = 0x3d
+   5               	__CCP__  = 0x34
+   6               	__tmp_reg__ = 0
+   7               	__zero_reg__ = 1
+   8               		.text
+   9               	.global	UdpOutput
+  10               		.type	UdpOutput, @function
+  11               	UdpOutput:
+  12 0000 0F93      		push r16
+  13 0002 1F93      		push r17
+  14               	/* prologue: function */
+  15               	/* frame size = 0 */
+  16               	/* #APP */
+  17               	 ;  72 "types.h" 1
+  18 0004 022E      		mov __tmp_reg__, r18
+  19 0006 232F      		mov r18, r19
+  20 0008 302D      		mov r19, __tmp_reg__
+  21               		
+  22               	 ;  0 "" 2
+  23               	/* #NOAPP */
+  24 000a 3093 0000 		sts (sframe+34)+1,r19
+  25 000e 2093 0000 		sts sframe+34,r18
+  26               	/* #APP */
+  27               	 ;  72 "types.h" 1
+  28 0012 042E      		mov __tmp_reg__, r20
+  29 0014 452F      		mov r20, r21
+  30 0016 502D      		mov r21, __tmp_reg__
+  31               		
+  32               	 ;  0 "" 2
+  33               	/* #NOAPP */
+  34 0018 5093 0000 		sts (sframe+36)+1,r21
+  35 001c 4093 0000 		sts sframe+36,r20
+  36 0020 085F      		subi r16,lo8(-(8))
+  37 0022 1F4F      		sbci r17,hi8(-(8))
+  38 0024 9801      		movw r18,r16
+  39               	/* #APP */
+  40               	 ;  72 "types.h" 1
+  41 0026 022E      		mov __tmp_reg__, r18
+  42 0028 232F      		mov r18, r19
+  43 002a 302D      		mov r19, __tmp_reg__
+  44               		
+  45               	 ;  0 "" 2
+  46               	/* #NOAPP */
+  47 002c 3093 0000 		sts (sframe+38)+1,r19
+  48 0030 2093 0000 		sts sframe+38,r18
+  49 0034 41E1      		ldi r20,lo8(17)
+  50 0036 9801      		movw r18,r16
+  51 0038 0E94 0000 		call IpOutput
+  52               	/* epilogue start */
+  53 003c 1F91      		pop r17
+  54 003e 0F91      		pop r16
+  55 0040 0895      		ret
+  56               		.size	UdpOutput, .-UdpOutput
+  57               	.global	UdpInput
+GAS LISTING C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/ccOQI9vf.s 			page 2
+
+
+  58               		.type	UdpInput, @function
+  59               	UdpInput:
+  60 0042 0F93      		push r16
+  61 0044 1F93      		push r17
+  62 0046 CF93      		push r28
+  63 0048 DF93      		push r29
+  64               	/* prologue: function */
+  65               	/* frame size = 0 */
+  66 004a 8C01      		movw r16,r24
+  67 004c EB01      		movw r28,r22
+  68               	.L5:
+  69 004e 81E1      		ldi r24,lo8(17)
+  70 0050 BE01      		movw r22,r28
+  71 0052 0E94 0000 		call IpInput
+  72 0056 9C01      		movw r18,r24
+  73 0058 1816      		cp __zero_reg__,r24
+  74 005a 1906      		cpc __zero_reg__,r25
+  75 005c 04F4      		brge .L4
+  76 005e 8091 0000 		lds r24,rframe+36
+  77 0062 9091 0000 		lds r25,(rframe+36)+1
+  78               	/* #APP */
+  79               	 ;  72 "types.h" 1
+  80 0066 082E      		mov __tmp_reg__, r24
+  81 0068 892F      		mov r24, r25
+  82 006a 902D      		mov r25, __tmp_reg__
+  83               		
+  84               	 ;  0 "" 2
+  85               	/* #NOAPP */
+  86 006c 0817      		cp r16,r24
+  87 006e 1907      		cpc r17,r25
+  88 0070 01F4      		brne .L5
+  89 0072 2091 0000 		lds r18,rframe+38
+  90 0076 3091 0000 		lds r19,(rframe+38)+1
+  91               	/* #APP */
+  92               	 ;  72 "types.h" 1
+  93 007a 022E      		mov __tmp_reg__, r18
+  94 007c 232F      		mov r18, r19
+  95 007e 302D      		mov r19, __tmp_reg__
+  96               		
+  97               	 ;  0 "" 2
+  98               	/* #NOAPP */
+  99 0080 2850      		subi r18,lo8(-(-8))
+ 100 0082 3040      		sbci r19,hi8(-(-8))
+ 101               	.L4:
+ 102 0084 C901      		movw r24,r18
+ 103               	/* epilogue start */
+ 104 0086 DF91      		pop r29
+ 105 0088 CF91      		pop r28
+ 106 008a 1F91      		pop r17
+ 107 008c 0F91      		pop r16
+ 108 008e 0895      		ret
+ 109               		.size	UdpInput, .-UdpInput
+GAS LISTING C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/ccOQI9vf.s 			page 3
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 udp.c
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/ccOQI9vf.s:2      *ABS*:0000003f __SREG__
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/ccOQI9vf.s:3      *ABS*:0000003e __SP_H__
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/ccOQI9vf.s:4      *ABS*:0000003d __SP_L__
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/ccOQI9vf.s:5      *ABS*:00000034 __CCP__
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/ccOQI9vf.s:6      *ABS*:00000000 __tmp_reg__
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/ccOQI9vf.s:7      *ABS*:00000001 __zero_reg__
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/ccOQI9vf.s:11     .text:00000000 UdpOutput
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/ccOQI9vf.s:59     .text:00000042 UdpInput
+
+UNDEFINED SYMBOLS
+sframe
+IpOutput
+IpInput
+rframe

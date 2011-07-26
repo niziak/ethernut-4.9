@@ -1,0 +1,315 @@
+ARM GAS  C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\cclFrFnU.s 			page 1
+
+
+   1              		.cpu arm7tdmi
+   2              		.fpu softvfp
+   3              		.eabi_attribute 20, 1
+   4              		.eabi_attribute 21, 1
+   5              		.eabi_attribute 23, 3
+   6              		.eabi_attribute 24, 1
+   7              		.eabi_attribute 25, 1
+   8              		.eabi_attribute 26, 1
+   9              		.eabi_attribute 30, 4
+  10              		.eabi_attribute 18, 4
+  11              		.code	16
+  12              		.file	"ip.c"
+  13              		.text
+  14              		.align	1
+  15              		.global	IpChkSum
+  16              		.code	16
+  17              		.thumb_func
+  18              		.type	IpChkSum, %function
+  19              	IpChkSum:
+  20 0000 70B5     		push	{r4, r5, r6, lr}
+  21 0002 0C1C     		mov	r4, r1
+  22 0004 021C     		mov	r2, r0
+  23 0006 0023     		mov	r3, #0
+  24              	.L3:
+  25 0008 012C     		cmp	r4, #1
+  26 000a 09D9     		bls	.L2
+  27 000c 5578     		ldrb	r5, [r2, #1]
+  28 000e 1678     		ldrb	r6, [r2]
+  29 0010 2D02     		lsl	r5, r5, #8
+  30 0012 023C     		sub	r4, r4, #2
+  31 0014 AD19     		add	r5, r5, r6
+  32 0016 2404     		lsl	r4, r4, #16
+  33 0018 5B19     		add	r3, r3, r5
+  34 001a 0232     		add	r2, r2, #2
+  35 001c 240C     		lsr	r4, r4, #16
+  36 001e F3E7     		b	.L3
+  37              	.L2:
+  38 0020 4A08     		lsr	r2, r1, #1
+  39 0022 5200     		lsl	r2, r2, #1
+  40 0024 8018     		add	r0, r0, r2
+  41 0026 CA07     		lsl	r2, r1, #31
+  42 0028 04D5     		bpl	.L7
+  43 002a 0278     		ldrb	r2, [r0]
+  44 002c 01E0     		b	.L8
+  45              	.L6:
+  46 002e 1B04     		lsl	r3, r3, #16
+  47 0030 1B0C     		lsr	r3, r3, #16
+  48              	.L8:
+  49 0032 D318     		add	r3, r2, r3
+  50              	.L7:
+  51 0034 1A0C     		lsr	r2, r3, #16
+  52 0036 002A     		cmp	r2, #0
+  53 0038 F9D1     		bne	.L6
+  54 003a D843     		mvn	r0, r3
+  55 003c 0004     		lsl	r0, r0, #16
+  56 003e 000C     		lsr	r0, r0, #16
+  57              		@ sp needed for prologue
+ARM GAS  C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\cclFrFnU.s 			page 2
+
+
+  58 0040 70BC     		pop	{r4, r5, r6}
+  59 0042 02BC     		pop	{r1}
+  60 0044 0847     		bx	r1
+  61              		.size	IpChkSum, .-IpChkSum
+  62              		.align	1
+  63              		.global	IpInput
+  64              		.code	16
+  65              		.thumb_func
+  66              		.type	IpInput, %function
+  67              	IpInput:
+  68 0046 F0B5     		push	{r4, r5, r6, r7, lr}
+  69 0048 FF25     		mov	r5, #255
+  70 004a 87B0     		sub	sp, sp, #28
+  71 004c 2D02     		lsl	r5, r5, #8
+  72 004e 0591     		str	r1, [sp, #20]
+  73 0050 2C4C     		ldr	r4, .L21
+  74 0052 0195     		str	r5, [sp, #4]
+  75 0054 071C     		mov	r7, r0
+  76 0056 0A26     		mov	r6, #10
+  77              	.L16:
+  78 0058 013E     		sub	r6, r6, #1
+  79 005a 4ED3     		bcc	.L13
+  80 005c 0820     		mov	r0, #8
+  81 005e 0599     		ldr	r1, [sp, #20]
+  82 0060 FFF7FEFF 		bl	EtherInput
+  83 0064 0028     		cmp	r0, #0
+  84 0066 49DD     		ble	.L11
+  85 0068 A37B     		ldrb	r3, [r4, #14]
+  86 006a 0F21     		mov	r1, #15
+  87 006c 1A1C     		mov	r2, r3
+  88 006e 8A43     		bic	r2, r2, r1
+  89 0070 402A     		cmp	r2, #64
+  90 0072 F1D1     		bne	.L16
+  91 0074 E27D     		ldrb	r2, [r4, #23]
+  92 0076 BA42     		cmp	r2, r7
+  93 0078 EED1     		bne	.L16
+  94 007a 627C     		ldrb	r2, [r4, #17]
+  95 007c 217C     		ldrb	r1, [r4, #16]
+  96 007e 1202     		lsl	r2, r2, #8
+  97 0080 0A43     		orr	r2, r2, r1
+  98 0082 1204     		lsl	r2, r2, #16
+  99 0084 019D     		ldr	r5, [sp, #4]
+ 100 0086 1002     		lsl	r0, r2, #8
+ 101 0088 1214     		asr	r2, r2, #16
+ 102 008a 2A40     		and	r2, r2, r5
+ 103 008c 1212     		asr	r2, r2, #8
+ 104 008e 000C     		lsr	r0, r0, #16
+ 105 0090 1B07     		lsl	r3, r3, #28
+ 106 0092 1043     		orr	r0, r0, r2
+ 107 0094 9B0E     		lsr	r3, r3, #26
+ 108 0096 E27F     		ldrb	r2, [r4, #31]
+ 109 0098 C01A     		sub	r0, r0, r3
+ 110 009a 1B49     		ldr	r1, .L21+4
+ 111 009c A37F     		ldrb	r3, [r4, #30]
+ 112 009e 1202     		lsl	r2, r2, #8
+ 113 00a0 1A43     		orr	r2, r2, r3
+ 114 00a2 CB7F     		ldrb	r3, [r1, #31]
+ARM GAS  C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\cclFrFnU.s 			page 3
+
+
+ 115 00a4 1B04     		lsl	r3, r3, #16
+ 116 00a6 1A43     		orr	r2, r2, r3
+ 117 00a8 A31C     		add	r3, r4, #2
+ 118 00aa DB7F     		ldrb	r3, [r3, #31]
+ 119 00ac 1B06     		lsl	r3, r3, #24
+ 120 00ae 1A43     		orr	r2, r2, r3
+ 121 00b0 531C     		add	r3, r2, #1
+ 122 00b2 23D0     		beq	.L11
+ 123 00b4 154B     		ldr	r3, .L21+8
+ 124 00b6 597C     		ldrb	r1, [r3, #17]
+ 125 00b8 1D7C     		ldrb	r5, [r3, #16]
+ 126 00ba 0902     		lsl	r1, r1, #8
+ 127 00bc 0D43     		orr	r5, r5, r1
+ 128 00be 0395     		str	r5, [sp, #12]
+ 129 00c0 9D7C     		ldrb	r5, [r3, #18]
+ 130 00c2 0399     		ldr	r1, [sp, #12]
+ 131 00c4 2D04     		lsl	r5, r5, #16
+ 132 00c6 2943     		orr	r1, r1, r5
+ 133 00c8 0391     		str	r1, [sp, #12]
+ 134 00ca DD7C     		ldrb	r5, [r3, #19]
+ 135 00cc 2D06     		lsl	r5, r5, #24
+ 136 00ce 2943     		orr	r1, r5
+ 137 00d0 8C46     		mov	ip, r1
+ 138 00d2 13D0     		beq	.L11
+ 139 00d4 6245     		cmp	r2, ip
+ 140 00d6 11D0     		beq	.L11
+ 141 00d8 5D7D     		ldrb	r5, [r3, #21]
+ 142 00da 197D     		ldrb	r1, [r3, #20]
+ 143 00dc 2D02     		lsl	r5, r5, #8
+ 144 00de 2943     		orr	r1, r1, r5
+ 145 00e0 0391     		str	r1, [sp, #12]
+ 146 00e2 997D     		ldrb	r1, [r3, #22]
+ 147 00e4 039D     		ldr	r5, [sp, #12]
+ 148 00e6 0904     		lsl	r1, r1, #16
+ 149 00e8 DB7D     		ldrb	r3, [r3, #23]
+ 150 00ea 0D43     		orr	r5, r5, r1
+ 151 00ec 1B06     		lsl	r3, r3, #24
+ 152 00ee 291C     		mov	r1, r5
+ 153 00f0 1943     		orr	r1, r1, r3
+ 154 00f2 0A43     		orr	r2, r2, r1
+ 155 00f4 0132     		add	r2, r2, #1
+ 156 00f6 AFD1     		bne	.L16
+ 157 00f8 00E0     		b	.L11
+ 158              	.L13:
+ 159 00fa 0020     		mov	r0, #0
+ 160              	.L11:
+ 161 00fc 07B0     		add	sp, sp, #28
+ 162              		@ sp needed for prologue
+ 163 00fe F0BC     		pop	{r4, r5, r6, r7}
+ 164 0100 02BC     		pop	{r1}
+ 165 0102 0847     		bx	r1
+ 166              	.L22:
+ 167              		.align	2
+ 168              	.L21:
+ 169 0104 00000000 		.word	rframe
+ 170 0108 01000000 		.word	rframe+1
+ 171 010c 00000000 		.word	confnet
+ARM GAS  C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\cclFrFnU.s 			page 4
+
+
+ 172              		.size	IpInput, .-IpInput
+ 173              		.align	1
+ 174              		.global	IpOutput
+ 175              		.code	16
+ 176              		.thumb_func
+ 177              		.type	IpOutput, %function
+ 178              	IpOutput:
+ 179 0110 F0B5     		push	{r4, r5, r6, r7, lr}
+ 180 0112 85B0     		sub	sp, sp, #20
+ 181 0114 02AE     		add	r6, sp, #8
+ 182 0116 0191     		str	r1, [sp, #4]
+ 183 0118 311C     		mov	r1, r6
+ 184 011a 051C     		mov	r5, r0
+ 185 011c 171C     		mov	r7, r2
+ 186 011e FFF7FEFF 		bl	ArpRequest
+ 187 0122 0028     		cmp	r0, #0
+ 188 0124 4DD1     		bne	.L25
+ 189 0126 2A4C     		ldr	r4, .L26
+ 190 0128 A27B     		ldrb	r2, [r4, #14]
+ 191 012a 0F23     		mov	r3, #15
+ 192 012c 1A40     		and	r2, r2, r3
+ 193 012e 4021     		mov	r1, #64
+ 194 0130 0A43     		orr	r2, r2, r1
+ 195 0132 A273     		strb	r2, [r4, #14]
+ 196 0134 A27B     		ldrb	r2, [r4, #14]
+ 197 0136 9A43     		bic	r2, r2, r3
+ 198 0138 1437     		add	r7, r7, #20
+ 199 013a 131C     		mov	r3, r2
+ 200 013c 0522     		mov	r2, #5
+ 201 013e 1343     		orr	r3, r3, r2
+ 202 0140 3A04     		lsl	r2, r7, #16
+ 203 0142 A373     		strb	r3, [r4, #14]
+ 204 0144 130A     		lsr	r3, r2, #8
+ 205 0146 120E     		lsr	r2, r2, #24
+ 206 0148 1343     		orr	r3, r3, r2
+ 207 014a 2374     		strb	r3, [r4, #16]
+ 208 014c 1B0A     		lsr	r3, r3, #8
+ 209 014e 6374     		strb	r3, [r4, #17]
+ 210 0150 6A46     		mov	r2, sp
+ 211 0152 4023     		mov	r3, #64
+ 212 0154 A375     		strb	r3, [r4, #22]
+ 213 0156 131D     		add	r3, r2, #4
+ 214 0158 1A78     		ldrb	r2, [r3]
+ 215 015a 2B0A     		lsr	r3, r5, #8
+ 216 015c E275     		strb	r2, [r4, #23]
+ 217 015e E377     		strb	r3, [r4, #31]
+ 218 0160 2A0C     		lsr	r2, r5, #16
+ 219 0162 631C     		add	r3, r4, #1
+ 220 0164 A577     		strb	r5, [r4, #30]
+ 221 0166 DA77     		strb	r2, [r3, #31]
+ 222 0168 2D0E     		lsr	r5, r5, #24
+ 223 016a A31C     		add	r3, r4, #2
+ 224 016c DD77     		strb	r5, [r3, #31]
+ 225 016e 194A     		ldr	r2, .L26+4
+ 226 0170 537C     		ldrb	r3, [r2, #17]
+ 227 0172 117C     		ldrb	r1, [r2, #16]
+ 228 0174 1B02     		lsl	r3, r3, #8
+ARM GAS  C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\cclFrFnU.s 			page 5
+
+
+ 229 0176 0B43     		orr	r3, r3, r1
+ 230 0178 917C     		ldrb	r1, [r2, #18]
+ 231 017a D27C     		ldrb	r2, [r2, #19]
+ 232 017c 0904     		lsl	r1, r1, #16
+ 233 017e 0B43     		orr	r3, r3, r1
+ 234 0180 1206     		lsl	r2, r2, #24
+ 235 0182 1343     		orr	r3, r3, r2
+ 236 0184 1A0A     		lsr	r2, r3, #8
+ 237 0186 A376     		strb	r3, [r4, #26]
+ 238 0188 E276     		strb	r2, [r4, #27]
+ 239 018a 1A0C     		lsr	r2, r3, #16
+ 240 018c 1B0E     		lsr	r3, r3, #24
+ 241 018e 6377     		strb	r3, [r4, #29]
+ 242 0190 E37C     		ldrb	r3, [r4, #19]
+ 243 0192 2277     		strb	r2, [r4, #28]
+ 244 0194 A27C     		ldrb	r2, [r4, #18]
+ 245 0196 1B02     		lsl	r3, r3, #8
+ 246 0198 1343     		orr	r3, r3, r2
+ 247 019a 0133     		add	r3, r3, #1
+ 248 019c A374     		strb	r3, [r4, #18]
+ 249 019e 2076     		strb	r0, [r4, #24]
+ 250 01a0 1B0A     		lsr	r3, r3, #8
+ 251 01a2 6076     		strb	r0, [r4, #25]
+ 252 01a4 201C     		mov	r0, r4
+ 253 01a6 E374     		strb	r3, [r4, #19]
+ 254 01a8 1421     		mov	r1, #20
+ 255 01aa 0E30     		add	r0, r0, #14
+ 256 01ac FFF7FEFF 		bl	IpChkSum
+ 257 01b0 2076     		strb	r0, [r4, #24]
+ 258 01b2 000A     		lsr	r0, r0, #8
+ 259 01b4 6076     		strb	r0, [r4, #25]
+ 260 01b6 0821     		mov	r1, #8
+ 261 01b8 301C     		mov	r0, r6
+ 262 01ba 3A1C     		mov	r2, r7
+ 263 01bc FFF7FEFF 		bl	EtherOutput
+ 264 01c0 01E0     		b	.L24
+ 265              	.L25:
+ 266 01c2 0120     		mov	r0, #1
+ 267 01c4 4042     		neg	r0, r0
+ 268              	.L24:
+ 269 01c6 05B0     		add	sp, sp, #20
+ 270              		@ sp needed for prologue
+ 271 01c8 F0BC     		pop	{r4, r5, r6, r7}
+ 272 01ca 02BC     		pop	{r1}
+ 273 01cc 0847     		bx	r1
+ 274              	.L27:
+ 275 01ce C046     		.align	2
+ 276              	.L26:
+ 277 01d0 00000000 		.word	sframe
+ 278 01d4 00000000 		.word	confnet
+ 279              		.size	IpOutput, .-IpOutput
+ 280              		.ident	"GCC: (GNU) 4.5.2"
+ARM GAS  C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\cclFrFnU.s 			page 6
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 ip.c
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\cclFrFnU.s:14     .text:00000000 $t
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\cclFrFnU.s:19     .text:00000000 IpChkSum
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\cclFrFnU.s:67     .text:00000046 IpInput
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\cclFrFnU.s:169    .text:00000104 $d
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\cclFrFnU.s:173    .text:00000110 $t
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\cclFrFnU.s:178    .text:00000110 IpOutput
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\cclFrFnU.s:277    .text:000001d0 $d
+
+UNDEFINED SYMBOLS
+EtherInput
+rframe
+confnet
+ArpRequest
+EtherOutput
+sframe

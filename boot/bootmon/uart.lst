@@ -1,0 +1,177 @@
+ARM GAS  C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\ccGjgISl.s 			page 1
+
+
+   1              		.cpu arm7tdmi
+   2              		.fpu softvfp
+   3              		.eabi_attribute 20, 1
+   4              		.eabi_attribute 21, 1
+   5              		.eabi_attribute 23, 3
+   6              		.eabi_attribute 24, 1
+   7              		.eabi_attribute 25, 1
+   8              		.eabi_attribute 26, 1
+   9              		.eabi_attribute 30, 4
+  10              		.eabi_attribute 18, 4
+  11              		.code	16
+  12              		.file	"uart.c"
+  13              		.text
+  14              		.align	1
+  15              		.global	UartInit
+  16              		.code	16
+  17              		.thumb_func
+  18              		.type	UartInit, %function
+  19              	UartInit:
+  20 0000 08B5     		push	{r3, lr}
+  21 0002 114B     		ldr	r3, .L2
+  22 0004 0422     		mov	r2, #4
+  23 0006 1A60     		str	r2, [r3]
+  24 0008 104A     		ldr	r2, .L2+4
+  25 000a C023     		mov	r3, #192
+  26 000c 1B02     		lsl	r3, r3, #8
+  27 000e 1360     		str	r3, [r2]
+  28 0010 0F4A     		ldr	r2, .L2+8
+  29 0012 AC23     		mov	r3, #172
+  30 0014 1360     		str	r3, [r2]
+  31 0016 0F49     		ldr	r1, .L2+12
+  32 0018 0123     		mov	r3, #1
+  33 001a 5B42     		neg	r3, r3
+  34 001c 0B60     		str	r3, [r1]
+  35 001e 0023     		mov	r3, #0
+  36 0020 2831     		add	r1, r1, #40
+  37 0022 0B60     		str	r3, [r1]
+  38 0024 0831     		add	r1, r1, #8
+  39 0026 0B60     		str	r3, [r1]
+  40 0028 0B4B     		ldr	r3, .L2+16
+  41 002a 2821     		mov	r1, #40
+  42 002c 1960     		str	r1, [r3]
+  43 002e 0B49     		ldr	r1, .L2+20
+  44 0030 8C23     		mov	r3, #140
+  45 0032 1B01     		lsl	r3, r3, #4
+  46 0034 0B60     		str	r3, [r1]
+  47 0036 FA20     		mov	r0, #250
+  48 0038 5023     		mov	r3, #80
+  49 003a 1360     		str	r3, [r2]
+  50 003c 8000     		lsl	r0, r0, #2
+  51 003e FFF7FEFF 		bl	MicroDelay
+  52              		@ sp needed for prologue
+  53 0042 08BC     		pop	{r3}
+  54 0044 01BC     		pop	{r0}
+  55 0046 0047     		bx	r0
+  56              	.L3:
+  57              		.align	2
+ARM GAS  C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\ccGjgISl.s 			page 2
+
+
+  58              	.L2:
+  59 0048 0440FFFF 		.word	-49148
+  60 004c 0400FFFF 		.word	-65532
+  61 0050 0000FDFF 		.word	-196608
+  62 0054 0C00FDFF 		.word	-196596
+  63 0058 2000FDFF 		.word	-196576
+  64 005c 0400FDFF 		.word	-196604
+  65              		.size	UartInit, .-UartInit
+  66              		.align	1
+  67              		.global	UartRxWait
+  68              		.code	16
+  69              		.thumb_func
+  70              		.type	UartRxWait, %function
+  71              	UartRxWait:
+  72 0060 00B5     		push	{lr}
+  73 0062 074A     		ldr	r2, .L9
+  74 0064 0123     		mov	r3, #1
+  75 0066 02E0     		b	.L5
+  76              	.L7:
+  77 0068 0028     		cmp	r0, #0
+  78 006a 05D0     		beq	.L8
+  79 006c 0138     		sub	r0, r0, #1
+  80              	.L5:
+  81 006e 1168     		ldr	r1, [r2]
+  82 0070 0B42     		tst	r3, r1
+  83 0072 F9D0     		beq	.L7
+  84 0074 0020     		mov	r0, #0
+  85 0076 01E0     		b	.L6
+  86              	.L8:
+  87 0078 0120     		mov	r0, #1
+  88 007a 4042     		neg	r0, r0
+  89              	.L6:
+  90              		@ sp needed for prologue
+  91 007c 02BC     		pop	{r1}
+  92 007e 0847     		bx	r1
+  93              	.L10:
+  94              		.align	2
+  95              	.L9:
+  96 0080 1400FDFF 		.word	-196588
+  97              		.size	UartRxWait, .-UartRxWait
+  98              		.align	1
+  99              		.global	UartRx
+ 100              		.code	16
+ 101              		.thumb_func
+ 102              		.type	UartRx, %function
+ 103              	UartRx:
+ 104 0084 00B5     		push	{lr}
+ 105 0086 054A     		ldr	r2, .L14
+ 106 0088 0123     		mov	r3, #1
+ 107              	.L12:
+ 108 008a 1168     		ldr	r1, [r2]
+ 109 008c 0B42     		tst	r3, r1
+ 110 008e FCD0     		beq	.L12
+ 111 0090 034B     		ldr	r3, .L14+4
+ 112 0092 1868     		ldr	r0, [r3]
+ 113 0094 0006     		lsl	r0, r0, #24
+ 114 0096 000E     		lsr	r0, r0, #24
+ARM GAS  C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\ccGjgISl.s 			page 3
+
+
+ 115              		@ sp needed for prologue
+ 116 0098 02BC     		pop	{r1}
+ 117 009a 0847     		bx	r1
+ 118              	.L15:
+ 119              		.align	2
+ 120              	.L14:
+ 121 009c 1400FDFF 		.word	-196588
+ 122 00a0 1800FDFF 		.word	-196584
+ 123              		.size	UartRx, .-UartRx
+ 124              		.align	1
+ 125              		.global	UartTx
+ 126              		.code	16
+ 127              		.thumb_func
+ 128              		.type	UartTx, %function
+ 129              	UartTx:
+ 130 00a4 00B5     		push	{lr}
+ 131 00a6 044A     		ldr	r2, .L19
+ 132 00a8 0223     		mov	r3, #2
+ 133              	.L17:
+ 134 00aa 1168     		ldr	r1, [r2]
+ 135 00ac 0B42     		tst	r3, r1
+ 136 00ae FCD0     		beq	.L17
+ 137 00b0 024B     		ldr	r3, .L19+4
+ 138              		@ sp needed for prologue
+ 139 00b2 1860     		str	r0, [r3]
+ 140 00b4 01BC     		pop	{r0}
+ 141 00b6 0047     		bx	r0
+ 142              	.L20:
+ 143              		.align	2
+ 144              	.L19:
+ 145 00b8 1400FDFF 		.word	-196588
+ 146 00bc 1C00FDFF 		.word	-196580
+ 147              		.size	UartTx, .-UartTx
+ 148              		.ident	"GCC: (GNU) 4.5.2"
+ARM GAS  C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\ccGjgISl.s 			page 4
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 uart.c
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\ccGjgISl.s:14     .text:00000000 $t
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\ccGjgISl.s:19     .text:00000000 UartInit
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\ccGjgISl.s:59     .text:00000048 $d
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\ccGjgISl.s:66     .text:00000060 $t
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\ccGjgISl.s:71     .text:00000060 UartRxWait
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\ccGjgISl.s:96     .text:00000080 $d
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\ccGjgISl.s:98     .text:00000084 $t
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\ccGjgISl.s:103    .text:00000084 UartRx
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\ccGjgISl.s:121    .text:0000009c $d
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\ccGjgISl.s:124    .text:000000a4 $t
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\ccGjgISl.s:129    .text:000000a4 UartTx
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\ccGjgISl.s:145    .text:000000b8 $d
+
+UNDEFINED SYMBOLS
+MicroDelay

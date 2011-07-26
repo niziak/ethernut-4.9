@@ -1,0 +1,350 @@
+ARM GAS  C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\cc8op6Ag.s 			page 1
+
+
+   1              		.cpu arm7tdmi
+   2              		.fpu softvfp
+   3              		.eabi_attribute 20, 1
+   4              		.eabi_attribute 21, 1
+   5              		.eabi_attribute 23, 3
+   6              		.eabi_attribute 24, 1
+   7              		.eabi_attribute 25, 1
+   8              		.eabi_attribute 26, 1
+   9              		.eabi_attribute 30, 4
+  10              		.eabi_attribute 18, 4
+  11              		.code	16
+  12              		.file	"twbbi.c"
+  13              		.text
+  14              		.align	1
+  15              		.code	16
+  16              		.thumb_func
+  17              		.type	TwDelay, %function
+  18              	TwDelay:
+  19 0000 00B5     		push	{lr}
+  20 0002 00E0     		b	.L2
+  21              	.L3:
+  22              	@ 104 "twbbi.c" 1
+  23 0004 001C     		mov r0, r0
+  24              	@ 0 "" 2
+  25              		.code	16
+  26              	.L2:
+  27 0006 0138     		sub	r0, r0, #1
+  28 0008 FCD2     		bcs	.L3
+  29              		@ sp needed for prologue
+  30 000a 01BC     		pop	{r0}
+  31 000c 0047     		bx	r0
+  32              		.size	TwDelay, .-TwDelay
+  33              		.align	1
+  34              		.code	16
+  35              		.thumb_func
+  36              		.type	TwStart, %function
+  37              	TwStart:
+  38 000e 70B5     		push	{r4, r5, r6, lr}
+  39 0010 0C4C     		ldr	r4, .L5
+  40 0012 8025     		mov	r5, #128
+  41 0014 6D02     		lsl	r5, r5, #9
+  42 0016 8026     		mov	r6, #128
+  43 0018 2560     		str	r5, [r4]
+  44 001a B602     		lsl	r6, r6, #10
+  45 001c 0820     		mov	r0, #8
+  46 001e FFF7EFFF 		bl	TwDelay
+  47 0022 2660     		str	r6, [r4]
+  48 0024 0820     		mov	r0, #8
+  49 0026 043C     		sub	r4, r4, #4
+  50 0028 FFF7EAFF 		bl	TwDelay
+  51 002c 2560     		str	r5, [r4]
+  52 002e 0820     		mov	r0, #8
+  53 0030 FFF7E6FF 		bl	TwDelay
+  54 0034 2660     		str	r6, [r4]
+  55 0036 0820     		mov	r0, #8
+  56 0038 FFF7E2FF 		bl	TwDelay
+  57              		@ sp needed for prologue
+ARM GAS  C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\cc8op6Ag.s 			page 2
+
+
+  58 003c 70BC     		pop	{r4, r5, r6}
+  59 003e 01BC     		pop	{r0}
+  60 0040 0047     		bx	r0
+  61              	.L6:
+  62 0042 C046     		.align	2
+  63              	.L5:
+  64 0044 1400FFFF 		.word	-65516
+  65              		.size	TwStart, .-TwStart
+  66              		.align	1
+  67              		.code	16
+  68              		.thumb_func
+  69              		.type	TwPut, %function
+  70              	TwPut:
+  71 0048 F0B5     		push	{r4, r5, r6, r7, lr}
+  72 004a 85B0     		sub	sp, sp, #20
+  73 004c 0822     		mov	r2, #8
+  74 004e 8023     		mov	r3, #128
+  75 0050 8025     		mov	r5, #128
+  76 0052 8027     		mov	r7, #128
+  77 0054 0390     		str	r0, [sp, #12]
+  78 0056 0192     		str	r2, [sp, #4]
+  79 0058 0293     		str	r3, [sp, #8]
+  80 005a 1A4C     		ldr	r4, .L14
+  81 005c 1A4E     		ldr	r6, .L14+4
+  82 005e 6D02     		lsl	r5, r5, #9
+  83 0060 BF02     		lsl	r7, r7, #10
+  84              	.L10:
+  85 0062 039A     		ldr	r2, [sp, #12]
+  86 0064 029B     		ldr	r3, [sp, #8]
+  87 0066 1A42     		tst	r2, r3
+  88 0068 01D0     		beq	.L8
+  89 006a 3560     		str	r5, [r6]
+  90 006c 00E0     		b	.L9
+  91              	.L8:
+  92 006e 2560     		str	r5, [r4]
+  93              	.L9:
+  94 0070 0820     		mov	r0, #8
+  95 0072 FFF7C5FF 		bl	TwDelay
+  96 0076 8022     		mov	r2, #128
+  97 0078 9202     		lsl	r2, r2, #10
+  98 007a 0092     		str	r2, [sp]
+  99 007c 1020     		mov	r0, #16
+ 100 007e 3760     		str	r7, [r6]
+ 101 0080 FFF7BEFF 		bl	TwDelay
+ 102 0084 029B     		ldr	r3, [sp, #8]
+ 103 0086 019A     		ldr	r2, [sp, #4]
+ 104 0088 5B10     		asr	r3, r3, #1
+ 105 008a 013A     		sub	r2, r2, #1
+ 106 008c 2760     		str	r7, [r4]
+ 107 008e 0293     		str	r3, [sp, #8]
+ 108 0090 0192     		str	r2, [sp, #4]
+ 109 0092 002A     		cmp	r2, #0
+ 110 0094 E5D1     		bne	.L10
+ 111 0096 0C4B     		ldr	r3, .L14+4
+ 112 0098 009A     		ldr	r2, [sp]
+ 113 009a 8024     		mov	r4, #128
+ 114 009c 6402     		lsl	r4, r4, #9
+ARM GAS  C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\cc8op6Ag.s 			page 3
+
+
+ 115 009e 1C60     		str	r4, [r3]
+ 116 00a0 1020     		mov	r0, #16
+ 117 00a2 1A60     		str	r2, [r3]
+ 118 00a4 FFF7ACFF 		bl	TwDelay
+ 119 00a8 084B     		ldr	r3, .L14+8
+ 120 00aa 1868     		ldr	r0, [r3]
+ 121 00ac 009A     		ldr	r2, [sp]
+ 122 00ae 0440     		and	r4, r4, r0
+ 123 00b0 6042     		neg	r0, r4
+ 124 00b2 6041     		adc	r0, r0, r4
+ 125 00b4 2C3B     		sub	r3, r3, #44
+ 126 00b6 05B0     		add	sp, sp, #20
+ 127 00b8 0138     		sub	r0, r0, #1
+ 128 00ba 1A60     		str	r2, [r3]
+ 129              		@ sp needed for prologue
+ 130 00bc F0BC     		pop	{r4, r5, r6, r7}
+ 131 00be 02BC     		pop	{r1}
+ 132 00c0 0847     		bx	r1
+ 133              	.L15:
+ 134 00c2 C046     		.align	2
+ 135              	.L14:
+ 136 00c4 1000FFFF 		.word	-65520
+ 137 00c8 1400FFFF 		.word	-65516
+ 138 00cc 3C00FFFF 		.word	-65476
+ 139              		.size	TwPut, .-TwPut
+ 140              		.align	1
+ 141              		.global	TwMasterTransact
+ 142              		.code	16
+ 143              		.thumb_func
+ 144              		.type	TwMasterTransact, %function
+ 145              	TwMasterTransact:
+ 146 00d0 F0B5     		push	{r4, r5, r6, r7, lr}
+ 147 00d2 89B0     		sub	sp, sp, #36
+ 148 00d4 0793     		str	r3, [sp, #28]
+ 149 00d6 0EAB     		add	r3, sp, #56
+ 150 00d8 1B88     		ldrh	r3, [r3]
+ 151 00da 071C     		mov	r7, r0
+ 152 00dc 0E1C     		mov	r6, r1
+ 153 00de 151C     		mov	r5, r2
+ 154 00e0 0693     		str	r3, [sp, #24]
+ 155 00e2 0024     		mov	r4, #0
+ 156 00e4 002A     		cmp	r2, #0
+ 157 00e6 13D0     		beq	.L17
+ 158 00e8 FFF791FF 		bl	TwStart
+ 159 00ec 7806     		lsl	r0, r7, #25
+ 160 00ee 000E     		lsr	r0, r0, #24
+ 161 00f0 FFF7AAFF 		bl	TwPut
+ 162 00f4 041E     		sub	r4, r0, #0
+ 163 00f6 0BD1     		bne	.L17
+ 164              	.L18:
+ 165 00f8 3078     		ldrb	r0, [r6]
+ 166 00fa FFF7A5FF 		bl	TwPut
+ 167 00fe 013D     		sub	r5, r5, #1
+ 168 0100 2D04     		lsl	r5, r5, #16
+ 169 0102 2D0C     		lsr	r5, r5, #16
+ 170 0104 0028     		cmp	r0, #0
+ 171 0106 02D1     		bne	.L27
+ARM GAS  C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\cc8op6Ag.s 			page 4
+
+
+ 172 0108 0136     		add	r6, r6, #1
+ 173 010a 002D     		cmp	r5, #0
+ 174 010c F4D1     		bne	.L18
+ 175              	.L27:
+ 176 010e 041C     		mov	r4, r0
+ 177              	.L17:
+ 178 0110 002C     		cmp	r4, #0
+ 179 0112 4ED1     		bne	.L19
+ 180 0114 069A     		ldr	r2, [sp, #24]
+ 181 0116 002A     		cmp	r2, #0
+ 182 0118 4BD0     		beq	.L19
+ 183 011a FFF778FF 		bl	TwStart
+ 184 011e 7800     		lsl	r0, r7, #1
+ 185 0120 0123     		mov	r3, #1
+ 186 0122 1843     		orr	r0, r0, r3
+ 187 0124 0006     		lsl	r0, r0, #24
+ 188 0126 000E     		lsr	r0, r0, #24
+ 189 0128 FFF78EFF 		bl	TwPut
+ 190 012c 041E     		sub	r4, r0, #0
+ 191 012e 40D1     		bne	.L19
+ 192 0130 8027     		mov	r7, #128
+ 193 0132 2B4D     		ldr	r5, .L29
+ 194 0134 7F02     		lsl	r7, r7, #9
+ 195              	.L26:
+ 196 0136 8023     		mov	r3, #128
+ 197 0138 5B02     		lsl	r3, r3, #9
+ 198 013a 2B60     		str	r3, [r5]
+ 199 013c 0822     		mov	r2, #8
+ 200 013e 8023     		mov	r3, #128
+ 201 0140 0592     		str	r2, [sp, #20]
+ 202 0142 0393     		str	r3, [sp, #12]
+ 203 0144 0022     		mov	r2, #0
+ 204 0146 9B02     		lsl	r3, r3, #10
+ 205 0148 0492     		str	r2, [sp, #16]
+ 206 014a 0293     		str	r3, [sp, #8]
+ 207              	.L21:
+ 208 014c 0820     		mov	r0, #8
+ 209 014e FFF757FF 		bl	TwDelay
+ 210 0152 029B     		ldr	r3, [sp, #8]
+ 211 0154 1020     		mov	r0, #16
+ 212 0156 2B60     		str	r3, [r5]
+ 213 0158 FFF752FF 		bl	TwDelay
+ 214 015c 214A     		ldr	r2, .L29+4
+ 215 015e 1368     		ldr	r3, [r2]
+ 216 0160 3B42     		tst	r3, r7
+ 217 0162 05D0     		beq	.L20
+ 218 0164 049A     		ldr	r2, [sp, #16]
+ 219 0166 039B     		ldr	r3, [sp, #12]
+ 220 0168 1343     		orr	r3, r3, r2
+ 221 016a 1B06     		lsl	r3, r3, #24
+ 222 016c 1B0E     		lsr	r3, r3, #24
+ 223 016e 0493     		str	r3, [sp, #16]
+ 224              	.L20:
+ 225 0170 029A     		ldr	r2, [sp, #8]
+ 226 0172 1D4E     		ldr	r6, .L29+8
+ 227 0174 8023     		mov	r3, #128
+ 228 0176 9B02     		lsl	r3, r3, #10
+ARM GAS  C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\cc8op6Ag.s 			page 5
+
+
+ 229 0178 0193     		str	r3, [sp, #4]
+ 230 017a 3260     		str	r2, [r6]
+ 231 017c 039B     		ldr	r3, [sp, #12]
+ 232 017e 059A     		ldr	r2, [sp, #20]
+ 233 0180 5B10     		asr	r3, r3, #1
+ 234 0182 013A     		sub	r2, r2, #1
+ 235 0184 0393     		str	r3, [sp, #12]
+ 236 0186 0592     		str	r2, [sp, #20]
+ 237 0188 002A     		cmp	r2, #0
+ 238 018a DFD1     		bne	.L21
+ 239 018c 6B46     		mov	r3, sp
+ 240 018e 1022     		mov	r2, #16
+ 241 0190 D25C     		ldrb	r2, [r2, r3]
+ 242 0192 079B     		ldr	r3, [sp, #28]
+ 243 0194 1A55     		strb	r2, [r3, r4]
+ 244 0196 069B     		ldr	r3, [sp, #24]
+ 245 0198 0134     		add	r4, r4, #1
+ 246 019a 9C42     		cmp	r4, r3
+ 247 019c 09DA     		bge	.L19
+ 248 019e 019A     		ldr	r2, [sp, #4]
+ 249 01a0 3760     		str	r7, [r6]
+ 250 01a2 1020     		mov	r0, #16
+ 251 01a4 2A60     		str	r2, [r5]
+ 252 01a6 FFF72BFF 		bl	TwDelay
+ 253 01aa 019B     		ldr	r3, [sp, #4]
+ 254 01ac 3360     		str	r3, [r6]
+ 255 01ae 2F60     		str	r7, [r5]
+ 256 01b0 C1E7     		b	.L26
+ 257              	.L19:
+ 258 01b2 0D4B     		ldr	r3, .L29+8
+ 259 01b4 8025     		mov	r5, #128
+ 260 01b6 6D02     		lsl	r5, r5, #9
+ 261 01b8 1D60     		str	r5, [r3]
+ 262 01ba 0820     		mov	r0, #8
+ 263 01bc FFF720FF 		bl	TwDelay
+ 264 01c0 074E     		ldr	r6, .L29
+ 265 01c2 8023     		mov	r3, #128
+ 266 01c4 9B02     		lsl	r3, r3, #10
+ 267 01c6 3360     		str	r3, [r6]
+ 268 01c8 1020     		mov	r0, #16
+ 269 01ca FFF719FF 		bl	TwDelay
+ 270 01ce 3560     		str	r5, [r6]
+ 271 01d0 4020     		mov	r0, #64
+ 272 01d2 FFF715FF 		bl	TwDelay
+ 273 01d6 09B0     		add	sp, sp, #36
+ 274 01d8 201C     		mov	r0, r4
+ 275              		@ sp needed for prologue
+ 276 01da F0BC     		pop	{r4, r5, r6, r7}
+ 277 01dc 02BC     		pop	{r1}
+ 278 01de 0847     		bx	r1
+ 279              	.L30:
+ 280              		.align	2
+ 281              	.L29:
+ 282 01e0 1400FFFF 		.word	-65516
+ 283 01e4 3C00FFFF 		.word	-65476
+ 284 01e8 1000FFFF 		.word	-65520
+ 285              		.size	TwMasterTransact, .-TwMasterTransact
+ARM GAS  C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\cc8op6Ag.s 			page 6
+
+
+ 286              		.align	1
+ 287              		.global	TwInit
+ 288              		.code	16
+ 289              		.thumb_func
+ 290              		.type	TwInit, %function
+ 291              	TwInit:
+ 292 01ec 0649     		ldr	r1, .L32
+ 293 01ee 8022     		mov	r2, #128
+ 294 01f0 8023     		mov	r3, #128
+ 295 01f2 5202     		lsl	r2, r2, #9
+ 296 01f4 9B02     		lsl	r3, r3, #10
+ 297 01f6 0A60     		str	r2, [r1]
+ 298 01f8 0B60     		str	r3, [r1]
+ 299 01fa 2031     		add	r1, r1, #32
+ 300 01fc 0A60     		str	r2, [r1]
+ 301 01fe 0B60     		str	r3, [r1]
+ 302 0200 3439     		sub	r1, r1, #52
+ 303 0202 0A60     		str	r2, [r1]
+ 304              		@ sp needed for prologue
+ 305 0204 0B60     		str	r3, [r1]
+ 306 0206 7047     		bx	lr
+ 307              	.L33:
+ 308              		.align	2
+ 309              	.L32:
+ 310 0208 1400FFFF 		.word	-65516
+ 311              		.size	TwInit, .-TwInit
+ 312              		.ident	"GCC: (GNU) 4.5.2"
+ARM GAS  C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\cc8op6Ag.s 			page 7
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 twbbi.c
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\cc8op6Ag.s:14     .text:00000000 $t
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\cc8op6Ag.s:18     .text:00000000 TwDelay
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\cc8op6Ag.s:37     .text:0000000e TwStart
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\cc8op6Ag.s:64     .text:00000044 $d
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\cc8op6Ag.s:66     .text:00000048 $t
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\cc8op6Ag.s:70     .text:00000048 TwPut
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\cc8op6Ag.s:136    .text:000000c4 $d
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\cc8op6Ag.s:140    .text:000000d0 $t
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\cc8op6Ag.s:145    .text:000000d0 TwMasterTransact
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\cc8op6Ag.s:282    .text:000001e0 $d
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\cc8op6Ag.s:286    .text:000001ec $t
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\cc8op6Ag.s:291    .text:000001ec TwInit
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\cc8op6Ag.s:310    .text:00000208 $d
+
+NO UNDEFINED SYMBOLS

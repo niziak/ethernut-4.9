@@ -1,0 +1,432 @@
+GAS LISTING C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/cc80I0tn.s 			page 1
+
+
+   1               		.file	"arp.c"
+   2               	__SREG__ = 0x3f
+   3               	__SP_H__ = 0x3e
+   4               	__SP_L__ = 0x3d
+   5               	__CCP__  = 0x34
+   6               	__tmp_reg__ = 0
+   7               	__zero_reg__ = 1
+   8               		.text
+   9               	.global	ArpRespond
+  10               		.type	ArpRespond, @function
+  11               	ArpRespond:
+  12 0000 EF92      		push r14
+  13 0002 FF92      		push r15
+  14 0004 0F93      		push r16
+  15 0006 1F93      		push r17
+  16               	/* prologue: function */
+  17               	/* frame size = 0 */
+  18 0008 2091 0000 		lds r18,confnet+16
+  19 000c 3091 0000 		lds r19,(confnet+16)+1
+  20 0010 4091 0000 		lds r20,(confnet+16)+2
+  21 0014 5091 0000 		lds r21,(confnet+16)+3
+  22 0018 8091 0000 		lds r24,arpframe+38
+  23 001c 9091 0000 		lds r25,(arpframe+38)+1
+  24 0020 A091 0000 		lds r26,(arpframe+38)+2
+  25 0024 B091 0000 		lds r27,(arpframe+38)+3
+  26 0028 8217      		cp r24,r18
+  27 002a 9307      		cpc r25,r19
+  28 002c A407      		cpc r26,r20
+  29 002e B507      		cpc r27,r21
+  30 0030 01F4      		brne .L2
+  31 0032 8091 0000 		lds r24,arpframe+20
+  32 0036 9091 0000 		lds r25,(arpframe+20)+1
+  33               	/* #APP */
+  34               	 ;  72 "types.h" 1
+  35 003a 082E      		mov __tmp_reg__, r24
+  36 003c 892F      		mov r24, r25
+  37 003e 902D      		mov r25, __tmp_reg__
+  38               		
+  39               	 ;  0 "" 2
+  40               	/* #NOAPP */
+  41 0040 0297      		sbiw r24,2
+  42 0042 01F0      		breq .+2
+  43 0044 00C0      		rjmp .L4
+  44 0046 8091 0000 		lds r24,arpframe+28
+  45 004a 9091 0000 		lds r25,(arpframe+28)+1
+  46 004e A091 0000 		lds r26,(arpframe+28)+2
+  47 0052 B091 0000 		lds r27,(arpframe+28)+3
+  48 0056 8093 0000 		sts ae,r24
+  49 005a 9093 0000 		sts (ae)+1,r25
+  50 005e A093 0000 		sts (ae)+2,r26
+  51 0062 B093 0000 		sts (ae)+3,r27
+  52 0066 8091 0000 		lds r24,arpframe+22
+  53 006a 8093 0000 		sts ae+4,r24
+  54 006e 8091 0000 		lds r24,arpframe+23
+  55 0072 8093 0000 		sts ae+5,r24
+  56 0076 8091 0000 		lds r24,arpframe+24
+  57 007a 8093 0000 		sts ae+6,r24
+GAS LISTING C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/cc80I0tn.s 			page 2
+
+
+  58 007e 8091 0000 		lds r24,arpframe+25
+  59 0082 8093 0000 		sts ae+7,r24
+  60 0086 8091 0000 		lds r24,arpframe+26
+  61 008a 8093 0000 		sts ae+8,r24
+  62 008e 8091 0000 		lds r24,arpframe+27
+  63 0092 8093 0000 		sts ae+9,r24
+  64 0096 00C0      		rjmp .L4
+  65               	.L2:
+  66 0098 E090 0000 		lds r14,arpframe+28
+  67 009c F090 0000 		lds r15,(arpframe+28)+1
+  68 00a0 0091 0000 		lds r16,(arpframe+28)+2
+  69 00a4 1091 0000 		lds r17,(arpframe+28)+3
+  70 00a8 E216      		cp r14,r18
+  71 00aa F306      		cpc r15,r19
+  72 00ac 0407      		cpc r16,r20
+  73 00ae 1507      		cpc r17,r21
+  74 00b0 01F0      		breq .+2
+  75 00b2 00C0      		rjmp .L4
+  76 00b4 8091 0000 		lds r24,arpframe+20
+  77 00b8 9091 0000 		lds r25,(arpframe+20)+1
+  78               	/* #APP */
+  79               	 ;  72 "types.h" 1
+  80 00bc 082E      		mov __tmp_reg__, r24
+  81 00be 892F      		mov r24, r25
+  82 00c0 902D      		mov r25, __tmp_reg__
+  83               		
+  84               	 ;  0 "" 2
+  85               	/* #NOAPP */
+  86 00c2 8130      		cpi r24,1
+  87 00c4 9105      		cpc r25,__zero_reg__
+  88 00c6 01F0      		breq .+2
+  89 00c8 00C0      		rjmp .L4
+  90               	/* #APP */
+  91               	 ;  72 "types.h" 1
+  92 00ca 082E      		mov __tmp_reg__, r24
+  93 00cc 892F      		mov r24, r25
+  94 00ce 902D      		mov r25, __tmp_reg__
+  95               		
+  96               	 ;  0 "" 2
+  97               	/* #NOAPP */
+  98 00d0 9093 0000 		sts (arpframe+14)+1,r25
+  99 00d4 8093 0000 		sts arpframe+14,r24
+ 100 00d8 88E0      		ldi r24,lo8(8)
+ 101 00da 90E0      		ldi r25,hi8(8)
+ 102 00dc 9093 0000 		sts (arpframe+16)+1,r25
+ 103 00e0 8093 0000 		sts arpframe+16,r24
+ 104 00e4 86E0      		ldi r24,lo8(6)
+ 105 00e6 8093 0000 		sts arpframe+18,r24
+ 106 00ea 84E0      		ldi r24,lo8(4)
+ 107 00ec 8093 0000 		sts arpframe+19,r24
+ 108 00f0 82E0      		ldi r24,lo8(2)
+ 109 00f2 90E0      		ldi r25,hi8(2)
+ 110               	/* #APP */
+ 111               	 ;  72 "types.h" 1
+ 112 00f4 082E      		mov __tmp_reg__, r24
+ 113 00f6 892F      		mov r24, r25
+ 114 00f8 902D      		mov r25, __tmp_reg__
+GAS LISTING C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/cc80I0tn.s 			page 3
+
+
+ 115               		
+ 116               	 ;  0 "" 2
+ 117               	/* #NOAPP */
+ 118 00fa 9093 0000 		sts (arpframe+20)+1,r25
+ 119 00fe 8093 0000 		sts arpframe+20,r24
+ 120 0102 8091 0000 		lds r24,arpframe+22
+ 121 0106 8093 0000 		sts arpframe+32,r24
+ 122 010a 8091 0000 		lds r24,arpframe+23
+ 123 010e 8093 0000 		sts arpframe+33,r24
+ 124 0112 8091 0000 		lds r24,arpframe+24
+ 125 0116 8093 0000 		sts arpframe+34,r24
+ 126 011a 8091 0000 		lds r24,arpframe+25
+ 127 011e 8093 0000 		sts arpframe+35,r24
+ 128 0122 8091 0000 		lds r24,arpframe+26
+ 129 0126 8093 0000 		sts arpframe+36,r24
+ 130 012a 8091 0000 		lds r24,arpframe+27
+ 131 012e 8093 0000 		sts arpframe+37,r24
+ 132 0132 E092 0000 		sts arpframe+38,r14
+ 133 0136 F092 0000 		sts (arpframe+38)+1,r15
+ 134 013a 0093 0000 		sts (arpframe+38)+2,r16
+ 135 013e 1093 0000 		sts (arpframe+38)+3,r17
+ 136 0142 8091 0000 		lds r24,confnet+10
+ 137 0146 8093 0000 		sts arpframe+22,r24
+ 138 014a 8091 0000 		lds r24,confnet+11
+ 139 014e 8093 0000 		sts arpframe+23,r24
+ 140 0152 8091 0000 		lds r24,confnet+12
+ 141 0156 8093 0000 		sts arpframe+24,r24
+ 142 015a 8091 0000 		lds r24,confnet+13
+ 143 015e 8093 0000 		sts arpframe+25,r24
+ 144 0162 8091 0000 		lds r24,confnet+14
+ 145 0166 8093 0000 		sts arpframe+26,r24
+ 146 016a 8091 0000 		lds r24,confnet+15
+ 147 016e 8093 0000 		sts arpframe+27,r24
+ 148 0172 80E0      		ldi r24,lo8(0)
+ 149 0174 90E0      		ldi r25,hi8(0)
+ 150 0176 68E0      		ldi r22,lo8(1544)
+ 151 0178 76E0      		ldi r23,hi8(1544)
+ 152 017a 4CE1      		ldi r20,lo8(28)
+ 153 017c 50E0      		ldi r21,hi8(28)
+ 154 017e 0E94 0000 		call EtherOutput
+ 155               	.L4:
+ 156               	/* epilogue start */
+ 157 0182 1F91      		pop r17
+ 158 0184 0F91      		pop r16
+ 159 0186 FF90      		pop r15
+ 160 0188 EF90      		pop r14
+ 161 018a 0895      		ret
+ 162               		.size	ArpRespond, .-ArpRespond
+ 163               	.global	ArpRequest
+ 164               		.type	ArpRequest, @function
+ 165               	ArpRequest:
+ 166 018c DF92      		push r13
+ 167 018e EF92      		push r14
+ 168 0190 FF92      		push r15
+ 169 0192 0F93      		push r16
+ 170 0194 1F93      		push r17
+ 171 0196 CF93      		push r28
+GAS LISTING C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/cc80I0tn.s 			page 4
+
+
+ 172 0198 DF93      		push r29
+ 173               	/* prologue: function */
+ 174               	/* frame size = 0 */
+ 175 019a 7B01      		movw r14,r22
+ 176 019c 8C01      		movw r16,r24
+ 177 019e EA01      		movw r28,r20
+ 178 01a0 8FEF      		ldi r24,lo8(-1)
+ 179 01a2 E816      		cp r14,r24
+ 180 01a4 8FEF      		ldi r24,hi8(-1)
+ 181 01a6 F806      		cpc r15,r24
+ 182 01a8 8FEF      		ldi r24,hlo8(-1)
+ 183 01aa 0807      		cpc r16,r24
+ 184 01ac 8FEF      		ldi r24,hhi8(-1)
+ 185 01ae 1807      		cpc r17,r24
+ 186 01b0 01F4      		brne .L6
+ 187 01b2 80E0      		ldi r24,lo8(0)
+ 188 01b4 90E0      		ldi r25,hi8(0)
+ 189 01b6 2FEF      		ldi r18,lo8(-1)
+ 190               	.L7:
+ 191 01b8 FE01      		movw r30,r28
+ 192 01ba E80F      		add r30,r24
+ 193 01bc F91F      		adc r31,r25
+ 194 01be 2083      		st Z,r18
+ 195 01c0 0196      		adiw r24,1
+ 196 01c2 8630      		cpi r24,6
+ 197 01c4 9105      		cpc r25,__zero_reg__
+ 198 01c6 01F4      		brne .L7
+ 199 01c8 00C0      		rjmp .L8
+ 200               	.L6:
+ 201 01ca 8091 0000 		lds r24,ae
+ 202 01ce 9091 0000 		lds r25,(ae)+1
+ 203 01d2 A091 0000 		lds r26,(ae)+2
+ 204 01d6 B091 0000 		lds r27,(ae)+3
+ 205 01da 8E15      		cp r24,r14
+ 206 01dc 9F05      		cpc r25,r15
+ 207 01de A007      		cpc r26,r16
+ 208 01e0 B107      		cpc r27,r17
+ 209 01e2 01F4      		brne .+2
+ 210 01e4 00C0      		rjmp .L9
+ 211 01e6 21E0      		ldi r18,lo8(1)
+ 212 01e8 30E0      		ldi r19,hi8(1)
+ 213 01ea C901      		movw r24,r18
+ 214               	/* #APP */
+ 215               	 ;  72 "types.h" 1
+ 216 01ec 082E      		mov __tmp_reg__, r24
+ 217 01ee 892F      		mov r24, r25
+ 218 01f0 902D      		mov r25, __tmp_reg__
+ 219               		
+ 220               	 ;  0 "" 2
+ 221               	/* #NOAPP */
+ 222 01f2 9093 0000 		sts (arpframe+14)+1,r25
+ 223 01f6 8093 0000 		sts arpframe+14,r24
+ 224 01fa 88E0      		ldi r24,lo8(8)
+ 225 01fc 90E0      		ldi r25,hi8(8)
+ 226 01fe 9093 0000 		sts (arpframe+16)+1,r25
+ 227 0202 8093 0000 		sts arpframe+16,r24
+ 228 0206 86E0      		ldi r24,lo8(6)
+GAS LISTING C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/cc80I0tn.s 			page 5
+
+
+ 229 0208 8093 0000 		sts arpframe+18,r24
+ 230 020c 84E0      		ldi r24,lo8(4)
+ 231 020e 8093 0000 		sts arpframe+19,r24
+ 232               	/* #APP */
+ 233               	 ;  72 "types.h" 1
+ 234 0212 022E      		mov __tmp_reg__, r18
+ 235 0214 232F      		mov r18, r19
+ 236 0216 302D      		mov r19, __tmp_reg__
+ 237               		
+ 238               	 ;  0 "" 2
+ 239               	/* #NOAPP */
+ 240 0218 3093 0000 		sts (arpframe+20)+1,r19
+ 241 021c 2093 0000 		sts arpframe+20,r18
+ 242 0220 8091 0000 		lds r24,confnet+10
+ 243 0224 8093 0000 		sts arpframe+22,r24
+ 244 0228 8091 0000 		lds r24,confnet+11
+ 245 022c 8093 0000 		sts arpframe+23,r24
+ 246 0230 8091 0000 		lds r24,confnet+12
+ 247 0234 8093 0000 		sts arpframe+24,r24
+ 248 0238 8091 0000 		lds r24,confnet+13
+ 249 023c 8093 0000 		sts arpframe+25,r24
+ 250 0240 8091 0000 		lds r24,confnet+14
+ 251 0244 8093 0000 		sts arpframe+26,r24
+ 252 0248 8091 0000 		lds r24,confnet+15
+ 253 024c 8093 0000 		sts arpframe+27,r24
+ 254 0250 8091 0000 		lds r24,confnet+16
+ 255 0254 9091 0000 		lds r25,(confnet+16)+1
+ 256 0258 A091 0000 		lds r26,(confnet+16)+2
+ 257 025c B091 0000 		lds r27,(confnet+16)+3
+ 258 0260 8093 0000 		sts arpframe+28,r24
+ 259 0264 9093 0000 		sts (arpframe+28)+1,r25
+ 260 0268 A093 0000 		sts (arpframe+28)+2,r26
+ 261 026c B093 0000 		sts (arpframe+28)+3,r27
+ 262 0270 8FEF      		ldi r24,lo8(-1)
+ 263 0272 8093 0000 		sts arpframe+32,r24
+ 264 0276 8093 0000 		sts arpframe+33,r24
+ 265 027a 8093 0000 		sts arpframe+34,r24
+ 266 027e 8093 0000 		sts arpframe+35,r24
+ 267 0282 8093 0000 		sts arpframe+36,r24
+ 268 0286 8093 0000 		sts arpframe+37,r24
+ 269 028a E092 0000 		sts arpframe+38,r14
+ 270 028e F092 0000 		sts (arpframe+38)+1,r15
+ 271 0292 0093 0000 		sts (arpframe+38)+2,r16
+ 272 0296 1093 0000 		sts (arpframe+38)+3,r17
+ 273 029a DD24      		clr r13
+ 274               	.L12:
+ 275 029c 80E0      		ldi r24,lo8(0)
+ 276 029e 90E0      		ldi r25,hi8(0)
+ 277 02a0 68E0      		ldi r22,lo8(1544)
+ 278 02a2 76E0      		ldi r23,hi8(1544)
+ 279 02a4 4CE1      		ldi r20,lo8(28)
+ 280 02a6 50E0      		ldi r21,hi8(28)
+ 281 02a8 0E94 0000 		call EtherOutput
+ 282 02ac 97FD      		sbrc r25,7
+ 283 02ae 00C0      		rjmp .L9
+ 284 02b0 88E0      		ldi r24,lo8(1544)
+ 285 02b2 96E0      		ldi r25,hi8(1544)
+GAS LISTING C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/cc80I0tn.s 			page 6
+
+
+ 286 02b4 68EE      		ldi r22,lo8(1000)
+ 287 02b6 73E0      		ldi r23,hi8(1000)
+ 288 02b8 0E94 0000 		call EtherInput
+ 289 02bc 1816      		cp __zero_reg__,r24
+ 290 02be 1906      		cpc __zero_reg__,r25
+ 291 02c0 04F0      		brlt .+2
+ 292 02c2 00C0      		rjmp .L10
+ 293 02c4 2091 0000 		lds r18,rframe+38
+ 294 02c8 3091 0000 		lds r19,(rframe+38)+1
+ 295 02cc 4091 0000 		lds r20,(rframe+38)+2
+ 296 02d0 5091 0000 		lds r21,(rframe+38)+3
+ 297 02d4 8091 0000 		lds r24,confnet+16
+ 298 02d8 9091 0000 		lds r25,(confnet+16)+1
+ 299 02dc A091 0000 		lds r26,(confnet+16)+2
+ 300 02e0 B091 0000 		lds r27,(confnet+16)+3
+ 301 02e4 2817      		cp r18,r24
+ 302 02e6 3907      		cpc r19,r25
+ 303 02e8 4A07      		cpc r20,r26
+ 304 02ea 5B07      		cpc r21,r27
+ 305 02ec 01F4      		brne .L11
+ 306 02ee 8091 0000 		lds r24,rframe+20
+ 307 02f2 9091 0000 		lds r25,(rframe+20)+1
+ 308               	/* #APP */
+ 309               	 ;  72 "types.h" 1
+ 310 02f6 082E      		mov __tmp_reg__, r24
+ 311 02f8 892F      		mov r24, r25
+ 312 02fa 902D      		mov r25, __tmp_reg__
+ 313               		
+ 314               	 ;  0 "" 2
+ 315               	/* #NOAPP */
+ 316 02fc 0297      		sbiw r24,2
+ 317 02fe 01F4      		brne .L11
+ 318 0300 8091 0000 		lds r24,rframe+28
+ 319 0304 9091 0000 		lds r25,(rframe+28)+1
+ 320 0308 A091 0000 		lds r26,(rframe+28)+2
+ 321 030c B091 0000 		lds r27,(rframe+28)+3
+ 322 0310 8093 0000 		sts ae,r24
+ 323 0314 9093 0000 		sts (ae)+1,r25
+ 324 0318 A093 0000 		sts (ae)+2,r26
+ 325 031c B093 0000 		sts (ae)+3,r27
+ 326 0320 8091 0000 		lds r24,rframe+22
+ 327 0324 8093 0000 		sts ae+4,r24
+ 328 0328 8091 0000 		lds r24,rframe+23
+ 329 032c 8093 0000 		sts ae+5,r24
+ 330 0330 8091 0000 		lds r24,rframe+24
+ 331 0334 8093 0000 		sts ae+6,r24
+ 332 0338 8091 0000 		lds r24,rframe+25
+ 333 033c 8093 0000 		sts ae+7,r24
+ 334 0340 8091 0000 		lds r24,rframe+26
+ 335 0344 8093 0000 		sts ae+8,r24
+ 336 0348 8091 0000 		lds r24,rframe+27
+ 337 034c 8093 0000 		sts ae+9,r24
+ 338 0350 00C0      		rjmp .L9
+ 339               	.L10:
+ 340 0352 892B      		or r24,r25
+ 341 0354 01F4      		brne .L9
+ 342               	.L11:
+GAS LISTING C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/cc80I0tn.s 			page 7
+
+
+ 343 0356 D394      		inc r13
+ 344 0358 8AE0      		ldi r24,lo8(10)
+ 345 035a D816      		cp r13,r24
+ 346 035c 01F0      		breq .+2
+ 347 035e 00C0      		rjmp .L12
+ 348               	.L9:
+ 349 0360 8091 0000 		lds r24,ae
+ 350 0364 9091 0000 		lds r25,(ae)+1
+ 351 0368 A091 0000 		lds r26,(ae)+2
+ 352 036c B091 0000 		lds r27,(ae)+3
+ 353 0370 8E15      		cp r24,r14
+ 354 0372 9F05      		cpc r25,r15
+ 355 0374 A007      		cpc r26,r16
+ 356 0376 B107      		cpc r27,r17
+ 357 0378 01F0      		breq .L13
+ 358 037a 2FEF      		ldi r18,lo8(-1)
+ 359 037c 3FEF      		ldi r19,hi8(-1)
+ 360 037e 00C0      		rjmp .L14
+ 361               	.L13:
+ 362 0380 A0E0      		ldi r26,lo8(ae+4)
+ 363 0382 B0E0      		ldi r27,hi8(ae+4)
+ 364 0384 FE01      		movw r30,r28
+ 365               	.L15:
+ 366 0386 8D91      		ld r24,X+
+ 367 0388 8193      		st Z+,r24
+ 368 038a 80E0      		ldi r24,hi8(ae+10)
+ 369 038c A030      		cpi r26,lo8(ae+10)
+ 370 038e B807      		cpc r27,r24
+ 371 0390 01F4      		brne .L15
+ 372               	.L8:
+ 373 0392 20E0      		ldi r18,lo8(0)
+ 374 0394 30E0      		ldi r19,hi8(0)
+ 375               	.L14:
+ 376 0396 C901      		movw r24,r18
+ 377               	/* epilogue start */
+ 378 0398 DF91      		pop r29
+ 379 039a CF91      		pop r28
+ 380 039c 1F91      		pop r17
+ 381 039e 0F91      		pop r16
+ 382 03a0 FF90      		pop r15
+ 383 03a2 EF90      		pop r14
+ 384 03a4 DF90      		pop r13
+ 385 03a6 0895      		ret
+ 386               		.size	ArpRequest, .-ArpRequest
+ 387               		.comm arpframe,42,1
+ 388               		.comm ae,10,1
+ 389               	.global __do_clear_bss
+GAS LISTING C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/cc80I0tn.s 			page 8
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 arp.c
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/cc80I0tn.s:2      *ABS*:0000003f __SREG__
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/cc80I0tn.s:3      *ABS*:0000003e __SP_H__
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/cc80I0tn.s:4      *ABS*:0000003d __SP_L__
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/cc80I0tn.s:5      *ABS*:00000034 __CCP__
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/cc80I0tn.s:6      *ABS*:00000000 __tmp_reg__
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/cc80I0tn.s:7      *ABS*:00000001 __zero_reg__
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/cc80I0tn.s:11     .text:00000000 ArpRespond
+                            *COM*:0000002a arpframe
+                            *COM*:0000000a ae
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/cc80I0tn.s:165    .text:0000018c ArpRequest
+
+UNDEFINED SYMBOLS
+confnet
+EtherOutput
+EtherInput
+rframe
+__do_clear_bss

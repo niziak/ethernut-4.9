@@ -1,0 +1,23 @@
+GAS LISTING C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/ccIhpkuG.s 			page 1
+
+
+   1               		.file	"debug.c"
+   2               	__SREG__ = 0x3f
+   3               	__SP_H__ = 0x3e
+   4               	__SP_L__ = 0x3d
+   5               	__CCP__  = 0x34
+   6               	__tmp_reg__ = 0
+   7               	__zero_reg__ = 1
+GAS LISTING C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/ccIhpkuG.s 			page 2
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 debug.c
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/ccIhpkuG.s:2      *ABS*:0000003f __SREG__
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/ccIhpkuG.s:3      *ABS*:0000003e __SP_H__
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/ccIhpkuG.s:4      *ABS*:0000003d __SP_L__
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/ccIhpkuG.s:5      *ABS*:00000034 __CCP__
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/ccIhpkuG.s:6      *ABS*:00000000 __tmp_reg__
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/ccIhpkuG.s:7      *ABS*:00000001 __zero_reg__
+
+NO UNDEFINED SYMBOLS

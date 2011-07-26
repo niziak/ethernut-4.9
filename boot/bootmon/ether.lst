@@ -1,0 +1,580 @@
+ARM GAS  C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\ccJJehn7.s 			page 1
+
+
+   1              		.cpu arm7tdmi
+   2              		.fpu softvfp
+   3              		.eabi_attribute 20, 1
+   4              		.eabi_attribute 21, 1
+   5              		.eabi_attribute 23, 3
+   6              		.eabi_attribute 24, 1
+   7              		.eabi_attribute 25, 1
+   8              		.eabi_attribute 26, 1
+   9              		.eabi_attribute 30, 4
+  10              		.eabi_attribute 18, 4
+  11              		.code	16
+  12              		.file	"ether.c"
+  13              		.text
+  14              		.align	1
+  15              		.code	16
+  16              		.thumb_func
+  17              		.type	nic_inw, %function
+  18              	nic_inw:
+  19 0000 10B5     		push	{r4, lr}
+  20 0002 0106     		lsl	r1, r0, #24
+  21 0004 8023     		mov	r3, #128
+  22 0006 9B05     		lsl	r3, r3, #22
+  23 0008 090E     		lsr	r1, r1, #24
+  24 000a 1970     		strb	r1, [r3]
+  25 000c 0131     		add	r1, r1, #1
+  26 000e 054A     		ldr	r2, .L2
+  27 0010 0906     		lsl	r1, r1, #24
+  28 0012 090E     		lsr	r1, r1, #24
+  29 0014 1478     		ldrb	r4, [r2]
+  30 0016 1970     		strb	r1, [r3]
+  31 0018 1078     		ldrb	r0, [r2]
+  32 001a 0002     		lsl	r0, r0, #8
+  33 001c 2043     		orr	r0, r0, r4
+  34              		@ sp needed for prologue
+  35 001e 10BC     		pop	{r4}
+  36 0020 02BC     		pop	{r1}
+  37 0022 0847     		bx	r1
+  38              	.L3:
+  39              		.align	2
+  40              	.L2:
+  41 0024 04000020 		.word	536870916
+  42              		.size	nic_inw, .-nic_inw
+  43              		.align	1
+  44              		.code	16
+  45              		.thumb_func
+  46              		.type	phy_outw, %function
+  47              	phy_outw:
+  48 0028 70B5     		push	{r4, r5, r6, lr}
+  49 002a 4023     		mov	r3, #64
+  50 002c 1843     		orr	r0, r0, r3
+  51 002e 8024     		mov	r4, #128
+  52 0030 0E4D     		ldr	r5, .L5
+  53 0032 A405     		lsl	r4, r4, #22
+  54 0034 0C23     		mov	r3, #12
+  55 0036 0006     		lsl	r0, r0, #24
+  56 0038 2370     		strb	r3, [r4]
+  57 003a 000E     		lsr	r0, r0, #24
+ARM GAS  C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\ccJJehn7.s 			page 2
+
+
+  58 003c 0D23     		mov	r3, #13
+  59 003e 2870     		strb	r0, [r5]
+  60 0040 2370     		strb	r3, [r4]
+  61 0042 0B06     		lsl	r3, r1, #24
+  62 0044 1B0E     		lsr	r3, r3, #24
+  63 0046 2B70     		strb	r3, [r5]
+  64 0048 0E23     		mov	r3, #14
+  65 004a 2370     		strb	r3, [r4]
+  66 004c 0B26     		mov	r6, #11
+  67 004e 090A     		lsr	r1, r1, #8
+  68 0050 0A23     		mov	r3, #10
+  69 0052 2970     		strb	r1, [r5]
+  70 0054 6420     		mov	r0, #100
+  71 0056 2670     		strb	r6, [r4]
+  72 0058 2B70     		strb	r3, [r5]
+  73 005a FFF7FEFF 		bl	MicroDelay
+  74 005e 0023     		mov	r3, #0
+  75 0060 2670     		strb	r6, [r4]
+  76              		@ sp needed for prologue
+  77 0062 2B70     		strb	r3, [r5]
+  78 0064 70BC     		pop	{r4, r5, r6}
+  79 0066 01BC     		pop	{r0}
+  80 0068 0047     		bx	r0
+  81              	.L6:
+  82 006a C046     		.align	2
+  83              	.L5:
+  84 006c 04000020 		.word	536870916
+  85              		.size	phy_outw, .-phy_outw
+  86              		.align	1
+  87              		.global	NicReset
+  88              		.code	16
+  89              		.thumb_func
+  90              		.type	NicReset, %function
+  91              	NicReset:
+  92 0070 70B5     		push	{r4, r5, r6, lr}
+  93 0072 0F4D     		ldr	r5, .L8
+  94 0074 8024     		mov	r4, #128
+  95 0076 0323     		mov	r3, #3
+  96 0078 A405     		lsl	r4, r4, #22
+  97 007a 0026     		mov	r6, #0
+  98 007c 2670     		strb	r6, [r4]
+  99 007e 0D48     		ldr	r0, .L8+4
+ 100 0080 2B70     		strb	r3, [r5]
+ 101 0082 FFF7FEFF 		bl	MicroDelay
+ 102 0086 0420     		mov	r0, #4
+ 103 0088 0B49     		ldr	r1, .L8+8
+ 104 008a FFF7CDFF 		bl	phy_outw
+ 105 008e 9021     		mov	r1, #144
+ 106 0090 4901     		lsl	r1, r1, #5
+ 107 0092 0020     		mov	r0, #0
+ 108 0094 FFF7C8FF 		bl	phy_outw
+ 109 0098 1E23     		mov	r3, #30
+ 110 009a 2370     		strb	r3, [r4]
+ 111 009c 0123     		mov	r3, #1
+ 112 009e 2B70     		strb	r3, [r5]
+ 113 00a0 1F23     		mov	r3, #31
+ 114 00a2 2370     		strb	r3, [r4]
+ARM GAS  C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\ccJJehn7.s 			page 3
+
+
+ 115 00a4 0020     		mov	r0, #0
+ 116 00a6 2E70     		strb	r6, [r5]
+ 117              		@ sp needed for prologue
+ 118 00a8 70BC     		pop	{r4, r5, r6}
+ 119 00aa 02BC     		pop	{r1}
+ 120 00ac 0847     		bx	r1
+ 121              	.L9:
+ 122 00ae C046     		.align	2
+ 123              	.L8:
+ 124 00b0 04000020 		.word	536870916
+ 125 00b4 10270000 		.word	10000
+ 126 00b8 E1010000 		.word	481
+ 127              		.size	NicReset, .-NicReset
+ 128              		.align	1
+ 129              		.global	EtherInit
+ 130              		.code	16
+ 131              		.thumb_func
+ 132              		.type	EtherInit, %function
+ 133              	EtherInit:
+ 134 00bc F8B5     		push	{r3, r4, r5, r6, r7, lr}
+ 135 00be 8024     		mov	r4, #128
+ 136 00c0 0023     		mov	r3, #0
+ 137 00c2 A405     		lsl	r4, r4, #22
+ 138 00c4 414D     		ldr	r5, .L22
+ 139 00c6 2370     		strb	r3, [r4]
+ 140 00c8 0123     		mov	r3, #1
+ 141 00ca 2B70     		strb	r3, [r5]
+ 142 00cc 4048     		ldr	r0, .L22+4
+ 143 00ce FFF7FEFF 		bl	MicroDelay
+ 144 00d2 2820     		mov	r0, #40
+ 145 00d4 FFF794FF 		bl	nic_inw
+ 146 00d8 061C     		mov	r6, r0
+ 147 00da 2A20     		mov	r0, #42
+ 148 00dc FFF790FF 		bl	nic_inw
+ 149 00e0 3C4B     		ldr	r3, .L22+8
+ 150 00e2 0004     		lsl	r0, r0, #16
+ 151 00e4 0643     		orr	r6, r6, r0
+ 152 00e6 9E42     		cmp	r6, r3
+ 153 00e8 6BD1     		bne	.L19
+ 154 00ea FFF7FEFF 		bl	NicReset
+ 155 00ee 0028     		cmp	r0, #0
+ 156 00f0 67D1     		bne	.L19
+ 157 00f2 FE23     		mov	r3, #254
+ 158 00f4 2370     		strb	r3, [r4]
+ 159 00f6 2B78     		ldrb	r3, [r5]
+ 160 00f8 C026     		mov	r6, #192
+ 161 00fa 1E40     		and	r6, r3
+ 162 00fc 61D1     		bne	.L19
+ 163 00fe 1F27     		mov	r7, #31
+ 164 0100 2770     		strb	r7, [r4]
+ 165 0102 3548     		ldr	r0, .L22+12
+ 166 0104 2E70     		strb	r6, [r5]
+ 167 0106 FFF7FEFF 		bl	MicroDelay
+ 168 010a 0323     		mov	r3, #3
+ 169 010c 2670     		strb	r6, [r4]
+ 170 010e 3248     		ldr	r0, .L22+12
+ 171 0110 2B70     		strb	r3, [r5]
+ARM GAS  C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\ccJJehn7.s 			page 4
+
+
+ 172 0112 FFF7FEFF 		bl	MicroDelay
+ 173 0116 0323     		mov	r3, #3
+ 174 0118 2670     		strb	r6, [r4]
+ 175 011a 2F48     		ldr	r0, .L22+12
+ 176 011c 2B70     		strb	r3, [r5]
+ 177 011e FFF7FEFF 		bl	MicroDelay
+ 178 0122 0123     		mov	r3, #1
+ 179 0124 2770     		strb	r7, [r4]
+ 180 0126 2B70     		strb	r3, [r5]
+ 181 0128 2C4B     		ldr	r3, .L22+16
+ 182 012a 2770     		strb	r7, [r4]
+ 183 012c 2E70     		strb	r6, [r5]
+ 184 012e 991D     		add	r1, r3, #6
+ 185 0130 1022     		mov	r2, #16
+ 186              	.L12:
+ 187 0132 1878     		ldrb	r0, [r3]
+ 188 0134 2270     		strb	r2, [r4]
+ 189 0136 0132     		add	r2, r2, #1
+ 190 0138 1206     		lsl	r2, r2, #24
+ 191 013a 0133     		add	r3, r3, #1
+ 192 013c 2870     		strb	r0, [r5]
+ 193 013e 120E     		lsr	r2, r2, #24
+ 194 0140 8B42     		cmp	r3, r1
+ 195 0142 F6D1     		bne	.L12
+ 196 0144 8021     		mov	r1, #128
+ 197 0146 214C     		ldr	r4, .L22
+ 198 0148 1623     		mov	r3, #22
+ 199 014a 8905     		lsl	r1, r1, #22
+ 200 014c 0020     		mov	r0, #0
+ 201              	.L13:
+ 202 014e 0B70     		strb	r3, [r1]
+ 203 0150 0133     		add	r3, r3, #1
+ 204 0152 1B06     		lsl	r3, r3, #24
+ 205 0154 8026     		mov	r6, #128
+ 206 0156 1B0E     		lsr	r3, r3, #24
+ 207 0158 B605     		lsl	r6, r6, #22
+ 208 015a 1C4A     		ldr	r2, .L22
+ 209 015c 2070     		strb	r0, [r4]
+ 210 015e 1D2B     		cmp	r3, #29
+ 211 0160 F5D1     		bne	.L13
+ 212 0162 3370     		strb	r3, [r6]
+ 213 0164 8023     		mov	r3, #128
+ 214 0166 1370     		strb	r3, [r2]
+ 215 0168 FE23     		mov	r3, #254
+ 216 016a 3370     		strb	r3, [r6]
+ 217 016c 0F23     		mov	r3, #15
+ 218 016e 1370     		strb	r3, [r2]
+ 219 0170 0523     		mov	r3, #5
+ 220 0172 3370     		strb	r3, [r6]
+ 221 0174 3123     		mov	r3, #49
+ 222 0176 1370     		strb	r3, [r2]
+ 223 0178 3225     		mov	r5, #50
+ 224              	.L15:
+ 225 017a 144C     		ldr	r4, .L22
+ 226 017c 0C23     		mov	r3, #12
+ 227 017e 3370     		strb	r3, [r6]
+ 228 0180 4123     		mov	r3, #65
+ARM GAS  C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\ccJJehn7.s 			page 5
+
+
+ 229 0182 2370     		strb	r3, [r4]
+ 230 0184 0B23     		mov	r3, #11
+ 231 0186 3370     		strb	r3, [r6]
+ 232 0188 0C23     		mov	r3, #12
+ 233 018a 2370     		strb	r3, [r4]
+ 234 018c 6420     		mov	r0, #100
+ 235 018e FFF7FEFF 		bl	MicroDelay
+ 236 0192 0B23     		mov	r3, #11
+ 237 0194 3370     		strb	r3, [r6]
+ 238 0196 0023     		mov	r3, #0
+ 239 0198 8027     		mov	r7, #128
+ 240 019a 2370     		strb	r3, [r4]
+ 241 019c 0D20     		mov	r0, #13
+ 242 019e BF05     		lsl	r7, r7, #22
+ 243 01a0 FFF72EFF 		bl	nic_inw
+ 244 01a4 8306     		lsl	r3, r0, #26
+ 245 01a6 06D4     		bmi	.L14
+ 246 01a8 002D     		cmp	r5, #0
+ 247 01aa 0AD0     		beq	.L19
+ 248 01ac 0C48     		ldr	r0, .L22+20
+ 249 01ae FFF7FEFF 		bl	MicroDelay
+ 250 01b2 013D     		sub	r5, r5, #1
+ 251 01b4 E1E7     		b	.L15
+ 252              	.L14:
+ 253 01b6 FF23     		mov	r3, #255
+ 254 01b8 3B70     		strb	r3, [r7]
+ 255 01ba 8323     		mov	r3, #131
+ 256 01bc 2370     		strb	r3, [r4]
+ 257 01be 0020     		mov	r0, #0
+ 258 01c0 01E0     		b	.L11
+ 259              	.L19:
+ 260 01c2 0120     		mov	r0, #1
+ 261 01c4 4042     		neg	r0, r0
+ 262              	.L11:
+ 263              		@ sp needed for prologue
+ 264 01c6 F8BC     		pop	{r3, r4, r5, r6, r7}
+ 265 01c8 02BC     		pop	{r1}
+ 266 01ca 0847     		bx	r1
+ 267              	.L23:
+ 268              		.align	2
+ 269              	.L22:
+ 270 01cc 04000020 		.word	536870916
+ 271 01d0 10270000 		.word	10000
+ 272 01d4 460A0090 		.word	-1879045562
+ 273 01d8 88130000 		.word	5000
+ 274 01dc 0A000000 		.word	confnet+10
+ 275 01e0 A0860100 		.word	100000
+ 276              		.size	EtherInit, .-EtherInit
+ 277              		.align	1
+ 278              		.global	EtherOutput
+ 279              		.code	16
+ 280              		.thumb_func
+ 281              		.type	EtherOutput, %function
+ 282              	EtherOutput:
+ 283 01e4 F8B5     		push	{r3, r4, r5, r6, r7, lr}
+ 284 01e6 C123     		mov	r3, #193
+ 285 01e8 DB00     		lsl	r3, r3, #3
+ARM GAS  C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\ccJJehn7.s 			page 6
+
+
+ 286 01ea 071C     		mov	r7, r0
+ 287 01ec 0D1C     		mov	r5, r1
+ 288 01ee 161C     		mov	r6, r2
+ 289 01f0 9942     		cmp	r1, r3
+ 290 01f2 01D1     		bne	.L29
+ 291 01f4 1D4C     		ldr	r4, .L30
+ 292 01f6 00E0     		b	.L25
+ 293              	.L29:
+ 294 01f8 1D4C     		ldr	r4, .L30+4
+ 295              	.L25:
+ 296 01fa A01D     		add	r0, r4, #6
+ 297 01fc 1D49     		ldr	r1, .L30+8
+ 298 01fe 0622     		mov	r2, #6
+ 299 0200 FFF7FEFF 		bl	memcpy_
+ 300 0204 201C     		mov	r0, r4
+ 301 0206 391C     		mov	r1, r7
+ 302 0208 0622     		mov	r2, #6
+ 303 020a FFF7FEFF 		bl	memcpy_
+ 304 020e 331C     		mov	r3, r6
+ 305 0210 2573     		strb	r5, [r4, #12]
+ 306 0212 0E33     		add	r3, r3, #14
+ 307 0214 2D0A     		lsr	r5, r5, #8
+ 308 0216 6573     		strb	r5, [r4, #13]
+ 309 0218 DA07     		lsl	r2, r3, #31
+ 310 021a 00D5     		bpl	.L26
+ 311 021c 0133     		add	r3, r3, #1
+ 312              	.L26:
+ 313 021e 8022     		mov	r2, #128
+ 314 0220 9205     		lsl	r2, r2, #22
+ 315 0222 F821     		mov	r1, #248
+ 316 0224 1170     		strb	r1, [r2]
+ 317 0226 5A1C     		add	r2, r3, #1
+ 318 0228 5208     		lsr	r2, r2, #1
+ 319 022a 1349     		ldr	r1, .L30+12
+ 320 022c 06E0     		b	.L27
+ 321              	.L28:
+ 322 022e 6078     		ldrb	r0, [r4, #1]
+ 323 0230 2578     		ldrb	r5, [r4]
+ 324 0232 0002     		lsl	r0, r0, #8
+ 325 0234 2843     		orr	r0, r0, r5
+ 326 0236 0880     		strh	r0, [r1]
+ 327 0238 0234     		add	r4, r4, #2
+ 328 023a 013A     		sub	r2, r2, #1
+ 329              	.L27:
+ 330 023c 002A     		cmp	r2, #0
+ 331 023e F6D1     		bne	.L28
+ 332 0240 1904     		lsl	r1, r3, #16
+ 333 0242 8023     		mov	r3, #128
+ 334 0244 9B05     		lsl	r3, r3, #22
+ 335 0246 FC22     		mov	r2, #252
+ 336 0248 1A70     		strb	r2, [r3]
+ 337 024a 0802     		lsl	r0, r1, #8
+ 338 024c 0A4A     		ldr	r2, .L30+12
+ 339 024e 000E     		lsr	r0, r0, #24
+ 340 0250 1070     		strb	r0, [r2]
+ 341 0252 090E     		lsr	r1, r1, #24
+ 342 0254 FD20     		mov	r0, #253
+ARM GAS  C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\ccJJehn7.s 			page 7
+
+
+ 343 0256 1870     		strb	r0, [r3]
+ 344 0258 1170     		strb	r1, [r2]
+ 345 025a 0221     		mov	r1, #2
+ 346 025c 1970     		strb	r1, [r3]
+ 347 025e 0123     		mov	r3, #1
+ 348 0260 0020     		mov	r0, #0
+ 349 0262 1370     		strb	r3, [r2]
+ 350              		@ sp needed for prologue
+ 351 0264 F8BC     		pop	{r3, r4, r5, r6, r7}
+ 352 0266 02BC     		pop	{r1}
+ 353 0268 0847     		bx	r1
+ 354              	.L31:
+ 355 026a C046     		.align	2
+ 356              	.L30:
+ 357 026c 00000000 		.word	arpframe
+ 358 0270 00000000 		.word	sframe
+ 359 0274 0A000000 		.word	confnet+10
+ 360 0278 04000020 		.word	536870916
+ 361              		.size	EtherOutput, .-EtherOutput
+ 362              		.align	1
+ 363              		.global	EtherInput
+ 364              		.code	16
+ 365              		.thumb_func
+ 366              		.type	EtherInput, %function
+ 367              	EtherInput:
+ 368 027c F0B5     		push	{r4, r5, r6, r7, lr}
+ 369 027e 83B0     		sub	sp, sp, #12
+ 370 0280 8025     		mov	r5, #128
+ 371 0282 0190     		str	r0, [sp, #4]
+ 372 0284 3D4C     		ldr	r4, .L60
+ 373 0286 0F1C     		mov	r7, r1
+ 374 0288 AD05     		lsl	r5, r5, #22
+ 375              	.L52:
+ 376 028a 1022     		mov	r2, #16
+ 377 028c 5242     		neg	r2, r2
+ 378 028e 2A70     		strb	r2, [r5]
+ 379 0290 2378     		ldrb	r3, [r4]
+ 380 0292 2378     		ldrb	r3, [r4]
+ 381 0294 0093     		str	r3, [sp]
+ 382 0296 012B     		cmp	r3, #1
+ 383 0298 12D1     		bne	.L53
+ 384 029a 26E0     		b	.L37
+ 385              	.L36:
+ 386 029c 384A     		ldr	r2, .L60+4
+ 387 029e 1368     		ldr	r3, [r2]
+ 388 02a0 0133     		add	r3, r3, #1
+ 389 02a2 1360     		str	r3, [r2]
+ 390 02a4 0223     		mov	r3, #2
+ 391 02a6 5B42     		neg	r3, r3
+ 392 02a8 2B70     		strb	r3, [r5]
+ 393 02aa 0222     		mov	r2, #2
+ 394 02ac 2378     		ldrb	r3, [r4]
+ 395 02ae 5242     		neg	r2, r2
+ 396 02b0 2A70     		strb	r2, [r5]
+ 397 02b2 013F     		sub	r7, r7, #1
+ 398 02b4 2370     		strb	r3, [r4]
+ 399 02b6 DA07     		lsl	r2, r3, #31
+ARM GAS  C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\ccJJehn7.s 			page 8
+
+
+ 400 02b8 17D4     		bmi	.L37
+ 401 02ba 3248     		ldr	r0, .L60+8
+ 402 02bc FFF7FEFF 		bl	MicroDelay
+ 403              	.L53:
+ 404 02c0 002F     		cmp	r7, #0
+ 405 02c2 EBD1     		bne	.L36
+ 406 02c4 14E0     		b	.L54
+ 407              	.L40:
+ 408 02c6 3368     		ldr	r3, [r6]
+ 409 02c8 0133     		add	r3, r3, #1
+ 410 02ca 3360     		str	r3, [r6]
+ 411 02cc 1023     		mov	r3, #16
+ 412 02ce 5B42     		neg	r3, r3
+ 413 02d0 2B70     		strb	r3, [r5]
+ 414 02d2 2378     		ldrb	r3, [r4]
+ 415 02d4 2378     		ldrb	r3, [r4]
+ 416 02d6 0093     		str	r3, [sp]
+ 417 02d8 012B     		cmp	r3, #1
+ 418 02da 48D8     		bhi	.L49
+ 419 02dc 013F     		sub	r7, r7, #1
+ 420 02de 002B     		cmp	r3, #0
+ 421 02e0 09D1     		bne	.L39
+ 422 02e2 2848     		ldr	r0, .L60+8
+ 423 02e4 FFF7FEFF 		bl	MicroDelay
+ 424 02e8 00E0     		b	.L55
+ 425              	.L37:
+ 426 02ea 254E     		ldr	r6, .L60+4
+ 427              	.L55:
+ 428 02ec 002F     		cmp	r7, #0
+ 429 02ee EAD1     		bne	.L40
+ 430              	.L54:
+ 431 02f0 009A     		ldr	r2, [sp]
+ 432 02f2 012A     		cmp	r2, #1
+ 433 02f4 39D1     		bne	.L48
+ 434              	.L39:
+ 435 02f6 F223     		mov	r3, #242
+ 436 02f8 2B70     		strb	r3, [r5]
+ 437 02fa C023     		mov	r3, #192
+ 438 02fc 2288     		ldrh	r2, [r4]
+ 439 02fe 2088     		ldrh	r0, [r4]
+ 440 0300 DB00     		lsl	r3, r3, #3
+ 441 0302 1204     		lsl	r2, r2, #16
+ 442 0304 9842     		cmp	r0, r3
+ 443 0306 32D8     		bhi	.L49
+ 444 0308 130E     		lsr	r3, r2, #24
+ 445 030a BF22     		mov	r2, #191
+ 446 030c 1A42     		tst	r2, r3
+ 447 030e 0AD0     		beq	.L41
+ 448 0310 0130     		add	r0, r0, #1
+ 449 0312 4008     		lsr	r0, r0, #1
+ 450 0314 0130     		add	r0, r0, #1
+ 451 0316 0023     		mov	r3, #0
+ 452 0318 184A     		ldr	r2, .L60
+ 453 031a 00E0     		b	.L42
+ 454              	.L43:
+ 455 031c 1188     		ldrh	r1, [r2]
+ 456              	.L42:
+ARM GAS  C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\ccJJehn7.s 			page 9
+
+
+ 457 031e 0133     		add	r3, r3, #1
+ 458 0320 8342     		cmp	r3, r0
+ 459 0322 FBD1     		bne	.L43
+ 460 0324 23E0     		b	.L49
+ 461              	.L41:
+ 462 0326 0438     		sub	r0, r0, #4
+ 463 0328 0004     		lsl	r0, r0, #16
+ 464 032a 000C     		lsr	r0, r0, #16
+ 465 032c 411C     		add	r1, r0, #1
+ 466 032e C903     		lsl	r1, r1, #15
+ 467 0330 090C     		lsr	r1, r1, #16
+ 468 0332 154B     		ldr	r3, .L60+12
+ 469 0334 4900     		lsl	r1, r1, #1
+ 470 0336 C918     		add	r1, r1, r3
+ 471 0338 04E0     		b	.L44
+ 472              	.L45:
+ 473 033a 2288     		ldrh	r2, [r4]
+ 474 033c 1A70     		strb	r2, [r3]
+ 475 033e 120A     		lsr	r2, r2, #8
+ 476 0340 5A70     		strb	r2, [r3, #1]
+ 477 0342 0233     		add	r3, r3, #2
+ 478              	.L44:
+ 479 0344 8B42     		cmp	r3, r1
+ 480 0346 F8D1     		bne	.L45
+ 481 0348 2388     		ldrh	r3, [r4]
+ 482 034a 2388     		ldrh	r3, [r4]
+ 483 034c 0E4B     		ldr	r3, .L60+12
+ 484 034e 5A7B     		ldrb	r2, [r3, #13]
+ 485 0350 197B     		ldrb	r1, [r3, #12]
+ 486 0352 1202     		lsl	r2, r2, #8
+ 487 0354 019B     		ldr	r3, [sp, #4]
+ 488 0356 0A43     		orr	r2, r2, r1
+ 489 0358 9A42     		cmp	r2, r3
+ 490 035a 0AD0     		beq	.L38
+ 491 035c C123     		mov	r3, #193
+ 492 035e DB00     		lsl	r3, r3, #3
+ 493 0360 9A42     		cmp	r2, r3
+ 494 0362 92D1     		bne	.L52
+ 495 0364 FFF7FEFF 		bl	ArpRespond
+ 496 0368 8FE7     		b	.L52
+ 497              	.L48:
+ 498 036a 0020     		mov	r0, #0
+ 499 036c 01E0     		b	.L38
+ 500              	.L49:
+ 501 036e 0120     		mov	r0, #1
+ 502 0370 4042     		neg	r0, r0
+ 503              	.L38:
+ 504 0372 03B0     		add	sp, sp, #12
+ 505              		@ sp needed for prologue
+ 506 0374 F0BC     		pop	{r4, r5, r6, r7}
+ 507 0376 02BC     		pop	{r1}
+ 508 0378 0847     		bx	r1
+ 509              	.L61:
+ 510 037a C046     		.align	2
+ 511              	.L60:
+ 512 037c 04000020 		.word	536870916
+ 513 0380 00000000 		.word	random_id
+ARM GAS  C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\ccJJehn7.s 			page 10
+
+
+ 514 0384 10270000 		.word	10000
+ 515 0388 00000000 		.word	rframe
+ 516              		.size	EtherInput, .-EtherInput
+ 517              		.ident	"GCC: (GNU) 4.5.2"
+ARM GAS  C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\ccJJehn7.s 			page 11
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 ether.c
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\ccJJehn7.s:14     .text:00000000 $t
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\ccJJehn7.s:18     .text:00000000 nic_inw
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\ccJJehn7.s:41     .text:00000024 $d
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\ccJJehn7.s:43     .text:00000028 $t
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\ccJJehn7.s:47     .text:00000028 phy_outw
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\ccJJehn7.s:84     .text:0000006c $d
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\ccJJehn7.s:86     .text:00000070 $t
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\ccJJehn7.s:91     .text:00000070 NicReset
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\ccJJehn7.s:124    .text:000000b0 $d
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\ccJJehn7.s:128    .text:000000bc $t
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\ccJJehn7.s:133    .text:000000bc EtherInit
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\ccJJehn7.s:270    .text:000001cc $d
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\ccJJehn7.s:277    .text:000001e4 $t
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\ccJJehn7.s:282    .text:000001e4 EtherOutput
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\ccJJehn7.s:357    .text:0000026c $d
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\ccJJehn7.s:362    .text:0000027c $t
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\ccJJehn7.s:367    .text:0000027c EtherInput
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp\ccJJehn7.s:512    .text:0000037c $d
+
+UNDEFINED SYMBOLS
+MicroDelay
+confnet
+memcpy_
+arpframe
+sframe
+ArpRespond
+random_id
+rframe

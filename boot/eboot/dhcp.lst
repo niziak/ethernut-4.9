@@ -1,0 +1,468 @@
+GAS LISTING C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/ccKY13ic.s 			page 1
+
+
+   1               		.file	"dhcp.c"
+   2               	__SREG__ = 0x3f
+   3               	__SP_H__ = 0x3e
+   4               	__SP_L__ = 0x3d
+   5               	__CCP__  = 0x34
+   6               	__tmp_reg__ = 0
+   7               	__zero_reg__ = 1
+   8               		.text
+   9               	.global	DhcpGetOption
+  10               		.type	DhcpGetOption, @function
+  11               	DhcpGetOption:
+  12 0000 CF93      		push r28
+  13 0002 DF93      		push r29
+  14               	/* prologue: function */
+  15               	/* frame size = 0 */
+  16 0004 982F      		mov r25,r24
+  17 0006 E0E0      		ldi r30,lo8(rframe+282)
+  18 0008 F0E0      		ldi r31,hi8(rframe+282)
+  19               	.L11:
+  20 000a 8081      		ld r24,Z
+  21 000c 8823      		tst r24
+  22 000e 01F0      		breq .L12
+  23               	.L2:
+  24 0010 8F3F      		cpi r24,lo8(-1)
+  25 0012 01F0      		breq .L4
+  26 0014 EF01      		movw r28,r30
+  27 0016 2196      		adiw r28,1
+  28 0018 8917      		cp r24,r25
+  29 001a 01F4      		brne .L5
+  30 001c 9881      		ld r25,Y
+  31 001e 4917      		cp r20,r25
+  32 0020 00F4      		brsh .L6
+  33 0022 942F      		mov r25,r20
+  34               	.L6:
+  35 0024 DF01      		movw r26,r30
+  36 0026 20E0      		ldi r18,lo8(0)
+  37 0028 30E0      		ldi r19,hi8(0)
+  38 002a 00C0      		rjmp .L7
+  39               	.L8:
+  40 002c FB01      		movw r30,r22
+  41 002e E20F      		add r30,r18
+  42 0030 F31F      		adc r31,r19
+  43 0032 1196      		adiw r26,1
+  44 0034 8C91      		ld r24,X
+  45 0036 1197      		sbiw r26,1
+  46 0038 8083      		st Z,r24
+  47 003a 2F5F      		subi r18,lo8(-(1))
+  48 003c 3F4F      		sbci r19,hi8(-(1))
+  49               	.L7:
+  50 003e 1196      		adiw r26,1
+  51 0040 2917      		cp r18,r25
+  52 0042 00F0      		brlo .L8
+  53 0044 8881      		ld r24,Y
+  54 0046 00C0      		rjmp .L9
+  55               	.L5:
+  56 0048 8181      		ldd r24,Z+1
+  57 004a FE01      		movw r30,r28
+GAS LISTING C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/ccKY13ic.s 			page 2
+
+
+  58 004c E80F      		add r30,r24
+  59 004e F11D      		adc r31,__zero_reg__
+  60               	.L12:
+  61 0050 3196      		adiw r30,1
+  62 0052 00C0      		rjmp .L11
+  63               	.L4:
+  64 0054 80E0      		ldi r24,lo8(0)
+  65               	.L9:
+  66               	/* epilogue start */
+  67 0056 DF91      		pop r29
+  68 0058 CF91      		pop r28
+  69 005a 0895      		ret
+  70               		.size	DhcpGetOption, .-DhcpGetOption
+  71               	.global	DhcpSetOption
+  72               		.type	DhcpSetOption, @function
+  73               	DhcpSetOption:
+  74 005c CF93      		push r28
+  75 005e DF93      		push r29
+  76               	/* prologue: function */
+  77               	/* frame size = 0 */
+  78 0060 FC01      		movw r30,r24
+  79 0062 EA01      		movw r28,r20
+  80 0064 322F      		mov r19,r18
+  81 0066 DC01      		movw r26,r24
+  82 0068 6D93      		st X+,r22
+  83 006a 2183      		std Z+1,r18
+  84 006c 1196      		adiw r26,1
+  85 006e 922F      		mov r25,r18
+  86 0070 00C0      		rjmp .L14
+  87               	.L15:
+  88 0072 8991      		ld r24,Y+
+  89 0074 8183      		std Z+1,r24
+  90 0076 9150      		subi r25,lo8(-(-1))
+  91               	.L14:
+  92 0078 3196      		adiw r30,1
+  93 007a 9923      		tst r25
+  94 007c 01F4      		brne .L15
+  95 007e FD01      		movw r30,r26
+  96 0080 E30F      		add r30,r19
+  97 0082 F11D      		adc r31,__zero_reg__
+  98 0084 8FEF      		ldi r24,lo8(-1)
+  99 0086 8083      		st Z,r24
+ 100 0088 CF01      		movw r24,r30
+ 101               	/* epilogue start */
+ 102 008a DF91      		pop r29
+ 103 008c CF91      		pop r28
+ 104 008e 0895      		ret
+ 105               		.size	DhcpSetOption, .-DhcpSetOption
+ 106               	.global	DhcpTransact
+ 107               		.type	DhcpTransact, @function
+ 108               	DhcpTransact:
+ 109 0090 AF92      		push r10
+ 110 0092 BF92      		push r11
+ 111 0094 CF92      		push r12
+ 112 0096 DF92      		push r13
+ 113 0098 EF92      		push r14
+ 114 009a FF92      		push r15
+GAS LISTING C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/ccKY13ic.s 			page 3
+
+
+ 115 009c 0F93      		push r16
+ 116 009e 1F93      		push r17
+ 117 00a0 DF93      		push r29
+ 118 00a2 CF93      		push r28
+ 119 00a4 0F92      		push __tmp_reg__
+ 120 00a6 CDB7      		in r28,__SP_L__
+ 121 00a8 DEB7      		in r29,__SP_H__
+ 122               	/* prologue: function */
+ 123               	/* frame size = 1 */
+ 124 00aa 6C01      		movw r12,r24
+ 125 00ac E62E      		mov r14,r22
+ 126 00ae FF24      		clr r15
+ 127 00b0 5E01      		movw r10,r28
+ 128 00b2 0894      		sec
+ 129 00b4 A11C      		adc r10,__zero_reg__
+ 130 00b6 B11C      		adc r11,__zero_reg__
+ 131               	.L21:
+ 132 00b8 6FEF      		ldi r22,lo8(-1)
+ 133 00ba 7FEF      		ldi r23,hi8(-1)
+ 134 00bc 8FEF      		ldi r24,hlo8(-1)
+ 135 00be 9FEF      		ldi r25,hhi8(-1)
+ 136 00c0 43E4      		ldi r20,lo8(67)
+ 137 00c2 50E0      		ldi r21,hi8(67)
+ 138 00c4 24E4      		ldi r18,lo8(68)
+ 139 00c6 30E0      		ldi r19,hi8(68)
+ 140 00c8 8601      		movw r16,r12
+ 141 00ca 0E94 0000 		call UdpOutput
+ 142 00ce 97FD      		sbrc r25,7
+ 143 00d0 00C0      		rjmp .L18
+ 144 00d2 84E4      		ldi r24,lo8(68)
+ 145 00d4 90E0      		ldi r25,hi8(68)
+ 146 00d6 60E2      		ldi r22,lo8(20000)
+ 147 00d8 7EE4      		ldi r23,hi8(20000)
+ 148 00da 0E94 0000 		call UdpInput
+ 149 00de 8C01      		movw r16,r24
+ 150 00e0 97FD      		sbrc r25,7
+ 151 00e2 00C0      		rjmp .L18
+ 152 00e4 0097      		sbiw r24,0
+ 153 00e6 01F0      		breq .L19
+ 154 00e8 2091 0000 		lds r18,rframe+46
+ 155 00ec 3091 0000 		lds r19,(rframe+46)+1
+ 156 00f0 4091 0000 		lds r20,(rframe+46)+2
+ 157 00f4 5091 0000 		lds r21,(rframe+46)+3
+ 158 00f8 8091 0000 		lds r24,sframe+46
+ 159 00fc 9091 0000 		lds r25,(sframe+46)+1
+ 160 0100 A091 0000 		lds r26,(sframe+46)+2
+ 161 0104 B091 0000 		lds r27,(sframe+46)+3
+ 162 0108 2817      		cp r18,r24
+ 163 010a 3907      		cpc r19,r25
+ 164 010c 4A07      		cpc r20,r26
+ 165 010e 5B07      		cpc r21,r27
+ 166 0110 01F4      		brne .L19
+ 167 0112 85E3      		ldi r24,lo8(53)
+ 168 0114 B501      		movw r22,r10
+ 169 0116 41E0      		ldi r20,lo8(1)
+ 170 0118 0E94 0000 		call DhcpGetOption
+ 171 011c 8130      		cpi r24,lo8(1)
+GAS LISTING C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/ccKY13ic.s 			page 4
+
+
+ 172 011e 01F4      		brne .L19
+ 173 0120 8981      		ldd r24,Y+1
+ 174 0122 8E15      		cp r24,r14
+ 175 0124 01F0      		breq .L20
+ 176               	.L19:
+ 177 0126 68EE      		ldi r22,lo8(1000)
+ 178 0128 73E0      		ldi r23,hi8(1000)
+ 179 012a 80E0      		ldi r24,hlo8(1000)
+ 180 012c 90E0      		ldi r25,hhi8(1000)
+ 181 012e 0E94 0000 		call Delay
+ 182 0132 F394      		inc r15
+ 183 0134 83E0      		ldi r24,lo8(3)
+ 184 0136 F816      		cp r15,r24
+ 185 0138 01F0      		breq .+2
+ 186 013a 00C0      		rjmp .L21
+ 187 013c 00E0      		ldi r16,lo8(0)
+ 188 013e 10E0      		ldi r17,hi8(0)
+ 189 0140 00C0      		rjmp .L20
+ 190               	.L18:
+ 191 0142 0FEF      		ldi r16,lo8(-1)
+ 192 0144 1FEF      		ldi r17,hi8(-1)
+ 193               	.L20:
+ 194 0146 C801      		movw r24,r16
+ 195               	/* epilogue start */
+ 196 0148 0F90      		pop __tmp_reg__
+ 197 014a CF91      		pop r28
+ 198 014c DF91      		pop r29
+ 199 014e 1F91      		pop r17
+ 200 0150 0F91      		pop r16
+ 201 0152 FF90      		pop r15
+ 202 0154 EF90      		pop r14
+ 203 0156 DF90      		pop r13
+ 204 0158 CF90      		pop r12
+ 205 015a BF90      		pop r11
+ 206 015c AF90      		pop r10
+ 207 015e 0895      		ret
+ 208               		.size	DhcpTransact, .-DhcpTransact
+ 209               	.global	DhcpQuery
+ 210               		.type	DhcpQuery, @function
+ 211               	DhcpQuery:
+ 212 0160 0F93      		push r16
+ 213 0162 1F93      		push r17
+ 214 0164 DF93      		push r29
+ 215 0166 CF93      		push r28
+ 216 0168 0F92      		push __tmp_reg__
+ 217 016a CDB7      		in r28,__SP_L__
+ 218 016c DEB7      		in r29,__SP_H__
+ 219               	/* prologue: function */
+ 220               	/* frame size = 1 */
+ 221 016e 8091 0000 		lds r24,confnet+28
+ 222 0172 9091 0000 		lds r25,(confnet+28)+1
+ 223 0176 A091 0000 		lds r26,(confnet+28)+2
+ 224 017a B091 0000 		lds r27,(confnet+28)+3
+ 225 017e 0097      		sbiw r24,0
+ 226 0180 A105      		cpc r26,__zero_reg__
+ 227 0182 B105      		cpc r27,__zero_reg__
+ 228 0184 01F0      		breq .L25
+GAS LISTING C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/ccKY13ic.s 			page 5
+
+
+ 229 0186 8093 0000 		sts confnet+16,r24
+ 230 018a 9093 0000 		sts (confnet+16)+1,r25
+ 231 018e A093 0000 		sts (confnet+16)+2,r26
+ 232 0192 B093 0000 		sts (confnet+16)+3,r27
+ 233 0196 00C0      		rjmp .L38
+ 234               	.L25:
+ 235 0198 1092 0000 		sts confnet+16,__zero_reg__
+ 236 019c 1092 0000 		sts (confnet+16)+1,__zero_reg__
+ 237 01a0 1092 0000 		sts (confnet+16)+2,__zero_reg__
+ 238 01a4 1092 0000 		sts (confnet+16)+3,__zero_reg__
+ 239 01a8 61E0      		ldi r22,lo8(1)
+ 240 01aa 6093 0000 		sts sframe+42,r22
+ 241 01ae 8091 0000 		lds r24,confnet+14
+ 242 01b2 90E0      		ldi r25,lo8(0)
+ 243 01b4 A0E0      		ldi r26,lo8(0)
+ 244 01b6 B0E0      		ldi r27,hi8(0)
+ 245 01b8 BA2F      		mov r27,r26
+ 246 01ba A92F      		mov r26,r25
+ 247 01bc 982F      		mov r25,r24
+ 248 01be 8827      		clr r24
+ 249 01c0 2091 0000 		lds r18,confnet+15
+ 250 01c4 30E0      		ldi r19,lo8(0)
+ 251 01c6 40E0      		ldi r20,lo8(0)
+ 252 01c8 50E0      		ldi r21,hi8(0)
+ 253 01ca 822B      		or r24,r18
+ 254 01cc 932B      		or r25,r19
+ 255 01ce A42B      		or r26,r20
+ 256 01d0 B52B      		or r27,r21
+ 257 01d2 8093 0000 		sts sframe+46,r24
+ 258 01d6 9093 0000 		sts (sframe+46)+1,r25
+ 259 01da A093 0000 		sts (sframe+46)+2,r26
+ 260 01de B093 0000 		sts (sframe+46)+3,r27
+ 261 01e2 80E8      		ldi r24,lo8(128)
+ 262 01e4 90E0      		ldi r25,hi8(128)
+ 263 01e6 9093 0000 		sts (sframe+52)+1,r25
+ 264 01ea 8093 0000 		sts sframe+52,r24
+ 265 01ee 6093 0000 		sts sframe+43,r22
+ 266 01f2 86E0      		ldi r24,lo8(6)
+ 267 01f4 8093 0000 		sts sframe+44,r24
+ 268 01f8 90E0      		ldi r25,lo8(0)
+ 269 01fa 00C0      		rjmp .L27
+ 270               	.L28:
+ 271 01fc E92F      		mov r30,r25
+ 272 01fe F0E0      		ldi r31,lo8(0)
+ 273 0200 DF01      		movw r26,r30
+ 274 0202 A050      		subi r26,lo8(-(confnet))
+ 275 0204 B040      		sbci r27,hi8(-(confnet))
+ 276 0206 1A96      		adiw r26,10
+ 277 0208 8C91      		ld r24,X
+ 278 020a E050      		subi r30,lo8(-(sframe+70))
+ 279 020c F040      		sbci r31,hi8(-(sframe+70))
+ 280 020e 8083      		st Z,r24
+ 281 0210 9F5F      		subi r25,lo8(-(1))
+ 282               	.L27:
+ 283 0212 9630      		cpi r25,lo8(6)
+ 284 0214 00F0      		brlo .L28
+ 285 0216 83E6      		ldi r24,lo8(1666417251)
+GAS LISTING C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/ccKY13ic.s 			page 6
+
+
+ 286 0218 92E8      		ldi r25,hi8(1666417251)
+ 287 021a A3E5      		ldi r26,hlo8(1666417251)
+ 288 021c B3E6      		ldi r27,hhi8(1666417251)
+ 289 021e 8093 0000 		sts sframe+278,r24
+ 290 0222 9093 0000 		sts (sframe+278)+1,r25
+ 291 0226 A093 0000 		sts (sframe+278)+2,r26
+ 292 022a B093 0000 		sts (sframe+278)+3,r27
+ 293 022e 81E0      		ldi r24,lo8(1)
+ 294 0230 8983      		std Y+1,r24
+ 295 0232 80E0      		ldi r24,lo8(sframe+282)
+ 296 0234 90E0      		ldi r25,hi8(sframe+282)
+ 297 0236 65E3      		ldi r22,lo8(53)
+ 298 0238 8E01      		movw r16,r28
+ 299 023a 0F5F      		subi r16,lo8(-(1))
+ 300 023c 1F4F      		sbci r17,hi8(-(1))
+ 301 023e A801      		movw r20,r16
+ 302 0240 21E0      		ldi r18,lo8(1)
+ 303 0242 0E94 0000 		call DhcpSetOption
+ 304 0246 84EF      		ldi r24,lo8(244)
+ 305 0248 90E0      		ldi r25,hi8(244)
+ 306 024a 62E0      		ldi r22,lo8(2)
+ 307 024c 0E94 0000 		call DhcpTransact
+ 308 0250 1816      		cp __zero_reg__,r24
+ 309 0252 1906      		cpc __zero_reg__,r25
+ 310 0254 04F0      		brlt .+2
+ 311 0256 00C0      		rjmp .L29
+ 312 0258 86E3      		ldi r24,lo8(54)
+ 313 025a 60E0      		ldi r22,lo8(sid)
+ 314 025c 70E0      		ldi r23,hi8(sid)
+ 315 025e 44E0      		ldi r20,lo8(4)
+ 316 0260 0E94 0000 		call DhcpGetOption
+ 317 0264 83E0      		ldi r24,lo8(3)
+ 318 0266 8983      		std Y+1,r24
+ 319 0268 80E0      		ldi r24,lo8(sframe+282)
+ 320 026a 90E0      		ldi r25,hi8(sframe+282)
+ 321 026c 65E3      		ldi r22,lo8(53)
+ 322 026e A801      		movw r20,r16
+ 323 0270 21E0      		ldi r18,lo8(1)
+ 324 0272 0E94 0000 		call DhcpSetOption
+ 325 0276 62E3      		ldi r22,lo8(50)
+ 326 0278 40E0      		ldi r20,lo8(rframe+58)
+ 327 027a 50E0      		ldi r21,hi8(rframe+58)
+ 328 027c 24E0      		ldi r18,lo8(4)
+ 329 027e 0E94 0000 		call DhcpSetOption
+ 330 0282 66E3      		ldi r22,lo8(54)
+ 331 0284 40E0      		ldi r20,lo8(sid)
+ 332 0286 50E0      		ldi r21,hi8(sid)
+ 333 0288 24E0      		ldi r18,lo8(4)
+ 334 028a 0E94 0000 		call DhcpSetOption
+ 335 028e 80E0      		ldi r24,lo8(256)
+ 336 0290 91E0      		ldi r25,hi8(256)
+ 337 0292 65E0      		ldi r22,lo8(5)
+ 338 0294 0E94 0000 		call DhcpTransact
+ 339 0298 1816      		cp __zero_reg__,r24
+ 340 029a 1906      		cpc __zero_reg__,r25
+ 341 029c 04F0      		brlt .+2
+ 342 029e 00C0      		rjmp .L29
+GAS LISTING C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/ccKY13ic.s 			page 7
+
+
+ 343 02a0 8091 0000 		lds r24,rframe+58
+ 344 02a4 9091 0000 		lds r25,(rframe+58)+1
+ 345 02a8 A091 0000 		lds r26,(rframe+58)+2
+ 346 02ac B091 0000 		lds r27,(rframe+58)+3
+ 347 02b0 8093 0000 		sts confnet+16,r24
+ 348 02b4 9093 0000 		sts (confnet+16)+1,r25
+ 349 02b8 A093 0000 		sts (confnet+16)+2,r26
+ 350 02bc B093 0000 		sts (confnet+16)+3,r27
+ 351 02c0 8091 0000 		lds r24,confboot+2
+ 352 02c4 9091 0000 		lds r25,(confboot+2)+1
+ 353 02c8 A091 0000 		lds r26,(confboot+2)+2
+ 354 02cc B091 0000 		lds r27,(confboot+2)+3
+ 355 02d0 0097      		sbiw r24,0
+ 356 02d2 A105      		cpc r26,__zero_reg__
+ 357 02d4 B105      		cpc r27,__zero_reg__
+ 358 02d6 01F4      		brne .L30
+ 359 02d8 8091 0000 		lds r24,rframe+62
+ 360 02dc 9091 0000 		lds r25,(rframe+62)+1
+ 361 02e0 A091 0000 		lds r26,(rframe+62)+2
+ 362 02e4 B091 0000 		lds r27,(rframe+62)+3
+ 363 02e8 8093 0000 		sts confboot+2,r24
+ 364 02ec 9093 0000 		sts (confboot+2)+1,r25
+ 365 02f0 A093 0000 		sts (confboot+2)+2,r26
+ 366 02f4 B093 0000 		sts (confboot+2)+3,r27
+ 367               	.L30:
+ 368 02f8 8091 0000 		lds r24,confboot+6
+ 369 02fc 8823      		tst r24
+ 370 02fe 01F4      		brne .L31
+ 371 0300 A0E0      		ldi r26,lo8(rframe+150)
+ 372 0302 B0E0      		ldi r27,hi8(rframe+150)
+ 373 0304 1982      		std Y+1,__zero_reg__
+ 374 0306 00C0      		rjmp .L32
+ 375               	.L35:
+ 376 0308 E82F      		mov r30,r24
+ 377 030a F0E0      		ldi r31,lo8(0)
+ 378 030c E050      		subi r30,lo8(-(confboot))
+ 379 030e F040      		sbci r31,hi8(-(confboot))
+ 380 0310 9683      		std Z+6,r25
+ 381 0312 1196      		adiw r26,1
+ 382 0314 8F5F      		subi r24,lo8(-(1))
+ 383               	.L32:
+ 384 0316 9C91      		ld r25,X
+ 385 0318 9923      		tst r25
+ 386 031a 01F0      		breq .L37
+ 387               	.L33:
+ 388 031c 8F37      		cpi r24,lo8(127)
+ 389 031e 00F0      		brlo .L35
+ 390               	.L37:
+ 391 0320 8983      		std Y+1,r24
+ 392 0322 E981      		ldd r30,Y+1
+ 393 0324 F0E0      		ldi r31,lo8(0)
+ 394 0326 E050      		subi r30,lo8(-(confboot))
+ 395 0328 F040      		sbci r31,hi8(-(confboot))
+ 396 032a 1682      		std Z+6,__zero_reg__
+ 397               	.L31:
+ 398 032c 81E0      		ldi r24,lo8(1)
+ 399 032e 60E0      		ldi r22,lo8(confnet+20)
+GAS LISTING C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/ccKY13ic.s 			page 8
+
+
+ 400 0330 70E0      		ldi r23,hi8(confnet+20)
+ 401 0332 44E0      		ldi r20,lo8(4)
+ 402 0334 0E94 0000 		call DhcpGetOption
+ 403               	.L38:
+ 404 0338 20E0      		ldi r18,lo8(0)
+ 405 033a 30E0      		ldi r19,hi8(0)
+ 406 033c 00C0      		rjmp .L26
+ 407               	.L29:
+ 408 033e 2FEF      		ldi r18,lo8(-1)
+ 409 0340 3FEF      		ldi r19,hi8(-1)
+ 410               	.L26:
+ 411 0342 C901      		movw r24,r18
+ 412               	/* epilogue start */
+ 413 0344 0F90      		pop __tmp_reg__
+ 414 0346 CF91      		pop r28
+ 415 0348 DF91      		pop r29
+ 416 034a 1F91      		pop r17
+ 417 034c 0F91      		pop r16
+ 418 034e 0895      		ret
+ 419               		.size	DhcpQuery, .-DhcpQuery
+GAS LISTING C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/ccKY13ic.s 			page 9
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 dhcp.c
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/ccKY13ic.s:2      *ABS*:0000003f __SREG__
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/ccKY13ic.s:3      *ABS*:0000003e __SP_H__
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/ccKY13ic.s:4      *ABS*:0000003d __SP_L__
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/ccKY13ic.s:5      *ABS*:00000034 __CCP__
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/ccKY13ic.s:6      *ABS*:00000000 __tmp_reg__
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/ccKY13ic.s:7      *ABS*:00000001 __zero_reg__
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/ccKY13ic.s:11     .text:00000000 DhcpGetOption
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/ccKY13ic.s:73     .text:0000005c DhcpSetOption
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/ccKY13ic.s:108    .text:00000090 DhcpTransact
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/ccKY13ic.s:211    .text:00000160 DhcpQuery
+
+UNDEFINED SYMBOLS
+rframe
+UdpOutput
+UdpInput
+sframe
+Delay
+confnet
+sid
+confboot

@@ -1,0 +1,110 @@
+GAS LISTING C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/ccO5FoTP.s 			page 1
+
+
+   1               		.file	"udp.c"
+   2               	__SREG__ = 0x3f
+   3               	__SP_H__ = 0x3e
+   4               	__SP_L__ = 0x3d
+   5               	__CCP__  = 0x34
+   6               	__tmp_reg__ = 0
+   7               	__zero_reg__ = 1
+   8               		.text
+   9               	.global	UdpOutput
+  10               		.type	UdpOutput, @function
+  11               	UdpOutput:
+  12 0000 CF92      		push r12
+  13 0002 DF92      		push r13
+  14 0004 EF92      		push r14
+  15 0006 FF92      		push r15
+  16 0008 0F93      		push r16
+  17 000a 1F93      		push r17
+  18               	/* prologue: function */
+  19               	/* frame size = 0 */
+  20 000c 6B01      		movw r12,r22
+  21 000e 7C01      		movw r14,r24
+  22 0010 3093 0000 		sts (sframe+34)+1,r19
+  23 0014 2093 0000 		sts sframe+34,r18
+  24 0018 5093 0000 		sts (sframe+36)+1,r21
+  25 001c 4093 0000 		sts sframe+36,r20
+  26 0020 085F      		subi r16,lo8(-(8))
+  27 0022 1F4F      		sbci r17,hi8(-(8))
+  28 0024 C801      		movw r24,r16
+  29 0026 0E94 0000 		call __byte_swap2
+  30 002a 9093 0000 		sts (sframe+38)+1,r25
+  31 002e 8093 0000 		sts sframe+38,r24
+  32 0032 C701      		movw r24,r14
+  33 0034 B601      		movw r22,r12
+  34 0036 41E1      		ldi r20,lo8(17)
+  35 0038 9801      		movw r18,r16
+  36 003a 0E94 0000 		call IpOutput
+  37               	/* epilogue start */
+  38 003e 1F91      		pop r17
+  39 0040 0F91      		pop r16
+  40 0042 FF90      		pop r15
+  41 0044 EF90      		pop r14
+  42 0046 DF90      		pop r13
+  43 0048 CF90      		pop r12
+  44 004a 0895      		ret
+  45               		.size	UdpOutput, .-UdpOutput
+  46               	.global	UdpInput
+  47               		.type	UdpInput, @function
+  48               	UdpInput:
+  49 004c 0F93      		push r16
+  50 004e 1F93      		push r17
+  51 0050 CF93      		push r28
+  52 0052 DF93      		push r29
+  53               	/* prologue: function */
+  54               	/* frame size = 0 */
+  55 0054 8C01      		movw r16,r24
+  56 0056 EB01      		movw r28,r22
+  57               	.L5:
+GAS LISTING C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/ccO5FoTP.s 			page 2
+
+
+  58 0058 81E1      		ldi r24,lo8(17)
+  59 005a BE01      		movw r22,r28
+  60 005c 0E94 0000 		call IpInput
+  61 0060 9C01      		movw r18,r24
+  62 0062 1816      		cp __zero_reg__,r24
+  63 0064 1906      		cpc __zero_reg__,r25
+  64 0066 04F4      		brge .L4
+  65 0068 8091 0000 		lds r24,rframe+36
+  66 006c 9091 0000 		lds r25,(rframe+36)+1
+  67 0070 0817      		cp r16,r24
+  68 0072 1907      		cpc r17,r25
+  69 0074 01F4      		brne .L5
+  70 0076 8091 0000 		lds r24,rframe+38
+  71 007a 9091 0000 		lds r25,(rframe+38)+1
+  72 007e 0E94 0000 		call __byte_swap2
+  73 0082 9C01      		movw r18,r24
+  74 0084 2850      		subi r18,lo8(-(-8))
+  75 0086 3040      		sbci r19,hi8(-(-8))
+  76               	.L4:
+  77 0088 C901      		movw r24,r18
+  78               	/* epilogue start */
+  79 008a DF91      		pop r29
+  80 008c CF91      		pop r28
+  81 008e 1F91      		pop r17
+  82 0090 0F91      		pop r16
+  83 0092 0895      		ret
+  84               		.size	UdpInput, .-UdpInput
+GAS LISTING C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/ccO5FoTP.s 			page 3
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 udp.c
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/ccO5FoTP.s:2      *ABS*:0000003f __SREG__
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/ccO5FoTP.s:3      *ABS*:0000003e __SP_H__
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/ccO5FoTP.s:4      *ABS*:0000003d __SP_L__
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/ccO5FoTP.s:5      *ABS*:00000034 __CCP__
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/ccO5FoTP.s:6      *ABS*:00000000 __tmp_reg__
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/ccO5FoTP.s:7      *ABS*:00000001 __zero_reg__
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/ccO5FoTP.s:11     .text:00000000 UdpOutput
+C:\DOCUME~1\NIZINS~1\LOCALS~1\Temp/ccO5FoTP.s:48     .text:0000004c UdpInput
+
+UNDEFINED SYMBOLS
+sframe
+__byte_swap2
+IpOutput
+IpInput
+rframe
