@@ -34,13 +34,28 @@
  */
 
 /*
- * $Id: crtat91sam7sex_rom.S 2401 2009-01-16 19:45:42Z haraldkipp $
+ * $Id: crtat91sam7sex_rom.S 3459 2011-06-02 11:30:26Z mifi $
  */
 
 #include <cfg/clock.h>
 #include <cfg/memory.h>
 
 #include <arch/arm.h>
+
+#ifndef NUTMEM_FLASH_RWS
+/* By default use 1 wait state for flash read access. */
+#define NUTMEM_FLASH_RWS    1
+#endif
+
+#if NUTMEM_FLASH_RWS == 0
+#define MC_FWS_VAL  MC_FWS_1R2W /* 1 cycle for read, 2 for write ops. */
+#elif NUTMEM_FLASH_RWS == 1
+#define MC_FWS_VAL  MC_FWS_2R3W /* 2 cycles for read, 3 for write ops. */
+#elif NUTMEM_FLASH_RWS == 2
+#define MC_FWS_VAL  MC_FWS_3R4W /* 3 cycles for read, 4 for write ops. */
+#else
+#define MC_FWS_VAL  MC_FWS_4R4W /* 4 cycles for read and write ops. */
+#endif
 
 #ifndef PLL_MUL_VAL
 #define PLL_MUL_VAL 72
@@ -170,11 +185,12 @@ __xcpt_dummy:
 _start:
 
         /*
-         * Use 2 cycles for flash access.
+         * Set cycles for flash access.
          */
         ldr     r1, =MC_BASE
-        mov     r0, #MC_FWS_2R3W
-        str     r0, [r1, #MC_FMR_OFF]
+        mov     r0, #MC_FWS_VAL
+        str     r0, [r1, #MC_FMR_EFC0_OFF]
+        str     r0, [r1, #MC_FMR_EFC1_OFF]
 
         /*
          * Disable all interrupts. Useful for debugging w/o target reset.
@@ -386,14 +402,14 @@ wait_pllsel:
         str     r3, [r2, #20]
 
         /* Set refresh rate count. */
-        mov     r3, #384
+        mov     r0, #384
         str     r0, [r1, #SDRAMC_TR_OFF]
 
         /* Issue 16 bit SDRAM command: Normal mode. */
         ldr     r0, =(SDRAMC_DBW | SDRAMC_MODE_NORMAL)
         str     r0, [r1, #SDRAMC_MR_OFF]
         mov     r0, #0
-        str     r3, [r2, #0]
+        str     r0, [r2, #0]
 #endif /* NUTMEM_SDRAM_BASE */
 
         /*

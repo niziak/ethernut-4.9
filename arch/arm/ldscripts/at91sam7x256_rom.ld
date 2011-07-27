@@ -33,7 +33,7 @@
  */
 
 /*
- * $Id: at91sam7x256_rom.ld 2683 2009-09-11 12:35:35Z haraldkipp $
+ * $Id: at91sam7x256_rom.ld 3433 2011-05-21 15:54:14Z haraldkipp $
  */
 
 ENTRY(_start)
@@ -65,6 +65,8 @@ SECTIONS
     *(.init5);
     . = ALIGN(4);
     *(.text);
+    . = ALIGN(4);
+    *(.text.*);
     . = ALIGN(4);
     *(.rodata*);
     . = ALIGN(4);

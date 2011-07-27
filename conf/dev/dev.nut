@@ -2711,6 +2711,14 @@ nutdev =
         sources = { "pcf8563.c" },
     },
     {
+        name = "nutdev_pcf8583",
+        brief = "PCF8583 Driver",
+        description = "Philips PCF8583 RTC driver. Tested on AT91 only.",
+        requires = { "HW_MCU_AT91" },
+        provides = { "DEV_RTC" },
+        sources = { "pcf8583.c" },
+    },
+    {
         name = "nutdev_x12rtc",
         brief = "X12xx Driver",
         description = "Intersil X12xx RTC and EEPROM driver. Tested on AT91 only.",
