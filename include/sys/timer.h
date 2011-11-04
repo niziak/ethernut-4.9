@@ -184,6 +184,7 @@ extern void NutMicroDelay(uint32_t us);
 extern uint32_t NutGetTickCount(void);
 extern uint32_t NutGetSeconds(void);
 extern uint32_t NutGetMillis(void);
+extern uint32_t NutGetDelayLoops(void);
 
 extern HANDLE NutTimerStart(uint32_t ms, void (*callback)(HANDLE, void *), void *arg, uint8_t flags);
 extern HANDLE NutTimerStartTicks(uint32_t ticks, void (*callback) (HANDLE, void *), void *arg, uint8_t flags);

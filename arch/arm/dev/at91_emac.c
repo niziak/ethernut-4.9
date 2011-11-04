@@ -114,6 +114,7 @@
 
 #include <dev/irqreg.h>
 #include <dev/at91_emac.h>
+#include <dev/watchdog.h>
 
 #ifdef NUTDEBUG
 #include <stdio.h>
@@ -135,7 +136,7 @@
 #endif
 
 #ifndef EMAC_LINK_LOOPS
-#define EMAC_LINK_LOOPS         1000000
+#define EMAC_LINK_LOOPS         100000
 #endif
 
 /*!
@@ -482,6 +483,7 @@ static int probePhy(uint32_t tmo)
         /* Wait for auto negotiation completed. */
         phy_inw(NIC_PHY_BMSR);  /* Discard previously latched status. */
         while (--tmo) {
+            NutWatchDogRestart();
             if (phy_inw(NIC_PHY_BMSR) & NIC_PHY_BMSR_ANCOMPL) {
                 break;
             }

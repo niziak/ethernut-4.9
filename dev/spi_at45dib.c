@@ -54,7 +54,7 @@
 #include <stdlib.h>
 
 #include <dev/spi_at45dib.h>
-
+#include <dev/watchdog.h>
 /*!
  * \addtogroup xgAt54dib
  */
@@ -961,7 +961,7 @@ static int SpiAt45dibErase(NUTSERIALFLASH * sfi, sf_unit_t pgn, int cnt)
     }
     while (cnt--) {
         uint32_t pga = pgn + cnt;
-
+        NutWatchDogRestart();
         pga <<= at->dib_pshft;
         if (At45dibCommand(sfi->sf_node, DFCMD_PAGE_ERASE, pga, 4)) {
             return -1;

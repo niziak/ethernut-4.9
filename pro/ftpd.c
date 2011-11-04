@@ -1072,6 +1072,7 @@ int NutFtpProcessPassiv(FTPSESSION * session)
  */
 int NutFtpProcessPort(FTPSESSION * session, char *args)
 {
+    session->ftp_passive = 0; // PORT after PASV means, fallback to active mode
     if (ParseIpPort(args, &session->ftp_data_ip, &session->ftp_data_port) == 6) {
         if (session->ftp_sock->so_remote_addr == session->ftp_data_ip) {
             return NutFtpRespondOk(session, 200);

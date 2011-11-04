@@ -95,7 +95,7 @@
  */
 
 /*
- * $Id: tcpsm.c 3170 2010-10-14 07:46:44Z hwmaier $
+ * $Id: tcpsm.c 3416 2011-05-15 16:58:54Z haraldkipp $
  */
 
 #include <cfg/os.h>
@@ -295,7 +295,10 @@ static void NutTcpInputOptions(TCPSOCKET * sock, NETBUF * nb)
 
             /* Read MAXSEG option */
             case TCPOPT_MAXSEG:
-                s = ntohs(*((uint16_t*)&cp[2]));
+                /* Network uses big endian. */
+                s = cp[2];
+                s <<= 8;
+                s |= cp[3];
                 if (s < sock->so_mss)
                     sock->so_mss = s;
                 cp += TCPOLEN_MAXSEG;

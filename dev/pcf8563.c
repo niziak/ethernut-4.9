@@ -66,7 +66,7 @@
 #include <dev/pcf8563.h>
 
 #ifndef I2C_SLA_RTC
-#define I2C_SLA_RTC     0x51
+  #define I2C_SLA_RTC     0x51
 #endif
 
 static uint32_t rtc_status;

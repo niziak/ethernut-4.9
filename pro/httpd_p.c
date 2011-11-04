@@ -30,6 +30,10 @@
 #define HTTP_DEFAULT_ROOT   "UROM:"
 #endif
 
+#ifndef HTTP_2ND_ROOT
+#define HTTP_2ND_ROOT       "UFLASH0:/"
+#endif
+
 char *http_root;
 
 char *default_files[] = {
@@ -42,6 +46,7 @@ char *default_files[] = {
     "/index.xhtml",
     "/index.asp",
     "/default.asp",
+    HTTP_2ND_ROOT,
     NULL
 };
 
@@ -54,14 +59,22 @@ char *default_files[] = {
 
 char *CreateFilePath(CONST char *url, CONST char *addon)
 {
+    char isUflash=0;
     char *root = http_root ? http_root : HTTP_DEFAULT_ROOT;
+
+    if (strcmp(addon, HTTP_2ND_ROOT)==0)
+    {
+      isUflash=1;
+      root = (char*) addon;
+    }
+
     size_t urll = strlen(url);
     char *path = malloc(strlen(root) + urll + strlen(addon) + 1);
 
     if (path) {
         strcpy(path, root);
         strcat(path, url);
-        if (*addon) {
+        if ((*addon) && (isUflash==0)) {
             strcat(path, addon + (urll == 0 || url[urll - 1] == '/'));
         }
     }
@@ -95,6 +108,8 @@ void DestroyRequestInfo(REQUEST * req)
 			free(req->req_referer);
 		if (req->req_host)
 			free(req->req_host);
+    if (req->req_encoding)
+      free(req->req_encoding);
 		free(req);
 	}
 }

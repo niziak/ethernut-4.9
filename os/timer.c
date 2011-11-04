@@ -303,6 +303,7 @@ static void NutTimerIntr(void *arg)
  * initialization. It calls the hardware dependent layer to initialze
  * the timer hardware and register a timer interrupt handler.
  */
+void NutTimerInit(void)  __attribute__((optimize(0)));
 void NutTimerInit(void)
 {
 #ifdef __NUT_EMULATION__
@@ -334,8 +335,12 @@ void NutTimerInit(void)
         nut_delay_loops *= 103UL;
         nut_delay_loops /= 26UL;
 #else
-        nut_delay_loops *= 137UL;
-        nut_delay_loops /= 25UL;
+        //nut_delay_loops *= 137UL;
+        //nut_delay_loops /= 25UL;
+        //nut_delay_loops *= 190UL;
+        //nut_delay_loops /= 25UL;
+        nut_delay_loops *= 185UL;
+        nut_delay_loops /= 24UL;
 #endif
     }
 #endif
@@ -357,6 +362,7 @@ void NutTimerInit(void)
  *
  * \todo Overflow handling.
  */
+void NutMicroDelay(uint32_t us) __attribute__((optimize(0)));
 void NutMicroDelay(uint32_t us)
 {
 #ifdef __NUT_EMULATION__
@@ -683,6 +689,7 @@ void NutTimerStop(HANDLE handle)
  *
  * \return Number of ticks.
  */
+uint32_t NutGetTickCount(void)  __attribute__((optimize(0)));
 uint32_t NutGetTickCount(void)
 {
     uint32_t rc;
@@ -743,6 +750,16 @@ uint32_t NutGetMillis(void)
     uint32_t seconds = ticks / NutGetTickClock();
     ticks         -= seconds * NutGetTickClock();
     return seconds * 1000 + (ticks * 1000 ) / NutGetTickClock();
+}
+
+/*!
+ * \brief Return the number of CPU loops for one us
+ *
+ * \return Value of nut_delya_loops;
+ */
+uint32_t NutGetDelayLoops(void)
+{
+    return nut_delay_loops;
 }
 
 /*!

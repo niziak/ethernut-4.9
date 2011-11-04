@@ -124,6 +124,9 @@
  */
 /*@{*/
 
+/* Check if IP is a multicast address */
+#define IP_IS_MULTICAST(_a)   ((ntohl(_a) & 0xF0000000U) == 0xE0000000U)     
+
 #define IPVERSION   4           /*!< \brief IP protocol version. */
 
 #define IP_DF       0x4000      /*!< \brief Don't fragment flag. */
@@ -134,6 +137,7 @@
  * \brief Internet header type.
  */
 typedef struct ip IPHDR;
+typedef struct ip_opt IPHDR_OPT;
 
 /*!
  * \brief Structure of an internet header.

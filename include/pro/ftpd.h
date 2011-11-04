@@ -71,6 +71,8 @@
 #define FTP_MAX_CMDBUF  128
 #endif
 
+//#define FTPD_DEBUG
+
 /*@}*/
 
 /*!
