@@ -59,6 +59,8 @@ CPPFLAGS = $(INCFIRST) -I$(INCDIR) $(INCLAST) $(DEFS) $(UCPFLAGS)
 CFLAGS_ASM = -Wa,-a=$(@:.o=.lst)
 CFLAGS_WRN = -Wall -Wstrict-prototypes -Werror
 CFLAGS_OPT = -Os -ffunction-sections
+#Niziak:
+CFLAGS_OPT+= -fdata-sections
 CFLAGS     = $(CFLAGS_MCU) $(CFLAGS_OPT) $(CFLAGS_WRN) $(CFLAGS_ASM) $(UCPFLAGS)
 
 # C++ compiler options.

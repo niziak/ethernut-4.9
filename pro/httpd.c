@@ -194,7 +194,7 @@
 
 /*! \brief Enable GZIP support. */
 #ifndef HTTPD_SUPPORT_GZIP
-#define HTTPD_SUPPORT_GZIP 0
+#define HTTPD_SUPPORT_GZIP 1
 #endif
 
 /*!
