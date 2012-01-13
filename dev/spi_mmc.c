@@ -355,9 +355,6 @@ static int CardInit(NUTSPINODE * node)
     int i;
     int j;
     uint8_t rsp;
-    NUTSPIBUS *bus;
-
-    bus = (NUTSPIBUS *) node->node_bus;
 
     /*
      * Switch to idle state and wait until initialization is running
@@ -781,14 +778,18 @@ int SpiMmcUnmount(NUTFILE * nfp)
 {
     int rc;
     MMCFCB *fcb;
+#if defined(NUTDEBUG_USE_ASSERT)
     NUTDEVICE *dev;
+#endif
 
     /* Sanity checks. */
     NUTASSERT(nfp != NULL);
     NUTASSERT(nfp->nf_fcb != NULL);
     NUTASSERT(nfp->nf_dev != NULL);
     fcb = (MMCFCB *) nfp->nf_fcb;
+#if defined(NUTDEBUG_USE_ASSERT)
     dev = (NUTDEVICE *) nfp->nf_dev;
+#endif
     NUTASSERT(dev->dev_dcb != NULL);
 
     /* Intentionally we do not check the card change flag here to allow the
