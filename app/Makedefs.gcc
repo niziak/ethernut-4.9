@@ -54,7 +54,7 @@ BINDIR    = $(top_srcdir)/bin/$(MCU)
 
 CPFLAGS   = $(MCFLAGS) -Os -Wall -Wstrict-prototypes -Wa,-ahlms=$(<:.c=.lst) $(DEFS)
 #CPFLAGS  = -g $(MCFLAGS) -O0 -Wall -Wstrict-prototypes -Wa,-ahlms=$(<:.c=.lst) $(DEFS)
-LDFLAGS   = $(MCFLAGS) -Wl,--defsym=main=0,-Map=$(PROJ).map,--cref,--gc-sections -L$(LIBDIR) 
+LDFLAGS   = $(MCFLAGS) -Wl,--defsym=main=0,-Map=$(PROJ).map,--cref,--gc-sections,--strip-all -L$(LIBDIR) 
 
 ELFCOF    = $(BIN) --debugging \
 	--change-section-address .data-0x08000000 \

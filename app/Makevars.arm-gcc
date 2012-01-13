@@ -42,4 +42,4 @@ include $(top_srcdir)/app/Makevars.gcc
 LDFLAGS = $(MCFLAGS) -nostartfiles -T$(LDSCRIPT) -Wl,-Map=$(PROJ).map,--cref,--no-warn-mismatch -L$(LIBDIR)
 
 #Niziak:
-LDFLAGS+=-Wl,--gc-sections
+LDFLAGS+=-Wl,--gc-sections,--strip-all
