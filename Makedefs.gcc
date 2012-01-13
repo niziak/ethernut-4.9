@@ -108,6 +108,6 @@ RANLIB = $(TRGT)ranlib
 MCFLAGS = -mmcu=$(MCU)
 CPFLAGS = $(MCFLAGS) -Os -Wall -Werror -Wstrict-prototypes -Wa,-ahlms=$(<:.c=.lst) $(DEFS)
 #CPFLAGS = -g $(MCFLAGS) -O1 -Wall -Wstrict-prototypes -Wa,-ahlms=$(<:.c=.lst) $(DEFS)
-LDFLAGS = $(MCFLAGS) -Wl,-Map=$(PROJ).map,--cref,--gc-sections
+LDFLAGS = $(MCFLAGS) -Wl,-Map=$(PROJ).map,--cref,--gc-sections,--strip-all
 ARFLAGS = rsv
 ASFLAGS = $(MCFLAGS) -Wa,-amhls=$(<:.S=.lst) $(DEFS)
