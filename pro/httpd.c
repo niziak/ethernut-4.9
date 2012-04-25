@@ -604,7 +604,7 @@ static void NutHttpProcessFileRequest(FILE * stream, REQUEST * req)
     /*
      * Validate authorization.
      */
-    if (NutHttpAuthValidate(req)) {
+    if (NutHttpAuthValidate(stream, req)) {
         NutHttpSendError(stream, req, 401);
         return;
     }

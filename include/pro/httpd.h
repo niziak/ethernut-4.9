@@ -162,9 +162,13 @@ struct _AUTHINFO {
 
 __BEGIN_DECLS
 
-extern int NutHttpAuthValidate(REQUEST * req);
+typedef int  (* NUT_AUTH_CB_FN)(FILE *, REQUEST *);      ///< prototype of auth callback function
+
+extern int NutHttpAuthValidate(FILE * stream, REQUEST * req);
 extern int NutRegisterAuth(CONST char *dirname, CONST char *login);
 extern void NutClearAuth(void);
+extern void NutRegisterAuthCallback(NUT_AUTH_CB_FN CallbackFnPtr);
+extern void NutClearAuthCallback(void);
 
 __END_DECLS
 

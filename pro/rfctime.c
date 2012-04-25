@@ -293,7 +293,10 @@ time_t RfcTimeParse(CONST char *str)
         str = TimeParseHms(str, &dts.tm_hour, &dts.tm_min, &dts.tm_sec);
     }
     str = skip_spaces(str);
-    if (strcmp(str, "GMT") == 0) {
+    if (    (strcmp(str, "GMT") == 0)
+         || (strcmp(str, "UTC") == 0)
+       )
+    {
         return mktime(&dts);
     }
     return _mkgmtime(&dts);

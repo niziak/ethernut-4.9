@@ -156,6 +156,25 @@ void NutClearAuth(void)
     }
 }
 
+
+static NUT_AUTH_CB_FN NutAuthCallbackFnPtr;
+
+/*
+ *
+ */
+void NutRegisterAuthCallback(NUT_AUTH_CB_FN CallbackFnPtr)
+{
+  NutAuthCallbackFnPtr = CallbackFnPtr;
+}
+
+/*
+ *
+ */
+void NutClearAuthCallback(void)
+{
+  NutAuthCallbackFnPtr = NULL;
+}
+
 /*!
  * \brief Validate an authorization request.
  *
@@ -167,11 +186,21 @@ void NutClearAuth(void)
  *
  * \return 0, if access granted, -1 otherwise.
  */
-int NutHttpAuthValidate(REQUEST * req)
+int NutHttpAuthValidate(FILE * stream, REQUEST * req)
 {
     char *realm;
     char *cp = 0;
     int rc = -1;
+
+    /* try user defined auth callback */
+
+    if (NutAuthCallbackFnPtr)
+    {
+      if (NutAuthCallbackFnPtr(stream, req)==0)
+      {
+        return 0;
+      }
+    }
 
     /*
      * Get directory by chopping off filename.
