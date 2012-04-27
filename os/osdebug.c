@@ -77,6 +77,7 @@
 #include <compiler.h>
 
 #include <cfg/os.h>
+#include <cfg/memory.h>
 
 #include <sys/thread.h>
 #include <sys/timer.h>
@@ -283,8 +284,10 @@ void NutDumpHeap(FILE * stream)
         sum += node->hn_size;
         fprintf_P(stream, fmt1, (int) node, (unsigned int) node->hn_size);
         /* TODO: Remove hardcoded RAMSTART and RAMEND */
-        if ((uintptr_t) node < 0x60 || (uintptr_t) node > 0x7fff)
-            break;
+        if ((uintptr_t) node < NUTMEM_START || (uintptr_t) node > (uintptr_t)(NUTMEM_START+NUTMEM_SIZE-1U))
+        {
+            continue;
+        }
     }
     if ((avail = NutHeapAvailable()) != sum)
         fprintf_P(stream, fmt2, (unsigned int) sum, (unsigned int) avail);

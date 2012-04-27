@@ -423,7 +423,15 @@ uint32_t NutGetTickClock(void)
  */
 uint32_t NutTimerMillisToTicks(uint32_t ms)
 {
-    return (ms * NutGetTickClock()) / 1000;
+  // shortcut to prevent 64bit integer. There are 1000 ticks/s, so is the same
+  // it saves 9 kB of ARM code
+  return ms;
+/*
+    unsigned long long ullTemp;
+    ullTemp = ms * NutGetTickClock();
+    ullTemp/=1000;
+    return ((uint32_t)ullTemp);
+*/
 }
 
 /*@}*/
