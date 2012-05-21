@@ -123,7 +123,7 @@ SRCS =  dhcpc.c resolv.c httpd.c httpd_p.c httpopt.c ssi.c asp.c auth.c cgi.c de
 OBJS = $(SRCS:.c=.o)
 
 TARG = $(PROJ).a
-
+CFLAGS_MCU+=-mthumb
 all: $(TARG)
 
 include $(top_srcdir)/Makerules

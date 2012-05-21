@@ -388,7 +388,8 @@ repository =
         description = "Network functions",
         requires = { "HW_TARGET" },
         subdir = "net",
-        script = "net/net.nut"
+        script = "net/net.nut",
+	makedefs = { "CFLAGS_MCU+=-mthumb" }
     },
     {
         name = "nutpro",
@@ -396,7 +397,8 @@ repository =
         description = "High level network protocols",
         requires = { "HW_TARGET" },
         subdir = "pro",
-        script = "pro/pro.nut"
+        script = "pro/pro.nut",
+	makedefs = { "CFLAGS_MCU+=-mthumb" }
     },
     {
         name = "nutfs",

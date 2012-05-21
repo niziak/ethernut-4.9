@@ -10,7 +10,7 @@ SRCS =	lapi.c ldo.c ldump.c ldebug.c lfunc.c lgc.c \
 	lcode.c llex.c lparser.c lrotable.c
 
 OBJS =	$(SRCS:.c=.o)
-
+CFLAGS_MCU+=-mthumb
 all:	$(PROJ).a $(OBJS)
 
 include ../../Makerules

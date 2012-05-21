@@ -84,6 +84,7 @@
 { \
     int temp_; \
     asm volatile (             \
+            ".arm"                  "\n\t" \
             "@ NutEnterCritical"    "\n\t" \
             "mrs     %0, cpsr"      "\n\t" \
             "stmfd   sp!, {%0}"     "\n\t" \
@@ -96,6 +97,7 @@
 { \
     int temp_; \
     asm volatile (             \
+            ".arm"              "\n\t" \
             "@ NutExitCritical" "\n\t" \
             "ldmfd   sp!, {%0}" "\n\t" \
             "msr     cpsr, %0"  "\n\t" \
@@ -106,6 +108,18 @@
 
 extern unsigned int critical_nesting_level;
 
+/*
+ *             "@ NutEnterCritical"    "\n\t" \
+            ".thumb"                "\n\t" \
+            "bx pc"                 "\n\t" \
+            "nop"                   "\n\t" \
+            ".align"                "\n\t" \
+            ".arm"                  "\n\t" \
+            "mrs     %0, cpsr"      "\n\t" \
+            "orr     %0, %0, #0xC0" "\n\t" \
+            "msr     cpsr, %0"      "\n\t" \
+            ".thumb"                "\n\t" \
+ */
 #define NutEnterCritical() \
 if (critical_nesting_level++ == 0) { \
     int temp_; \
@@ -137,6 +151,7 @@ if (critical_nesting_level) { \
 { \
     int temp_; \
     asm volatile (             \
+            ".arm"                  "\n\t" \
             "@ NutEnterCritical"    "\n\t" \
             "mrs     %0, cpsr"      "\n\t" \
             "orr     %0, %0, #0xC0" "\n\t" \
@@ -148,6 +163,7 @@ if (critical_nesting_level) { \
 { \
     int temp_; \
     asm volatile (             \
+            ".arm"                  "\n\t" \
             "@ NutExitCritical"     "\n\t" \
             "mrs     %0, cpsr"      "\n\t" \
             "bic     %0, %0, #0xC0" "\n\t" \

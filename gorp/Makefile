@@ -55,7 +55,7 @@ SRCS =  codec/base64_decode.c codec/base64_encode.c \
 OBJS = $(SRCS:.c=.o)
 
 TARG = $(PROJ).a
-
+CFLAGS_MCU+=-mthumb
 all: $(TARG)
 
 include $(top_srcdir)/Makerules

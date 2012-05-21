@@ -196,7 +196,7 @@ endif
 OBJS = $(SRCS:.c=.o)
 
 TARG = $(PROJ).a
-
+CFLAGS_MCU+=-mthumb
 all: $(TARG)
 
 include $(top_srcdir)/Makerules

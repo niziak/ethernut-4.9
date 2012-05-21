@@ -99,6 +99,7 @@ SRCS = pathops.c dirent.c fat.c uromfs.c pnutfs.c \
 OBJS = $(SRCS:.c=.o)
 
 TARG = $(PROJ).a
+CFLAGS_MCU+=-mthumb
 
 all: $(TARG)
 

@@ -137,7 +137,7 @@ OBJ2 = $(SRC2:.c=.o)
 
 TRG1 = $(OBJ1) 
 TRG2 = $(PROJ).a $(SRC1.c=.d)
-
+CFLAGS_MCU+=-mthumb
 all: $(TRG1) $(TRG2)
 
 include $(top_srcdir)/Makerules

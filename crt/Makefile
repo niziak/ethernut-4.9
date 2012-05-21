@@ -117,7 +117,7 @@ OBJF = $(SRCF:.c=.o)
 TARG  = $(PROJ).a
 TARGF = $(PROJ)f.a
 TARGS = $(TARG) $(TARGF)
-
+CFLAGS_MCU+=-mthumb
 all: $(TARGS)
 
 include $(top_srcdir)/Makerules
