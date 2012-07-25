@@ -100,7 +100,13 @@
 /*@{*/
 
 #ifndef NUT_THREAD_SNTPSTACK
-#define NUT_THREAD_SNTPSTACK    256
+
+#if (NUT_THREAD_STACK_MULT==1)
+  #define NUT_THREAD_SNTPSTACK    256
+#else
+  #define NUT_THREAD_SNTPSTACK    512
+#endif
+
 #endif
 
 typedef struct _sntpframe sntpframe;

@@ -53,6 +53,7 @@
 #include <arch/avr32/pm.h>
 #include <arch/avr32/ihndlr.h>
 
+#include <memdebug.h>
 
 /*!
  * \addtogroup xgNutArchAvr32Init

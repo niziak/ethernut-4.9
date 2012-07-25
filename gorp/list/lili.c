@@ -46,6 +46,7 @@
 
 #include <stdlib.h>
 #include <gorp/lili.h>
+#include <memdebug.h>
 
 /*!
  * \addtogroup xgLili

@@ -42,6 +42,7 @@
 #include <string.h>
 #include <errno.h>
 #include <dirent.h>
+#include <memdebug.h>
 
 #include <dev/spi_at45dib.h>
 #include <fs/uflashfs.h>

@@ -81,6 +81,8 @@
 
 #include <dev/keys.h>
 
+#include <memdebug.h>
+
 /*!
  * \addtogroup xgDevKeys
  */

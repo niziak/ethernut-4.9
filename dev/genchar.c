@@ -56,6 +56,7 @@
 #include <sys/timer.h>
 #include <dev/irqreg.h>
 #include <dev/genchar.h>
+#include <memdebug.h>
 
 /*!
  * \addtogroup xgDevGenChar

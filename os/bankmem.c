@@ -64,6 +64,7 @@
 #include <sys/heap.h>
 
 #include <stdint.h>
+#include <memdebug.h>
 
 /*!
  * \addtogroup xgBankMem

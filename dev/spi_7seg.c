@@ -49,6 +49,7 @@
 #include <compiler.h>
 #include <string.h>
 #include <stdlib.h>
+#include <memdebug.h>
 
 #ifdef SPI2SEG_DEBUG
 #include <stdio.h>
@@ -176,7 +177,7 @@ static CONST uint8_t Seg7CharTab[] = {
 	/* '$' */(0x5B),
 	/* '%' */(0x00),
 	/* '&' */(0x6F),
-	/* '´' */(0x20),
+	/* 'ï¿½' */(0x20),
 	/* '(' */(0x4E),
 	/* ')' */(0x78),
 	/* '*' */(0x00),

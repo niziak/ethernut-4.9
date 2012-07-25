@@ -72,6 +72,7 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include <memdebug.h>
 
 #include <dev/at49bv.h>
 

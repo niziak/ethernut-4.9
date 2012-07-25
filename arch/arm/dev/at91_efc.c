@@ -62,6 +62,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
+#include <memdebug.h>
 
 #include <arch/arm/at91_efc.h>
 

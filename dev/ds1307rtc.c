@@ -69,6 +69,7 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include <memdebug.h>
 
 #include <dev/ds1307rtc.h>
 

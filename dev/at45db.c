@@ -82,6 +82,7 @@
 
 #include <string.h>
 #include <stdlib.h>
+#include <memdebug.h>
 
 #include <dev/at91_spi.h>
 #include <dev/at45db.h>

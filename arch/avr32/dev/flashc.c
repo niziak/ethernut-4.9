@@ -45,6 +45,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
+#include <memdebug.h>
 
 #include <arch/avr32.h>
 #include <arch/avr32/flashc.h>

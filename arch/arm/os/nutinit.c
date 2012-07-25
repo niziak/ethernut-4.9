@@ -155,7 +155,7 @@ struct __iobuf {
     int     iob_unget;
 };
 #endif
-
+#include <memdebug.h>
 /*!
  * \addtogroup xgNutArchArmInit
  */

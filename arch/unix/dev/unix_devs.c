@@ -61,6 +61,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <termios.h>
+#include <memdebug.h>
 
 #include <dev/unix_devs.h>
 

@@ -44,6 +44,8 @@
 #include <compiler.h>
 #include <stdlib.h>
 
+#include <memdebug.h>
+
 #include <sys/file.h>
 #include <sys/device.h>
 

@@ -80,6 +80,7 @@
 #include <io.h>
 #include <fcntl.h>
 #include <dev/uart.h>
+#include <memdebug.h>
 
 #include <sys/thread.h>
 #include <sys/heap.h>

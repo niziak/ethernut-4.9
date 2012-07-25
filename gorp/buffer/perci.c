@@ -52,6 +52,7 @@
 #include <errno.h>
 #include <sys/nutdebug.h>
 #include <sys/event.h>
+#include <memdebug.h>
 
 #include <gorp/perci.h>
 

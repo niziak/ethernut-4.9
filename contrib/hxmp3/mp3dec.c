@@ -43,6 +43,7 @@
 
 #include <string.h>		/* for memmove, memcpy (can replace with different implementations if desired) */
 #include <contrib/hxmp3/mp3common.h>	/* includes mp3dec.h (public API) and internal, platform-independent API */
+#include <memdebug.h>
 
 /**************************************************************************************
  * Function:    MP3InitDecoder

@@ -75,6 +75,7 @@
 #include "cfg/led.h"
 #include "dev/led.h"
 
+#include <memdebug.h>
 /*!
  * \addtogroup xgDevLED
  */
