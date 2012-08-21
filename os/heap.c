@@ -660,16 +660,19 @@ void NutHeapDump(void * stream)
 
 #ifdef NUTMEM_SPLIT_FAST
     for (node = heapFastMemFreeList; node; node = node->hn_next) {
+      if (node)
         fprintf(stream, "%p(%d)\n", node, (int) node->hn_size);
     }
 #endif
 
     for (node = heapFreeList; node; node = node->hn_next) {
+      if (node)
         fprintf(stream, "%p(%d)\n", node, (int) node->hn_size);
     }
 
 #ifdef NUTDEBUG_HEAP
     for (node = heapAllocList; node; node = node->ht_next) {
+      if (node)
         fprintf(stream, "%p(%u) %s:%d\n", node, (int) node->ht_size, node->ht_file, node->ht_line);
     }
 #endif
