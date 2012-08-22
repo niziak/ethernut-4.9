@@ -94,7 +94,7 @@ void XTeaDecrypt(uint32_t *w, CONST uint32_t *v, CONST XTeaKeyBlock_t k)
     register uint32_t z=v[1];
     register uint32_t sum=XTSUM;
     register uint32_t delta=XTDELTA;
-    uint_fast8_t n=32;
+    uint_fast8_t n=ROUNDS;
 
     while (n-- > 0) {
         z -= (((y << 4) ^ (y >> 5)) + y) ^ (sum + k[sum>>11 & 3]);
