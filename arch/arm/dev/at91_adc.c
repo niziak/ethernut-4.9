@@ -70,7 +70,7 @@
 #define AT91_ADC_INITIAL_PRESCALE 55
 #endif
 
-#define AT91_ADC_BUF_SIZE 16 // this may only be a power of two
+#define AT91_ADC_BUF_SIZE 2 // (org 16) this may only be a power of two
 
 #define _adc_buf_head AT91_ADC_BUF_SIZE
 #define _adc_buf_tail AT91_ADC_BUF_SIZE+1
