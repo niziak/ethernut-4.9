@@ -43,4 +43,6 @@ include $(top_srcdir)/Makevars.gcc
 TRGT       = arm-none-eabi-
 MCFLAGS    = -mcpu=$(MCU)
 CFLAGS_MCU = $(MCFLAGS) -mthumb-interwork
+CFLAGS_MCU+= -mthumb
 CXXFLAGS_MCU = $(CFLAGS_MCU)
+ASFLAGS	+= -marm

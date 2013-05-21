@@ -35,4 +35,7 @@
 # $Id: Makerules.arm-gcc 2599 2009-04-15 13:09:02Z haraldkipp $
 #
 
+
 include $(top_srcdir)/Makerules.gcc
+include $(top_srcdir)/Makerules.arm-nothumb
+

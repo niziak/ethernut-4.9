@@ -1,0 +1,21 @@
+# Nizinski_w
+# workaround for thumb compilation 
+#
+ARM_OBJS =arm/os/context.o arm/dev/ih_at91fiq.o arm/dev/ih_at91sys.o
+ARM_OBJS+=arm/dev/ih_at91irq0.o arm/dev/ih_at91irq1.o
+ARM_OBJS+=arm/dev/ih_at91pioa.o arm/dev/ih_at91piob.o
+ARM_OBJS+=arm/dev/ih_at91spi0.o arm/dev/ih_at91spi1.o
+ARM_OBJS+=arm/dev/ih_at91ssc.o 
+ARM_OBJS+=arm/dev/ih_at91tc0.o arm/dev/ih_at91tc1.o arm/dev/ih_at91tc2.o
+ARM_OBJS+=arm/dev/ih_at91adc.o arm/dev/ih_at91twi.o
+ARM_OBJS+=arm/dev/ih_at91uart0.o arm/dev/ih_at91uart1.o
+ARM_OBJS+=arm/dev/ih_at91emac.o
+
+ARM_OBJS+=arm/dev/at91_ahdlc.o
+ARM_OBJS+=arm/dev/at91init.o
+ARM_OBJS+=arm/dev/at91_efc.o
+
+ARM_OBJS+=msg.o event.o timer.o thread.o heap.o osdebug.o panic.o
+ARM_OBJS+=usart.o led.o keys.o
+
+$(ARM_OBJS): CFLAGS +=-marm

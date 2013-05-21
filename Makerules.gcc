@@ -41,13 +41,25 @@ include $(top_srcdir)/Makerules.all
 	$(CC) -MM $(CPPFLAGS) $(CFLAGS) -o $@ $<
 
 %.o : %.c
+	@echo ------------------
+	@echo [Compiling CC]: $<
+	@echo ------------------
 	$(CC) -c $(CPPFLAGS) $(CFLAGS) -o $@ $<
+	@echo
 
 %.o : %.cc
+	@echo ------------------
+	@echo [Compiling CXX]: $<
+	@echo ------------------
 	$(CXX) -c $(CPPFLAGS) $(CXXFLAGS) -o $@ $<
-
+	@echo
+	
 %.o : %.S
+	@echo ------------------
+	@echo [Asm]: $<
+	@echo ------------------
 	$(AS) -c $(CPPFLAGS) $(ASFLAGS) -o $@ $<
+	@echo
 
 %.a: $(OBJS)
 	$(AR) $(ARFLAGS) $@ $?
