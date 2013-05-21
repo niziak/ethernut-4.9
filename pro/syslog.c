@@ -93,6 +93,7 @@
 #include <stdarg.h>
 #include <io.h>
 #include <time.h>
+#include <sys/timer.h>  //temp
 #include <memdebug.h>
 
 #define SYSLOG_INTERNAL
@@ -137,6 +138,7 @@ char *syslog_buf;
  */
 size_t syslog_header(int pri)
 {
+    #define NILVALUE '-'
     size_t rc;
 
     /* Remove invalid bits. */
@@ -172,10 +174,19 @@ size_t syslog_header(int pri)
 
 #ifdef SYSLOG_RFC5424
     syslog_buf[rc++] = ' ';
-    syslog_buf[rc++] = '-';
+    syslog_buf[rc++] = NILVALUE;
+// workaround for broken rsyslog
+//    time_t now = NutGetSeconds();
+//    struct _tm *tip;
+//
+//    tip = gmtime(&now);
+//
+//    rc += sprintf(&syslog_buf[rc], " %04d-%02d-%02dT%02d:%02d:%02dZ",
+//        tip->tm_year + 1900, tip->tm_mon + 1, tip->tm_mday,
+//        tip->tm_hour, tip->tm_min, tip->tm_sec);
 #endif
 
-#else
+#else //SYSLOG_OMIT_TIMESTAMP
     {
         time_t now;
         struct _tm *tip;
@@ -204,38 +215,38 @@ size_t syslog_header(int pri)
     /* HOSTNAME field. */
 #ifdef SYSLOG_OMIT_HOSTNAME
 
-#ifdef SYSLOG_RFC5424
-    syslog_buf[rc++] = ' ';
-    syslog_buf[rc++] = '-';
-#endif
+  #ifdef SYSLOG_RFC5424
+      syslog_buf[rc++] = ' ';
+      syslog_buf[rc++] = NILVALUE;
+  #endif
 
 #else
 
-#ifdef SYSLOG_RFC5424
-    syslog_buf[rc++] = ' ';
-    if (confnet.cdn_cip_addr) {
-        strcpy(&syslog_buf[rc], inet_ntoa(confnet.cdn_cip_addr));
-        rc += strlen(&syslog_buf[rc]);
-    }
-    else if (confos.hostname[0]) {
-        strcpy(&syslog_buf[rc], confos.hostname);
-        rc += strlen(&syslog_buf[rc]);
-    }
-    else if (confnet.cdn_ip_addr) {
-        strcpy(&syslog_buf[rc], inet_ntoa(confnet.cdn_ip_addr));
-        rc += strlen(&syslog_buf[rc]);
-    } else {
-        syslog_buf[rc++] = '-';
-    }
-#else
-    syslog_buf[rc++] = ' ';
-    strcpy(&syslog_buf[rc], confos.hostname);
-    rc += strlen(confos.hostname);
-#endif /* SYSLOG_RFC5424 */
+  #ifdef SYSLOG_RFC5424
+      syslog_buf[rc++] = ' ';
+      if (confnet.cdn_cip_addr) {
+          strcpy(&syslog_buf[rc], inet_ntoa(confnet.cdn_cip_addr));
+          rc += strlen(&syslog_buf[rc]);
+      }
+      else if (confos.hostname[0]) {
+          strcpy(&syslog_buf[rc], confos.hostname);
+          rc += strlen(&syslog_buf[rc]);
+      }
+      else if (confnet.cdn_ip_addr) {
+          strcpy(&syslog_buf[rc], inet_ntoa(confnet.cdn_ip_addr));
+          rc += strlen(&syslog_buf[rc]);
+      } else {
+          syslog_buf[rc++] = NILVALUE;
+      }
+  #else
+      syslog_buf[rc++] = ' ';
+      strcpy(&syslog_buf[rc], confos.hostname);
+      rc += strlen(confos.hostname);
+  #endif /* SYSLOG_RFC5424 */
 
 #endif /* SYSLOG_OMIT_HOSTNAME */
 
-    /* APP-NAME field. */
+    /* APP-NAME / syslog tag field. */
     if (syslog_taglen) {
         syslog_buf[rc++] = ' ';
         strcpy(&syslog_buf[rc], syslog_tag);
@@ -244,13 +255,23 @@ size_t syslog_header(int pri)
         syslog_buf[rc++] = ':';
 #endif
     }
+#ifdef SYSLOG_RFC5424
+    else
+    {
+      syslog_buf[rc++] = ' ';
+      syslog_buf[rc++] = NILVALUE;
+    }
+#endif
 
     /* No PROCID and MSGID fields. */
 #ifdef SYSLOG_RFC5424
     syslog_buf[rc++] = ' ';
-    syslog_buf[rc++] = '-';
+    syslog_buf[rc++] = NILVALUE;
     syslog_buf[rc++] = ' ';
-    syslog_buf[rc++] = '-';
+    syslog_buf[rc++] = NILVALUE;
+    /* STRUCTURED DATA FIELD */
+    //syslog_buf[rc++] = ' ';
+    //syslog_buf[rc++] = NILVALUE;
 #endif
 
     syslog_buf[rc++] = ' ';
