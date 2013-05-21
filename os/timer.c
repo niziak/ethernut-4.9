@@ -472,10 +472,18 @@ void NutTimerProcessElapsed(void)
                 nutTimerList->tn_prev = NULL;
             }
             if ((tn->tn_ticks_left = tn->tn_ticks) == 0) {
+#ifdef NUTDEBUG
+    if (__os_trf)
+        fprintf(__os_trs, " TIM %p free NutTimerProcessElapsed\n", tn);
+#endif
                 NutHeapFree(tn);
             }
             else {
                 // re-insert
+#ifdef NUTDEBUG
+    if (__os_trf)
+        fprintf(__os_trs, " TIM %p reinsert NutTimerProcessElapsed\n", tn);
+#endif
                 NutTimerInsert(tn);
             }
         }
@@ -523,6 +531,10 @@ NUTTIMERINFO * NutTimerCreate(uint32_t ticks, void (*callback) (HANDLE, void *),
         tn->tn_callback = callback;
         tn->tn_arg = arg;
     }
+#ifdef NUTDEBUG
+    if (__os_trf)
+        fprintf(__os_trs, " TIM %p NutTimerCreate\n", tn);
+#endif
     return tn;
 }
 
@@ -561,6 +573,10 @@ HANDLE NutTimerStartTicks(uint32_t ticks, void (*callback) (HANDLE, void *), voi
         /* Add the timer to the list. */
         NutTimerInsert(tn);
     }
+#ifdef NUTDEBUG
+    if (__os_trf)
+        fprintf(__os_trs, " TIM %p NutTimerStartTicks\n", tn);
+#endif
     return tn;
 }
 
@@ -660,7 +676,10 @@ void NutTimerStop(HANDLE handle)
     NUTTIMERINFO *tn = (NUTTIMERINFO *)handle;
 
     NUTASSERT(tn != NULL);
-
+#ifdef NUTDEBUG
+    if (__os_trf)
+        fprintf(__os_trs, " TIM %p NutTimerStop\n", handle);
+#endif
     /* Disable periodic operation and callback. */
     tn->tn_ticks = 0;
     tn->tn_callback = NULL;

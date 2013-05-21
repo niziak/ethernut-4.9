@@ -418,6 +418,10 @@ void NutThreadResume(void)
 #ifdef NUTTRACER
         TRACE_ADD_ITEM(TRACE_TAG_THREAD_YIELD,(int)runningThread);
 #endif
+#ifdef NUTDEBUG
+    if (__os_trf)
+        fprintf(__os_trs, " Y: %s <%04x>\n", runningThread->td_name, (int)runningThread);
+#endif
 
         if (runningThread->td_state == TDS_RUNNING) {
             runningThread->td_state = TDS_READY;
@@ -541,6 +545,11 @@ uint8_t NutThreadSetPriority(uint8_t level)
 #ifdef NUTTRACER
         TRACE_ADD_ITEM(TRACE_TAG_THREAD_SETPRIO,(int)runningThread);
 #endif
+#ifdef NUTDEBUG
+    if (__os_trf)
+        fprintf(__os_trs, "Set prio <%04x>\n", (int)runningThread);
+#endif
+
 
         NutEnterCritical();
         NutThreadSwitch();

@@ -85,7 +85,7 @@
 #include <sys/heap.h>
 
 #include <sys/osdebug.h>
-
+#include <sys/atom.h>
 #if defined(__arm__) || defined(__AVR32__) || defined(__m68k__) || defined(__H8300H__) || defined(__H8300S__) || defined(__NUT_EMULATION__)
 #define ARCH_32BIT
 #endif
@@ -101,7 +101,7 @@ static char *states[] = { "TRM", "RUN", "RDY", "SLP" };
 
 #ifdef ARCH_32BIT
 /*                              12345678 12345678 1234 123 12345678 12345678 12345678 1234556789 123456789*/
-static prog_char qheader[] = "\nHandle   Name     Prio Sta Queue    Timer    StackPtr   FreeMem  MinStack\n";
+static prog_char qheader[] = "\nHandle   Name     Prio Sta Queue    Timer    StackPtr   FreeMem  MinStack  ?  Handle\n";
 #else
 /*                              1234 12345678 1234 123 1234 1234 1234 1234567 12345678*/
 static prog_char qheader[] = "\nHndl Name     Prio Sta QUE  Timr StkP FreeMem MinStack\n";
@@ -181,6 +181,13 @@ void NutDumpThreadList(FILE * stream)
                   (int) tdp->td_timer, (int) tdp->td_sp,
                   (int) tdp->td_sp - (int) tdp->td_memory, (unsigned int) NutThreadStackAvailable(tdp->td_name), 
                   *((uint32_t *) tdp->td_memory) != DEADBEEF ? "FAIL" : "OK");
+/*
+        __exp_stack
+        00205380 g       .bss 00000000 __exp_stack
+        FIQ_STACK_SIZE
+        IRQ_STACK_SIZE
+        ABT_STACK_SIZE
+        UND_STACK_SIZE*/
 #endif
         if (tdp->td_queue) {
             tqp = *(NUTTHREADINFO **) (tdp->td_queue);
@@ -280,10 +287,10 @@ void NutDumpHeap(FILE * stream)
     size_t avail;
 
     fputc('\n', stream);
+    NutEnterCritical();
     for (node = heapFreeList; node; node = node->hn_next) {
         sum += node->hn_size;
         fprintf_P(stream, fmt1, (int) node, (unsigned int) node->hn_size);
-        /* TODO: Remove hardcoded RAMSTART and RAMEND */
         if ((uintptr_t) node < NUTMEM_START || (uintptr_t) node > (uintptr_t)(NUTMEM_START+NUTMEM_SIZE-1U))
         {
             continue;
@@ -293,6 +300,7 @@ void NutDumpHeap(FILE * stream)
         fprintf_P(stream, fmt2, (unsigned int) sum, (unsigned int) avail);
     else
         fprintf_P(stream, fmt3, (unsigned int) avail);
+    NutExitCritical();
 }
 
 /*!

@@ -63,6 +63,8 @@
 #include <sys/msg.h>
 #include <stddef.h> /* NULL definition */
 
+#include <sys/nutdebug.h>
+#include <sys/osdebug.h>
 
 #define ASSERT(x)
 
@@ -115,7 +117,10 @@ NUTMSGQ *NutMsgQCreate(uint8_t bits)
     /*Link into the Global list */
     que->mq_next = nutMsgQue;
     nutMsgQue = que;
-
+#ifdef NUTDEBUG
+    if (__os_trf)
+        fprintf(__os_trs, " MSG %p QCreate\n", que);
+#endif
     return que;
 }
 
@@ -134,7 +139,10 @@ int NutMsgQBroadcast(uint8_t id, int param, void *data)
 
     NUTMSGQ *pCur = nutMsgQue;
     int ret = 0;
-
+#ifdef NUTDEBUG
+    if (__os_trf)
+        fprintf(__os_trs, " MSG QBroad %d\n", id);
+#endif
     while (pCur) {
         ret -= NutMsgQPost(pCur, id, param, data);
         pCur = pCur->mq_next;
@@ -176,7 +184,10 @@ int NutMsgQPost(NUTMSGQ * que, uint8_t id, int param, void *data)
     NutExitCritical();
 
     NutEventPostAsync(&que->mq_wait);
-    
+#ifdef NUTDEBUG
+    if (__os_trf)
+        fprintf(__os_trs, " MSG %p QPost %d\n", que, id);
+#endif
     return 0;
 }
 
@@ -197,6 +208,10 @@ int NutMsgQPost(NUTMSGQ * que, uint8_t id, int param, void *data)
 int NutMsgQSend(NUTMSGQ * que, uint8_t id, int param, void *data)
 {
     if (NutMsgQPost(que, id, param, data) == 0) {
+#ifdef NUTDEBUG
+    if (__os_trf)
+        fprintf(__os_trs, " MSG %p QSend id=%d\n", que, id);
+#endif
         NutThreadYield();
         return 0;
     }
@@ -211,6 +226,11 @@ int NutMsgQSend(NUTMSGQ * que, uint8_t id, int param, void *data)
 int NutMsgQFull(NUTMSGQ * que)
 {
     if (((que->mq_write + 1) & que->mq_mask) == que->mq_read) {
+#ifdef NUTDEBUG
+    if (__os_trf)
+        fprintf(__os_trs, " MSG %p QFull!\n", que);
+#endif
+
         return -1;
     }
     return 0;
@@ -220,7 +240,10 @@ int NutMsgQFull(NUTMSGQ * que)
 static void NutMsgQTimerCb(HANDLE hndl, void *arg)
 {
     NUTMSGTMR *timer = (NUTMSGTMR *) arg;
-
+#ifdef NUTDEBUG
+    if (__os_trf)
+        fprintf(__os_trs, " MSG QTimerCb %p %p\n", hndl, arg);
+#endif
     if (NutMsgQPost(timer->mt_que, MSG_TIMER, 0, timer)) {
         /*
          * If a oneshot is missed we need to restart it until
@@ -270,6 +293,10 @@ HANDLE NutMsgQStartTimer(NUTMSGQ * que, uint32_t ms, int param, void *data, uint
 
     timer->mt_next = que->mq_timers;
     que->mq_timers = timer;
+#ifdef NUTDEBUG
+    if (__os_trf)
+        fprintf(__os_trs, " MSG %p QStartTimer %p\n", que, timer);
+#endif
     return (HANDLE) timer;
 }
 
@@ -277,6 +304,10 @@ static void NutMsgQFreeTimer(NUTMSGQ * que, NUTMSGTMR * handle)
 {
     NUTMSGTMR *tnp = que->mq_timers;
     NUTMSGTMR **tnpp = &que->mq_timers;
+#ifdef NUTDEBUG
+    if (__os_trf)
+        fprintf(__os_trs, " MSG %p QFreeTimer %p\n", que, handle);
+#endif
 
     while (tnp) {
         if (tnp == handle) {
@@ -328,6 +359,10 @@ void NutMsgQStopTimer(HANDLE timer)
         NutTimerStop(t->mt_handle);
 
     NutExitCritical();
+#ifdef NUTDEBUG
+    if (__os_trf)
+        fprintf(__os_trs, " MSG QStopTimer t=%p\n", timer);
+#endif
 
     NutMsgQFreeTimer(que, t);
 }
@@ -363,7 +398,10 @@ int NutMsgQGetMessage(NUTMSGQ * que, NUTMSG * msg, uint32_t timeout)
         NutEventPostAsync(&que->mq_wait);
 
     NutExitCritical();
-
+#ifdef NUTDEBUG
+    if (__os_trf)
+        fprintf(__os_trs, " MSG %p QGetMessage id=%d\n", que, msg->id);
+#endif
     if (msg->id == MSG_TIMER) {
         NUTMSGTMR *timer = (NUTMSGTMR *) msg->data;
         msg->data = timer->mt_data;
@@ -393,6 +431,11 @@ void NutMsgQFlush(NUTMSGQ * que)
 
     que->mq_wait = 0;
     NutExitCritical();
+#ifdef NUTDEBUG
+    if (__os_trf)
+        fprintf(__os_trs, " MSG %p QFlush\n", que);
+#endif
+
 }
 
 /*@}*/

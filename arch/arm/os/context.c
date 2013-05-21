@@ -106,6 +106,7 @@
 #include <sys/atom.h>
 #include <sys/heap.h>
 #include <sys/thread.h>
+#include <sys/osdebug.h>
 
 /*!
  * \addtogroup xgNutArchArmOsContext
@@ -323,8 +324,15 @@ HANDLE NutThreadCreate(char * name, void (*fn) (void *), void *arg, size_t stack
     NutEnterCritical();
     td->td_next = nutThreadList;
     nutThreadList = td;
+#ifdef NUTDEBUG
+    if (__os_trf)
+        fprintf(__os_trs, "Cre <%08x>\n", (uptr_t) td);
+#endif
     NutThreadAddPriQueue(td, (NUTTHREADINFO **) & runQueue);
-
+#ifdef NUTDEBUG
+    if (__os_trf)
+        NutDumpThreadList(__os_trs);
+#endif
     /*
      * If no thread is running, then this is the first thread ever 
      * created. In Nut/OS, the idle thread is created first.
@@ -357,14 +365,20 @@ HANDLE NutThreadCreate(char * name, void (*fn) (void *), void *arg, size_t stack
           :"r0", "memory");
     }
 
+
     /*
      * If current context is not in front of the run queue (highest 
      * priority), then switch to the thread in front.
      */
     if (runningThread != runQueue) {
         runningThread->td_state = TDS_READY;
+#ifdef NUTDEBUG
+        if (__os_trf)
+            fprintf(__os_trs, "New <%08x %08x>\n", (uptr_t) runningThread, (uptr_t) runQueue);
+#endif
         NutThreadSwitch();
     }
+
     NutExitCritical();
 
     return td;

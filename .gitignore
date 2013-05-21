@@ -1,0 +1,5 @@
+tools/nutconf/.hg
+tools/nutconf/Debug
+*.bak
+*.org
+tools/nutconf/

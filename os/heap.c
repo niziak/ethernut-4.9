@@ -51,6 +51,7 @@
 
 #ifdef NUTDEBUG_HEAP
 #include <sys/nutdebug.h>
+#include <sys/atom.h>
 #endif
 
 /*
@@ -657,7 +658,7 @@ int NutHeapCheck(void)
 void NutHeapDump(void * stream)
 {
     HEAPNODE *node;
-
+    NutEnterCritical();
 #ifdef NUTMEM_SPLIT_FAST
     for (node = heapFastMemFreeList; node; node = node->hn_next) {
       if (node)
@@ -667,15 +668,17 @@ void NutHeapDump(void * stream)
 
     for (node = heapFreeList; node; node = node->hn_next) {
       if (node)
+      {
         fprintf(stream, "%p(%d)\n", node, (int) node->hn_size);
+      }
     }
-
 #ifdef NUTDEBUG_HEAP
     for (node = heapAllocList; node; node = node->ht_next) {
       if (node)
         fprintf(stream, "%p(%u) %s:%d\n", node, (int) node->ht_size, node->ht_file, node->ht_line);
     }
 #endif
+    NutExitCritical();
 }
 
 /*@}*/
