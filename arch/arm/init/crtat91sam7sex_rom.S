@@ -164,17 +164,29 @@ __vectors:
         .word   __data_abort
 
         .weak   __undef
-        .set    __undef, __xcpt_dummy
+        .set    __undef, __undef_stop
         .weak   __swi
-        .set    __swi, __xcpt_dummy
+        .set    __swi, __swi_stop
         .weak   __prefetch_abort
-        .set    __prefetch_abort, __xcpt_dummy
+        .set    __prefetch_abort, __prefetch_stop
         .weak   __data_abort
-        .set    __data_abort, __xcpt_dummy
+        .set    __data_abort, __data_stop
 
-        .global __xcpt_dummy
-__xcpt_dummy:
-        b       __xcpt_dummy
+        .global __undef_stop
+__undef_stop:
+        b       __undef_stop
+
+        .global __swi_stop
+__swi_stop:
+        b       __swi_stop
+
+        .global __prefetch_stop
+__prefetch_stop:
+        b       __prefetch_stop
+
+        .global __data_stop
+__data_stop:
+        b       __data_stop
 
         .ltorg
 /*

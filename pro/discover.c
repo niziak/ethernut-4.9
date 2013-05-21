@@ -92,7 +92,7 @@
 
 /* arm-elf-gcc used 232 bytes with size optimized, 476 bytes with debug code. */
 #if (NUT_THREAD_STACK_MULT==1)
-  #define NUT_THREAD_DISTSTACK  384
+  #define NUT_THREAD_DISTSTACK  432
 #else
   #define NUT_THREAD_DISTSTACK  476
 #endif
