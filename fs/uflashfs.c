@@ -51,6 +51,9 @@
 /* Use for local debugging. */
 #define NUTDEBUG
 #include <stdio.h>
+  #define DEBUG(...)    {printf("%s()",__func__); printf(__VA_ARGS__);}
+#else
+  #define DEBUG(...)
 #endif
 
 /*!
@@ -1449,6 +1452,7 @@ static int UFlashFileRead(NUTFILE * nfp, void *data, int size)
     UFLASHENTRY *ent;
     UFLASHVOLUME *vol;
 
+    DEBUG(" %p %d\n",data, size);
     /* Ignore input flush. */
     if (data == NULL || size == 0) {
         return 0;
@@ -1525,6 +1529,7 @@ static int UFlashFileWrite(NUTFILE * nfp, CONST void *data, int len)
     UFLASHENTRY *ent;
     UFLASHVOLUME *vol;
 
+    DEBUG(" %p %d\n", data, len);
     /* Ignore output flush. */
     if (data == NULL || len == 0) {
         return 0;
@@ -1681,6 +1686,7 @@ static int UFlashFileSeek(NUTFILE * nfp, long *pos, int whence)
     NUTASSERT(nfp != NULL);
     NUTASSERT(nfp->nf_fcb != NULL);
 
+    DEBUG(" %ld %d\n", *pos, whence);
     ent = (UFLASHENTRY *) nfp->nf_fcb;
 
     NUTASSERT(pos != NULL);
@@ -1913,7 +1919,7 @@ int UFlashFormat(NUTDEVICE * dev, NUTSERIALFLASH * sfi, NUTSPIBUS * bus)
     NUTASSERT(dev != NULL);
     NUTASSERT(sfi != NULL);
     NUTASSERT(dev->dev_dcb == NULL);
-
+    DEBUG("\n");
     sfi->sf_node->node_bus = bus;
     if ((*sfi->sf_node->node_bus->bus_initnode) (sfi->sf_node)) {
         return -1;

@@ -59,6 +59,14 @@
 #define AT45_WRITE_POLLS        1000
 #endif
 
+#if 0
+  #define NUTDEBUG
+  #include <stdio.h>
+  #define DEBUG(...)  {printf("%s()",__func__); printf(__VA_ARGS__);}
+#else
+  #define DEBUG(...)
+#endif
+
 /*! \brief Parameter table of known DataFlash types. */
 AT45D_INFO at45d_info[] = {
     {8, 512, 256, 0x0D},    /* AT45DB011B - 128kB */
@@ -236,7 +244,7 @@ int SpiAt45dPageErase(NUTDEVICE * dev, uint32_t pgn)
 {
     NUTBLOCKIO *blkio;
     AT45D_INFO *info;
-
+    DEBUG("%ld\n", pgn);
     NUTASSERT(dev != NULL);
     NUTASSERT(dev->dev_dcb != NULL);
     blkio = dev->dev_dcb;
@@ -283,7 +291,7 @@ int SpiAt45dInit(NUTDEVICE * dev)
     NUTASSERT(dev->dev_icb != NULL);
     blkio = dev->dev_dcb;
     node = dev->dev_icb;
-
+    DEBUG("\n");
     /* Read the status byte and locate the related table entry. */
     sr = At45dStatus(node);
     sr &= AT45D_STATUS_DENSITY | AT45D_STATUS_PAGE_SIZE;
@@ -315,7 +323,7 @@ int SpiAt45dPageRead(NUTDEVICE * dev, uint32_t pgn, void *data, int len)
 {
     NUTBLOCKIO *blkio;
     AT45D_INFO *info;
-
+    DEBUG("%ld %p %d\n", pgn, data, len);
     NUTASSERT(dev != NULL);
     NUTASSERT(dev->dev_dcb != NULL);
     blkio = dev->dev_dcb;
@@ -360,6 +368,8 @@ int SpiAt45dPageWrite(NUTDEVICE * dev, uint32_t pgn, CONST void *data, int len)
     uint32_t limit;
     NUTBLOCKIO *blkio;
     NUTSPINODE *node;
+
+    DEBUG("%ld %p %d\n", pgn, data, len);
 
     /* Sanity check. */
     if (len == 0) {

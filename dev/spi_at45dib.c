@@ -55,6 +55,18 @@
 
 #include <dev/spi_at45dib.h>
 #include <dev/watchdog.h>
+
+#if 0
+  #define DEBUG
+  #define NUTDEBUG
+  #include <stdio.h>
+  #define DPRINTF(...)  {printf("%s()",__func__); printf(__VA_ARGS__);}
+#else
+  #define DPRINTF(...)
+#endif
+
+
+
 /*!
  * \addtogroup xgAt54dib
  */
@@ -661,6 +673,11 @@ static int SpiAt45dibRead(NUTSERIALFLASH * sfi, sf_unit_t pgn, int off, void *da
 {
     int rc = 0;
 
+#ifdef DEBUG
+    unsigned long a = (unsigned long)pgn;
+    DPRINTF(" pgn: %ld off: %d @%p len: %d \n", a, off, data, len);
+#endif
+
     /* Sanity checks. */
     NUTASSERT(sfi != NULL);
     NUTASSERT(sfi->sf_info != NULL);
@@ -723,6 +740,10 @@ static int SpiAt45dibCompare(NUTSERIALFLASH * sfi, sf_unit_t pgn, int off, CONST
     NUTASSERT(data != NULL);
     NUTASSERT(len >= 0 && len <= sfi->sf_unit_size);
 
+#ifdef DEBUG
+    unsigned long a = (unsigned long)pgn;
+    DPRINTF(" pgn: %ld off: %d @%p len: %d \n", a, off, data, len);
+#endif
     if (len) {
         int_fast8_t b;
         AT45DIB *at = (AT45DIB *) sfi->sf_info;
@@ -769,6 +790,11 @@ static int SpiAt45dibUsed(NUTSERIALFLASH * sfi, sf_unit_t pgn, int skip)
     int len;
     AT45DIB *at;
     int_fast8_t b;
+
+#ifdef DEBUG
+    unsigned long a = (unsigned long)pgn;
+    DPRINTF(" pgn: %ld skip: %d \n", a, skip);
+#endif
 
     /* Sanity checks. */
     NUTASSERT(sfi != NULL);
@@ -822,6 +848,10 @@ static int SpiAt45dibWrite(NUTSERIALFLASH * sfi, sf_unit_t pgn, int off, CONST v
 {
     int rc = 0;
 
+#ifdef DEBUG
+    unsigned long a = (unsigned long)pgn;
+    DPRINTF(" pgn: %ld off: %d @%p len: %d \n", a, off, data, len);
+#endif
     /* Sanity checks. */
     NUTASSERT(sfi != NULL);
     NUTASSERT(pgn < sfi->sf_units);
@@ -873,6 +903,12 @@ static int SpiAt45dibCopy(NUTSERIALFLASH * sfi, sf_unit_t spg, sf_unit_t dpg)
     NUTASSERT(spg < sfi->sf_units);
     NUTASSERT(dpg < sfi->sf_units);
 
+#ifdef DEBUG
+    unsigned long a = (unsigned long)spg;
+    unsigned long c = (unsigned long)dpg;
+    DPRINTF(" spg: %ld dpg: %ld\n", a, c);
+#endif
+
     /* If source and destination page numbers are equal, just load it. */
     if (spg == dpg) {
         b = At45dibAllocate(sfi, spg);
@@ -920,6 +956,10 @@ static int SpiAt45dibCommit(NUTSERIALFLASH * sfi, sf_unit_t pgn)
     int_fast8_t b;
     AT45DIB *at;
 
+#ifdef DEBUG
+    unsigned long a = (unsigned long)pgn;
+    DPRINTF(" pgn: %ld \n", a);
+#endif
     /* Sanity checks. */
     NUTASSERT(sfi != NULL);
     NUTASSERT(pgn < sfi->sf_units);
@@ -946,6 +986,10 @@ static int SpiAt45dibErase(NUTSERIALFLASH * sfi, sf_unit_t pgn, int cnt)
     int_fast8_t b;
     AT45DIB *at;
 
+#ifdef DEBUG
+    unsigned long a = (unsigned long)pgn;
+    DPRINTF(" pgn: %ld cnt: %d\n", a, cnt);
+#endif
     /* Sanity checks. */
     NUTASSERT(sfi != NULL);
     NUTASSERT(pgn + cnt <= sfi->sf_units);

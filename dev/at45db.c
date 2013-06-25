@@ -115,6 +115,14 @@
 #define AT45_WRITE_POLLS        1000
 #endif
 
+#if 0
+  #define NUTDEBUG
+  #include <stdio.h>
+  #define DEBUG(...)  {printf("%s()",__func__); printf(__VA_ARGS__);}
+#else
+  #define DEBUG(...)
+#endif
+
 /*!
  * \name AT45 DataFlash Commands
  */
@@ -399,6 +407,7 @@ int At45dbInit(unsigned int spibas, unsigned int spipcs)
  */
 int At45dbPageErase(int dd, uint32_t pgn)
 {
+    DEBUG ("%ld\n", pgn);
     pgn <<= dcbtab[dd].dcb_devt->devt_offs;
     return At45dbSendCmd(dd, DFCMD_PAGE_ERASE, pgn, 4, NULL, NULL, 0);
 }
@@ -423,6 +432,7 @@ int At45dbChipErase(void)
  */
 int At45dbPageRead(int dd, uint32_t pgn, void *data, unsigned int len)
 {
+    DEBUG ("%ld @%p %d\n", pgn, data, len);
     pgn <<= dcbtab[dd].dcb_devt->devt_offs;
     return At45dbSendCmd(dd, DFCMD_CONT_READ, pgn, 8, data, data, len);
 }
@@ -443,6 +453,8 @@ int At45dbPageWrite(int dd, uint32_t pgn, CONST void *data, unsigned int len)
 {
     int rc = -1;
     void *rp;
+
+    DEBUG ("%ld @%p %d\n", pgn, data, len);
 
     if ((rp = malloc(len)) != NULL) {
         /* Copy data to dataflash RAM buffer. */
@@ -518,7 +530,7 @@ int At45dbParamRead(unsigned int pos, void *data, unsigned int len)
     uint8_t *buff;
     int csize = At45dbParamSize();
     uint32_t cpage = At45dbParamPage();
-
+    DEBUG ("pos: %ud data: @%p len: %d\n", pos, data, len);
     /* Load the complete configuration area. */
     if (csize > len && (buff = malloc(csize)) != NULL) {
         rc = At45dbPageRead(dd_param, cpage, buff, csize);
@@ -544,6 +556,8 @@ int At45dbParamWrite(unsigned int pos, CONST void *data, unsigned int len)
     uint8_t *buff;
     int csize = At45dbParamSize();
     uint32_t cpage = At45dbParamPage();
+
+    DEBUG ("pos: %ud data: @%p len: %d\n", pos, data, len);
 
     /* Load the complete configuration area. */
     if (csize > len && (buff = malloc(csize)) != NULL) {
