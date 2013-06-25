@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 by Thermotemp GmbH
+ * Copyright (C) 2011 by Thermotemp GmbH. 
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,89 +29,11 @@
  * SUCH DAMAGE.
  *
  * For additional information see http://www.ethernut.de/
+ *
  */
 
 /*
  * $Id: $
  */
 
-ENTRY(_start)
-STARTUP(crtat91sam7x256_rom.o)
-SEARCH_DIR(.)
-
-MEMORY
-{
-  /* First 48k are reserved for the bootloader */
-  rom(rx) : org = 0x00101000, len = 252k
-  ram(rw) : org = 0x00200000, len = 64k
-}
-
-SECTIONS
-{
-  .text :
-  {
-    *(.vectors);
-    . = ALIGN(4);
-    *(.init0);
-    . = ALIGN(4);
-    *(.init1);
-    . = ALIGN(4);
-    *(.init2);
-    . = ALIGN(4);
-    *(.init3);
-    . = ALIGN(4);
-    *(.init4);
-    . = ALIGN(4);
-    *(.init5);
-    . = ALIGN(4);
-    *(.text);
-    . = ALIGN(4);
-    *(.text.*);
-    . = ALIGN(4);
-    *(.rodata*);
-    . = ALIGN(4);
-    *(.eh_frame*);
-    . = ALIGN(4);
-    *(.glue_7t);
-    . = ALIGN(4);
-    *(.glue_7);
-  } > rom
-
-  . = ALIGN(4);
-
-  _etext = .;
-  PROVIDE (__etext = .);
-
-  .data : AT (__etext)
-  {
-    PROVIDE (__data_start = .);
-    *(.data)
-    . = ALIGN(4);
-    *(.ramfunc)
-    _edata = .;
-    PROVIDE (__data_end = .);
-  } > ram
-
-  .bss :
-  {
-    PROVIDE (__bss_start = .);
-    *(.bss)
-    *(COMMON)
-    . = ALIGN(4);
-    PROVIDE (__bss_end = .);
-    . += 0x400;
-    PROVIDE (__exp_stack = .);
-    . += 0x400;
-    PROVIDE (__stack = .);
-    PROVIDE (__heap_start = .);
-  } > ram
-
-  .stab 0 (NOLOAD) :
-  {
-    [ .stab ]
-  }
-  .stabstr 0 (NOLOAD) :
-  {
-    [ .stabstr ]
-  }
-}
+#include "crtat91sam7sex_rom.S"
