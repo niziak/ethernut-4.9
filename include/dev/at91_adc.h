@@ -96,10 +96,10 @@ typedef enum adc_channel_type
     ADC2=2,
     ADC3=3,
     ADC4=4,
-    ADC5=5,
-    ADC6=6,
-    ADC7=7,
-    ADC_MAX_CHANNEL = 8
+//    ADC5=5,
+//    ADC6=6,
+//    ADC7=7,
+    ADC_MAX_CHANNEL
 } TADCChannel;
 
 /* Function prototypes */
