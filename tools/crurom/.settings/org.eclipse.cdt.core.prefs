@@ -1,0 +1,7 @@
+#Tue Jul 09 08:42:28 CEST 2013
+eclipse.preferences.version=1
+environment/project/cdt.managedbuild.toolchain.gnu.mingw.base.871773328/PATH/delimiter=;
+environment/project/cdt.managedbuild.toolchain.gnu.mingw.base.871773328/PATH/operation=append
+environment/project/cdt.managedbuild.toolchain.gnu.mingw.base.871773328/PATH/value=d\:\\MinGW\\bin
+environment/project/cdt.managedbuild.toolchain.gnu.mingw.base.871773328/append=true
+environment/project/cdt.managedbuild.toolchain.gnu.mingw.base.871773328/appendContributed=true

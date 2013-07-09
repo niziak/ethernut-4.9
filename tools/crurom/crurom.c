@@ -36,6 +36,7 @@ const char crurom_rcsid[] = "@(#) $Id: crurom.c 2356 2008-10-26 18:29:59Z olerei
 #include <stdio.h>
 #include <string.h>
 #include <errno.h>
+#include <time.h>
 #ifdef _WIN32
 #include <io.h>
 #include "dirent.h"
@@ -59,6 +60,7 @@ const char crurom_rcsid[] = "@(#) $Id: crurom.c 2356 2008-10-26 18:29:59Z olerei
 static int entryno = 0;
 static int verbose = 0;
 static int recursive = 0;
+static int creationtime = 0;
 static char rootdir[256];
 static int rootlen = 0;
 static char outname[256];
@@ -69,10 +71,12 @@ int dofile(char *name)
     int rc = 0;
     int fd;
     unsigned char buf[512];
-	int i;
-	int cnt;
-	long total = 0;
+    int i;
+    int cnt;
+    long total = 0;
     char *fsname = name;
+    time_t fstime;
+    struct stat st;
 
     if(strnicmp(fsname, rootdir, rootlen) == 0)
         fsname += rootlen;
@@ -84,7 +88,25 @@ int dofile(char *name)
     if(verbose)
         fprintf(stderr, IDENT ": Reading %s\n", name);
 
-	for(;;) {
+    if(creationtime)
+    {
+      if (fstat(fd, &st) == -1)
+      {
+        fprintf(stderr, IDENT ": cannot stat file!\n");
+        fstime = 0;
+      }
+      else
+      {
+        fstime = st.st_mtime;
+        if (verbose)
+        {
+          fprintf(stderr, IDENT ": mtime %s\n", ctime(&fstime));
+        }
+      }
+    } // ctime
+
+	for(;;)
+	{
 		if((cnt = read(fd, buf, sizeof(buf))) < 0) {
 			fprintf(stderr, IDENT ": Error %d reading %s\n", errno, name);
             rc = -1;
@@ -104,21 +126,25 @@ int dofile(char *name)
 				fprintf(fpout, "\n");
 			fprintf(fpout, "0x%02x,", buf[i]);
 		}
-	}
+	} //for
 	close(fd);
 
 	fprintf(fpout, "\n};\n\n");
-
 	fprintf(fpout, "prog_char file%dname[] = \"%s\";\n\n", entryno, fsname); 
-	
 	fprintf(fpout, "static ROMENTRY file%dentry = { ", entryno);
 
 	if(entryno > 1)
+	{
 		fprintf(fpout, "&file%dentry, ", entryno - 1);
+	}
 	else
-		fprintf(fpout, "0, ", entryno - 1);
-
-    fprintf(fpout, "(prog_char *)file%dname, %d, (prog_char *)file%ddata };\n", entryno, total, entryno);
+	{
+		fprintf(fpout, "0, "/*, entryno - 1*/);
+	}
+	if (creationtime)
+	  fprintf(fpout, "(prog_char *)file%dname, %ld, (prog_char *)file%ddata, (time_t)%ld };\n", entryno, total, entryno, fstime);
+	else
+	  fprintf(fpout, "(prog_char *)file%dname, %ld, (prog_char *)file%ddata };\n", entryno, total, entryno);
 
     return rc;
 }
@@ -160,6 +186,7 @@ void usage(void)
       "OPTIONS:\n"
       "-ofile  output file\n"
       "-r      recursive\n"
+      "-c      add file creation time\n"
       "-v      verbose\n"
     , stderr);
 }
@@ -170,7 +197,7 @@ int main(int argc, char **argv)
     int i;
     int rc = 0;
 
-    while((option = getopt(argc, argv, "o:rv?")) != EOF) {
+    while((option = getopt(argc, argv, "o:rcv?")) != EOF) {
         switch(option) {
         case 'o':
             strcpy(outname, optarg);
@@ -180,6 +207,9 @@ int main(int argc, char **argv)
             break;
         case 'v':
             verbose++;
+            break;
+        case 'c':
+            creationtime++;
             break;
         default:
             usage();
@@ -202,6 +232,9 @@ int main(int argc, char **argv)
     fprintf(fpout, " * This file is automatically created by " IDENT " " VERSION "\n");
     fprintf(fpout, " */\n");
     fprintf(fpout, "#include <fs/uromfs.h>\n\n");
+    if (creationtime)
+      fprintf(fpout, "#include <time.h>\n\n");
+
 
     if(argc) {
         for(i = 0; i < argc && rc == 0; i++) {
