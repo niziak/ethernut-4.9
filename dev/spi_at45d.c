@@ -68,7 +68,7 @@
 #endif
 
 /*! \brief Parameter table of known DataFlash types. */
-AT45D_INFO at45d_info[] = {
+const AT45D_INFO at45d_info[] = {
     {8, 512, 256, 0x0D},    /* AT45DB011B - 128kB */
     {9, 512, 264, 0x0C},    /* AT45DB011B - 128kB */
     {8, 1025, 256, 0x15},   /* AT45DB021B - 256kB */

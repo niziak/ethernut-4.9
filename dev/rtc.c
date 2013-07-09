@@ -66,9 +66,9 @@ static NUTRTC *reg_rtc;
  * \return 0 on success or -1 in case of an error.
  *
  */
-int NutRegisterRtc(NUTRTC * rtc)
+int NutRegisterRtc(const NUTRTC * rtc)
 {
-    reg_rtc = rtc;
+    reg_rtc = (NUTRTC *) rtc;
     if (rtc && reg_rtc->rtc_init) {
         if ((*reg_rtc->rtc_init) ()) {
             reg_rtc = NULL;

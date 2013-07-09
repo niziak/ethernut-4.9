@@ -188,7 +188,7 @@ struct _AT45D_INFO {
 /*!
  * \brief Table of known AT45D DataFlash chips.
  */
-extern AT45D_INFO at45d_info[];
+extern const AT45D_INFO at45d_info[];
 
 /*!
  * \brief Number of known AT45D DataFlash chips.

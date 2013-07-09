@@ -36,7 +36,7 @@
 
 char *http_root;
 
-char *default_files[] = {
+const char *default_files[] = {
     "",
     "/index.html",
     "/index.htm",

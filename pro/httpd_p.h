@@ -17,7 +17,7 @@
 #include <pro/httpd.h>
 
 extern char *http_root;
-extern char *default_files[];
+extern const char *default_files[];
 
 char *CreateFilePath(CONST char *url, CONST char *addon);
 void DestroyRequestInfo(REQUEST * req);

@@ -265,7 +265,7 @@ typedef struct _AT45_DEVTAB {
  * \brief Active device entry.
  */
 typedef struct _AT45DB_DCB {
-    AT45_DEVTAB *dcb_devt;
+    const AT45_DEVTAB *dcb_devt;
     unsigned int dcb_spibas;
     unsigned int dcb_spipcs;
     uint8_t dcb_cmdbuf[MAX_AT45_CMDLEN];
@@ -274,7 +274,7 @@ typedef struct _AT45DB_DCB {
 /*!
  * \brief Table of known Dataflash types.
  */
-AT45_DEVTAB at45_devt[] = {
+const AT45_DEVTAB at45_devt[] = {
     {512, 264, 9, 0x3C, 0x0C},  /* AT45DB011B - 128kB */
     {1025, 264, 9, 0x3C, 0x14}, /* AT45DB021B - 256kB */
     {2048, 264, 9, 0x3C, 0x1C}, /* AT45DB041B - 512kB */

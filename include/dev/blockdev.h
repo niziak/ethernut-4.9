@@ -120,7 +120,7 @@ struct _NUTBLOCKIO {
     /*!
      * \brief Device specific information.
      */
-    void *blkio_info;
+    const void *blkio_info;
 
     /*!
      * \brief Total number of blocks on this device.

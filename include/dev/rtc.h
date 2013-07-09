@@ -89,7 +89,7 @@ struct _NUTRTC {
 
 __BEGIN_DECLS
 /* Prototypes */
-extern int NutRegisterRtc(NUTRTC *rtc);
+extern int NutRegisterRtc(const NUTRTC *rtc);
 
 extern int NutRtcGetTime(struct _tm *tm);
 extern int NutRtcSetTime(CONST struct _tm *tm);
