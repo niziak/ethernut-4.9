@@ -72,9 +72,16 @@
  * First pre-release with 2.4 stack
  *
  */
+#define WITH_UROM_CTIME     1
+
 #include <stddef.h>
 #include <sys/types.h>
 #include <stdint.h>
+#if (WITH_UROM_CTIME)
+#include <time.h>
+#endif
+
+
 
 /*!
  * \file fs/uromfs.h
@@ -84,7 +91,7 @@
 /*!
  * \brief Mikro-ROM directory entry type.
  */
-typedef struct _ROMENTRY ROMENTRY;
+typedef const struct _ROMENTRY ROMENTRY;
 
 /*!
  * \struct _ROMENTRY uromfs.h fs/uromfs.h
@@ -96,6 +103,9 @@ struct _ROMENTRY {
     const uint8_t *rome_name;/*!< Filename. */
     unsigned int rome_size;        /*!< File size. */
     const char *rome_data;  /*!< File data. */
+#if (WITH_UROM_CTIME)
+    time_t ctime;           /*! File creation time */
+#endif
 };
 #else
 struct _ROMENTRY {
@@ -103,6 +113,9 @@ struct _ROMENTRY {
     prog_char *rome_name;   /*!< Filename. */
     unsigned int rome_size;        /*!< File size. */
     prog_char *rome_data;   /* __attribute__ ((progmem));  !< File data. */
+#if (WITH_UROM_CTIME)
+    time_t ctime;           /*! File creation time */
+#endif
 };
 #endif
 

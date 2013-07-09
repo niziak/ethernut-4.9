@@ -87,6 +87,8 @@
 #include <sys/heap.h>
 #include <sys/file.h>
 #include <sys/device.h>
+#include <sys/nutdebug.h>
+#include <sys/stat.h>
 
 #include <stdlib.h>
 #include <string.h>
@@ -243,6 +245,33 @@ static long UromSize(NUTFILE * fp)
     return (long) rome->rome_size;
 }
 
+#if (WITH_UROM_CTIME)
+/*!
+ * \brief Retrieve the status of an entry.
+ */
+static int UromFileStatus(NUTDEVICE * dev, CONST char *name, struct stat *st)
+{
+  ROMENTRY *rome;
+
+  for (rome = romEntryList; rome; rome = rome->rome_next) {
+      if (strcmp_P(name, rome->rome_name) == 0)
+          break;
+  }
+
+  if (rome)
+  {
+    st->st_size  = rome->rome_size;
+    st->st_mtime = rome->ctime;
+  }
+  else
+  {
+      errno = ENOENT;
+      return -1;
+  }
+  return 0;
+}
+#endif // #if (WITH_UROM_CTIME)
+
 /*!
  * \brief Device specific functions.
  */
@@ -251,11 +280,18 @@ int UromIOCtl(NUTDEVICE * dev, int req, void *conf)
     int rc = -1;
 
     switch (req) {
-    case FS_FILE_SEEK:
-        UromSeek((NUTFILE *) ((IOCTL_ARG3 *) conf)->arg1,      /* */
-                     (long *) ((IOCTL_ARG3 *) conf)->arg2,      /* */
-                     (int) ((IOCTL_ARG3 *) conf)->arg3);
-        break;
+#if (WITH_UROM_CTIME)
+      case FS_STATUS:
+          NUTASSERT(conf != NULL);
+          FSCP_STATUS *par = (FSCP_STATUS *) conf;
+          rc = UromFileStatus(dev, par->par_path, par->par_stp);
+          break;
+#endif
+      case FS_FILE_SEEK:
+          UromSeek((NUTFILE *) ((IOCTL_ARG3 *) conf)->arg1,      /* */
+                       (long *) ((IOCTL_ARG3 *) conf)->arg2,      /* */
+                       (int) ((IOCTL_ARG3 *) conf)->arg3);
+          break;
     }
     return rc;
 }

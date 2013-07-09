@@ -62,6 +62,9 @@ include $(top_srcdir)/Makerules.all
 	@echo
 
 %.a: $(OBJS)
+	@echo ------------------
+	@echo [AR]: $<
+	@echo ------------------
 	$(AR) $(ARFLAGS) $@ $?
 
 # No idea why the pattern rule above doesn't work on some
