@@ -34,7 +34,7 @@
  */
 
 /*
- * $Id: crtat91sam7sex_rom.S 3459 2011-06-02 11:30:26Z mifi $
+ * $Id: crtat91sam7x256_bootrom.S 3459 2011-06-02 11:30:26Z mifi $
  */
 
 #include <cfg/clock.h>
@@ -430,7 +430,24 @@ wait_pllsel:
         ldr     r0, =(RSTC_KEY | RSTC_URSTEN)
         ldr     r1, =RSTC_MR
         str     r0, [r1, #0]
-        
+
+__copy_vectors_to_ram:
+        /* copy 64 (0x40) bytes of flash to RAM */
+        ldr     r0, =__vectors
+        ldr     r1, =__vectors_ram_start
+        ldmia   r0!, {r2-r9}  /* Load multiple increment after 8*4 = 32 bytes */
+        stmia   r1!, {r2-r9}
+        ldmia   r0!, {r2-r9}
+        stmia   r1!, {r2-r9}
+
+        /*
+         * Remapping memory, SRAM to 0x00000000
+         */
+__remap_ram:
+        ldr     r1, =MC_BASE             /* Memory controller base. */
+        mov     r0, #MC_RCB              /* Remap command. */
+        str     r0, [r1, #MC_RCR_OFF]    /* MC remap control register address. */
+
         b       __set_stacks
 
         .ltorg
@@ -488,10 +505,10 @@ __clear_bss:
         ldr     r2, =__bss_end
         ldr     r3, =0
 
-_40:
+_clear_bss_loop:
         cmp     r1, r2
         strne   r3, [r1], #+4
-        bne     _40
+        bne     _clear_bss_loop
 
         /*
          * Relocate .data section (Copy from ROM to RAM).
@@ -500,11 +517,11 @@ _40:
         ldr     r2, =__data_start
         ldr     r3, =__data_end
 
-_41:
+_copy_data_loop:
         cmp     r2, r3
         ldrlo   r0, [r1], #4
         strlo   r0, [r2], #4
-        blo     _41
+        blo     _copy_data_loop
 
         /*
          * Initialize user stack pointer.

@@ -60,7 +60,7 @@
   #define DEBUG
   #define NUTDEBUG
   #include <stdio.h>
-  #define DPRINTF(...)  {printf("%s()",__func__); printf(__VA_ARGS__);}
+  #define DPRINTF(...)  {printf("\t\t\t\t%s() ",__func__); printf(__VA_ARGS__);}
 #else
   #define DPRINTF(...)
 #endif
@@ -271,6 +271,8 @@ static int At45dibUsed(NUTSPINODE * node, uint8_t op, uint32_t parm, uint_fast8_
     NUTASSERT(bus->bus_transfer != NULL);
     NUTASSERT(bus->bus_release != NULL);
 
+    DPRINTF("\n");
+
     rc = (*bus->bus_alloc) (node, 0);
     if (rc == 0) {
         rc = At45dibTransmitCmd(node, op, parm, oplen);
@@ -279,6 +281,7 @@ static int At45dibUsed(NUTSPINODE * node, uint8_t op, uint32_t parm, uint_fast8_
             int n = -1;
             uint8_t c;
 
+            DPRINTF("\tScanning xlen=%d\n",xlen);
             for (i = 0; i < xlen; i++) {
                 rc = (*bus->bus_transfer) (node, NULL, &c, 1);
                 if (rc) {
@@ -453,6 +456,7 @@ static int At45dibFlash(NUTSERIALFLASH * sfi, int_fast8_t b)
 
     at = (AT45DIB *) sfi->sf_info;
     pga = at->dib_page[b];
+    DPRINTF("pga=%ld\n", pga);
     pga <<= at->dib_pshft;
     rc = At45dibCommand(sfi->sf_node, b ? DFCMD_BUF2_FLASH_NE : DFCMD_BUF1_FLASH_NE, pga, 4);
     if (rc == 0) {
@@ -650,6 +654,7 @@ static int SpiAt45dibCheck(NUTSERIALFLASH * sfi, sf_unit_t pgn, int cnt)
         }
         if (crc16 != 0xFFFF) {
             rc = -1;
+            DPRINTF("error on page %ld!\n", pgn + cnt);
             break;
         }
     }
@@ -793,9 +798,8 @@ static int SpiAt45dibUsed(NUTSERIALFLASH * sfi, sf_unit_t pgn, int skip)
 
 #ifdef DEBUG
     unsigned long a = (unsigned long)pgn;
-    DPRINTF(" pgn: %ld skip: %d \n", a, skip);
+    DPRINTF(" pgn: %ld skip: %d\n", a, skip);
 #endif
-
     /* Sanity checks. */
     NUTASSERT(sfi != NULL);
     NUTASSERT(pgn < sfi->sf_units);
@@ -816,6 +820,7 @@ static int SpiAt45dibUsed(NUTSERIALFLASH * sfi, sf_unit_t pgn, int skip)
     for (b = 0; b < 2 && at->dib_page[b] != pgn; b++);
     if (b < 2) {
         rc = At45dibUsed(sfi->sf_node, b ? DFCMD_BUF2_READ : DFCMD_BUF1_READ, skip, 5, len);
+        DPRINTF(" used %d B. buffered page from buf %d skip=%d len=%d\n", rc, b ? 2 : 1, skip, len);
     }
     /* If not buffered, then directly read from the flash. */
     else {
@@ -824,7 +829,9 @@ static int SpiAt45dibUsed(NUTSERIALFLASH * sfi, sf_unit_t pgn, int skip)
         pga <<= at->dib_pshft;
         pga |= skip;
         rc = At45dibUsed(sfi->sf_node, DFCMD_READ_PAGE, pga, 8, len);
+        DPRINTF(" used %d B. page %ld len %d\n", rc, pgn, len);
     }
+    DPRINTF(" bytes used = %d\n", rc);
     return rc;
 }
 

@@ -36,18 +36,28 @@
  */
 
 ENTRY(_start)
-STARTUP(crtat91sam7x256_rom.o)
+STARTUP(crtat91sam7x256_bootrom_remap.o)
 SEARCH_DIR(.)
 
 MEMORY
 {
-  /* First 48k are reserved for the bootloader */
-  rom(rx) : org = 0x00101000, len = 252k
-  ram(rw) : org = 0x00200000, len = 64k
+  /* First 8k are reserved for the bootloader */
+  bootrom(rx) : org = 0x00100000, len = 8k
+  rom(rx)     : org = 0x00102000, len = 248k
+  ram(rw)     : org = 0x00200000, len = 64k
 }
 
 SECTIONS
 {
+  .boot :
+  {
+    _bootloader_start = .;
+    . = . + 0x2000;
+    . = ALIGN(4);
+  } > bootrom
+  
+  /*. = ORIGIN(rom);*/
+  /*. = 0x2000;*/
   .text :
   {
     *(.vectors);
@@ -76,18 +86,34 @@ SECTIONS
     . = ALIGN(4);
     *(.glue_7);
   } > rom
-
+  
   . = ALIGN(4);
 
   _etext = .;
   PROVIDE (__etext = .);
 
-  .data : AT (__etext)
+  /* data is in RAM, but put it just after __etext to save ROM */
+  /* CInit startup should copy it to correct RAM address */
+  
+  .vectors_ram (NOLOAD) : 
+  {
+    _vectors_ram_start = .;
+    PROVIDE (__vectors_ram_start = .);
+      . += 0x40;
+    _vectors_ram_end = .;
+    PROVIDE (__vectors_ram_end = .);    
+  } > ram
+  
+  . = ALIGN(4);
+   
+
+  .data :
+  AT (_etext)
   {
     PROVIDE (__data_start = .);
-    *(.data)
+      *(.data)
     . = ALIGN(4);
-    *(.ramfunc)
+      *(.ramfunc)
     _edata = .;
     PROVIDE (__data_end = .);
   } > ram
@@ -95,13 +121,13 @@ SECTIONS
   .bss :
   {
     PROVIDE (__bss_start = .);
-    *(.bss)
-    *(COMMON)
+      *(.bss)
+      *(COMMON)
     . = ALIGN(4);
     PROVIDE (__bss_end = .);
-    . += 0x400;
+      . += 0x400;
     PROVIDE (__exp_stack = .);
-    . += 0x400;
+      . += 0x400;
     PROVIDE (__stack = .);
     PROVIDE (__heap_start = .);
   } > ram

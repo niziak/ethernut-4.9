@@ -51,9 +51,12 @@
 /* Use for local debugging. */
 #define NUTDEBUG
 #include <stdio.h>
-  #define DEBUG(...)    {printf("%s()",__func__); printf(__VA_ARGS__);}
+#include <dev/watchdog.h>
+  #define DPRINTF(...)    {printf("\t%s() ",__func__); printf(__VA_ARGS__);}
+  #define DWDOG           {NutWatchDogRestart();}
 #else
-  #define DEBUG(...)
+  #define DPRINTF(...)
+  #define DWDOG
 #endif
 
 /*!
@@ -260,6 +263,7 @@ typedef struct _UFLASHFIND {
  */
 static int FlashUnitCopy(NUTSERIALFLASH * ifc, blknum_t b_src, blknum_t b_dst, sf_unit_t unit)
 {
+    DPRINTF("src=%d dst=%d unit=%ld\n", b_src, b_dst, (uint32_t)unit);
     unit += ifc->sf_rsvbot;
     return (*ifc->sf_copy) (ifc, b_src * UFLASH_BLOCK_UNITS + unit, b_dst * UFLASH_BLOCK_UNITS + unit);
 }
@@ -269,6 +273,7 @@ static int FlashUnitCopy(NUTSERIALFLASH * ifc, blknum_t b_src, blknum_t b_dst, s
  */
 static void FlashUnitCommit(NUTSERIALFLASH * ifc, blknum_t b, sf_unit_t unit)
 {
+    DPRINTF("block=%d unit=%ld\n", b, (uint32_t)unit);
     (*ifc->sf_commit) (ifc, b * UFLASH_BLOCK_UNITS + unit + ifc->sf_rsvbot);
 }
 
@@ -277,12 +282,14 @@ static void FlashUnitCommit(NUTSERIALFLASH * ifc, blknum_t b, sf_unit_t unit)
  */
 static int FlashUnitRead(NUTSERIALFLASH * ifc, blknum_t b, sf_unit_t unit, int upos, void *data, int len)
 {
+    DPRINTF("block=%d unit=%ld upos=%d len=%d\n", b, (uint32_t)unit, upos, len);
     int rc = ifc->sf_unit_size - upos;
 
     if (unit == UFLASH_BLOCK_UNITS - 1) {
         rc -= sizeof(BLOCKFOOT);
     }
     if (rc > len) {
+      DPRINTF("rc=%d > len=%d !!!\n", rc, len);
         rc = len;
     }
     (*ifc->sf_read) (ifc, b * UFLASH_BLOCK_UNITS + unit + ifc->sf_rsvbot, upos, data, rc);
@@ -296,11 +303,12 @@ static int FlashUnitRead(NUTSERIALFLASH * ifc, blknum_t b, sf_unit_t unit, int u
 static int FlashUnitWrite(NUTSERIALFLASH * ifc, blknum_t b, sf_unit_t unit, int upos, CONST void *data, int len)
 {
     int rc = ifc->sf_unit_size - upos;
-
+    DPRINTF("block=%d unit=%ld upos=%d len=%d (rc=%d)\n", b, (uint32_t)unit, upos, len, rc);
     if (unit == UFLASH_BLOCK_UNITS - 1) {
         rc -= sizeof(BLOCKFOOT);
     }
     if (rc > len) {
+        DPRINTF("rc=%d > len=%d !!!\n", rc, len);
         rc = len;
     }
     (*ifc->sf_write) (ifc, b * UFLASH_BLOCK_UNITS + unit + ifc->sf_rsvbot, upos, data, rc);
@@ -313,6 +321,7 @@ static int FlashUnitWrite(NUTSERIALFLASH * ifc, blknum_t b, sf_unit_t unit, int 
  */
 static int FlashCheckBlock(NUTSERIALFLASH * ifc, blknum_t b)
 {
+    DPRINTF("block=%d\n", b);
     return (*ifc->sf_check) (ifc, b * UFLASH_BLOCK_UNITS + ifc->sf_rsvbot, UFLASH_BLOCK_UNITS);
 }
 
@@ -321,7 +330,12 @@ static int FlashCheckBlock(NUTSERIALFLASH * ifc, blknum_t b)
  */
 static int FlashReadBlockHead(NUTSERIALFLASH * ifc, blknum_t b, BLOCKHEAD * bh)
 {
-    return (*ifc->sf_read) (ifc, b * UFLASH_BLOCK_UNITS + ifc->sf_rsvbot, 0, bh, sizeof(BLOCKHEAD));
+    int rc = (*ifc->sf_read) (ifc, b * UFLASH_BLOCK_UNITS + ifc->sf_rsvbot, 0, bh, sizeof(BLOCKHEAD));
+    if (bh->bh_logblk < 0xFFFF)
+    {
+      DPRINTF("block=%d entblk=%d, entseq=%d, logblk=%d, ver=%d\n", b, bh->bh_entblk, bh->bh_entseq, bh->bh_logblk, bh->bh_version);
+    }
+    return rc;
 }
 
 /*!
@@ -329,6 +343,7 @@ static int FlashReadBlockHead(NUTSERIALFLASH * ifc, blknum_t b, BLOCKHEAD * bh)
  */
 static int FlashWriteBlockHead(NUTSERIALFLASH * ifc, blknum_t b, BLOCKHEAD * bh)
 {
+    DPRINTF("block=%d\n", b);
     /* Update the block's version number. */
     bh->bh_version++;
     return (*ifc->sf_write) (ifc, b * UFLASH_BLOCK_UNITS + ifc->sf_rsvbot, 0, bh, sizeof(BLOCKHEAD));
@@ -341,6 +356,7 @@ static int FlashReadEntry(NUTSERIALFLASH * ifc, blknum_t b, ENTRYHEAD * eh, char
 {
     int rc;
 
+    DPRINTF("block=%d\n", b);
     /* Read the entry header, which contains the name length. */
     rc = (*ifc->sf_read) (ifc, b * UFLASH_BLOCK_UNITS + ifc->sf_rsvbot, sizeof(BLOCKHEAD), eh, sizeof(ENTRYHEAD));
     if (rc == 0 && name) {
@@ -361,6 +377,7 @@ static int FlashReadEntry(NUTSERIALFLASH * ifc, blknum_t b, ENTRYHEAD * eh, char
  */
 static int FlashBlockCmpEntryName(NUTSERIALFLASH * ifc, blknum_t b, CONST char *name, uint8_t len)
 {
+    DPRINTF("block=%d name=%s\n", b, name);
     return (*ifc->sf_compare) (ifc, b * UFLASH_BLOCK_UNITS + ifc->sf_rsvbot, sizeof(BLOCKHEAD) + sizeof(ENTRYHEAD), name, len);
 }
 
@@ -370,7 +387,7 @@ static int FlashBlockCmpEntryName(NUTSERIALFLASH * ifc, blknum_t b, CONST char *
 static int FlashWriteEntry(NUTSERIALFLASH * ifc, blknum_t b, CONST ENTRYHEAD * eh, CONST char *name)
 {
     int rc;
-
+    DPRINTF("block=%d name=%s\n", b, name);
     rc = (*ifc->sf_write) (ifc, b * UFLASH_BLOCK_UNITS + ifc->sf_rsvbot, sizeof(BLOCKHEAD), eh, sizeof(ENTRYHEAD));
     if (rc == 0) {
         rc = (*ifc->sf_write) (ifc, b * UFLASH_BLOCK_UNITS + ifc->sf_rsvbot, sizeof(BLOCKHEAD) + sizeof(ENTRYHEAD), name,
@@ -384,6 +401,7 @@ static int FlashWriteEntry(NUTSERIALFLASH * ifc, blknum_t b, CONST ENTRYHEAD * e
  */
 static int FlashReadBlockFoot(NUTSERIALFLASH * ifc, blknum_t b, BLOCKFOOT * bf)
 {
+    DPRINTF("block=%d\n", b);
     return (*ifc->sf_read) (ifc, (b + 1) * UFLASH_BLOCK_UNITS - 1 + ifc->sf_rsvbot, -(int) sizeof(BLOCKFOOT), bf,
                             sizeof(BLOCKFOOT));
 }
@@ -393,6 +411,7 @@ static int FlashReadBlockFoot(NUTSERIALFLASH * ifc, blknum_t b, BLOCKFOOT * bf)
  */
 static int FlashWriteBlockFoot(NUTSERIALFLASH * ifc, blknum_t b, BLOCKFOOT * bf)
 {
+    DPRINTF("block=%d wear\n", b, bf->bf_wear);
     bf->bf_wear++;
 #ifdef UFLASH_USE_TIMESTAMP
     bf->bf_time = time(NULL);
@@ -406,6 +425,7 @@ static int FlashWriteBlockFoot(NUTSERIALFLASH * ifc, blknum_t b, BLOCKFOOT * bf)
  */
 static int FlashEraseEntry(NUTSERIALFLASH * ifc, blknum_t b)
 {
+    DPRINTF("block=%d\n", b);
     return (*ifc->sf_erase) (ifc, b * UFLASH_BLOCK_UNITS + ifc->sf_rsvbot, 1);
 }
 
@@ -414,6 +434,7 @@ static int FlashEraseEntry(NUTSERIALFLASH * ifc, blknum_t b)
  */
 static int FlashEraseBlockData(NUTSERIALFLASH * ifc, blknum_t b)
 {
+    DPRINTF("block=%d\n", b);
     return (*ifc->sf_erase) (ifc, b * UFLASH_BLOCK_UNITS + 1 + ifc->sf_rsvbot, UFLASH_BLOCK_UNITS - 1);
 }
 
@@ -422,6 +443,7 @@ static int FlashEraseBlockData(NUTSERIALFLASH * ifc, blknum_t b)
  */
 static int FlashEraseBlocks(NUTSERIALFLASH * ifc, int n)
 {
+    DPRINTF("n=%d\n", n);
     return (*ifc->sf_erase) (ifc, ifc->sf_rsvbot, n * UFLASH_BLOCK_UNITS);
 }
 
@@ -506,7 +528,7 @@ static int PhysBlkMove(UFLASHVOLUME * vol, blknum_t src, blknum_t dst)
     BLOCKHEAD bh;
     BLOCKFOOT bf;
     uint_fast8_t u;
-
+    DPRINTF("src=%d dst=%d\n", src, dst);
     /* Read the header of the source block. */
     FlashReadBlockHead(vol->vol_ifc, src, &bh);
     /* Read the footer of the destination block. */
@@ -515,6 +537,7 @@ static int PhysBlkMove(UFLASHVOLUME * vol, blknum_t src, blknum_t dst)
     FlashEraseBlockData(vol->vol_ifc, dst);
     /* Copy unit by unit. */
     for (u = 0; rc == 0 && u < UFLASH_BLOCK_UNITS; u++) {
+        DWDOG;
         FlashUnitCopy(vol->vol_ifc, src, dst, u);
         /* If this is the first unit, write a new version of the header. */
         if (u == 0) {
@@ -550,6 +573,7 @@ static blknum_t PhysBlkUnused(UFLASHVOLUME * vol)
             break;
         }
     }
+    DPRINTF("b=%d\n", b);
     return b;
 }
 
@@ -588,7 +612,7 @@ static blknum_t PhysBlkAllocate(UFLASHVOLUME * vol, int level)
 {
     uint8_t *phy_use;
     int i;
-
+    DPRINTF("");
     for (;;) {
         if (level || min_used[UFLASH_USAGE_CACHE - (UFLASH_USAGE_CACHE / 4)].use_phyblk < vol->vol_blocks) {
             for (i = 0; i < UFLASH_USAGE_CACHE; i++) {
@@ -645,6 +669,7 @@ static blknum_t LogBlkAllocate(UFLASHVOLUME * vol, blknum_t lb)
             break;
         }
     }
+    DPRINTF("new lb=%d\n", lb);
     return lb;
 }
 
@@ -667,6 +692,7 @@ static blknum_t LogBlkReallocate(UFLASHVOLUME * vol, blknum_t lb)
         b_old = vol->vol_l2p[lb];
         vol->vol_l2p[lb] = b_new;
     }
+    DPRINTF("%d -> %d\n", b_old, b_new);
     return b_old;
 }
 
@@ -681,7 +707,7 @@ static int LogBlkRelease(UFLASHVOLUME * vol, blknum_t lb)
 
     b = vol->vol_l2p[lb];
     vol->vol_l2p[lb] = UFLASH_BLOCK_INVALID;
-
+    DPRINTF("Release %d\n", lb);
     return FlashEraseEntry(vol->vol_ifc, b);
 }
 
@@ -814,12 +840,15 @@ static long EntryScan(UFLASHVOLUME * vol, blknum_t lbe, time_t * mod)
 #endif
 
     /* Find the highest sequence block. */
+    DPRINTF("\n");
+    DPRINTF("Find the highest sequence block for lbe=%d\n", lbe);
     for (lb = UFLASH_ENTRIES; lb < vol->vol_blocks; lb++) {
         p = vol->vol_l2p[lb];
         if (p < vol->vol_blocks) {
             p *= UFLASH_BLOCK_UNITS;
             FlashReadBlockHead(vol->vol_ifc, p / UFLASH_BLOCK_UNITS, &bh);
             if (bh.bh_entblk == lbe) {
+                DPRINTF("flash entry lb=%d, bh_entseq=%d\n", lb, bh.bh_entseq);
                 if (seq < bh.bh_entseq) {
                     seq = bh.bh_entseq;
                     lbs = lb;
@@ -837,21 +866,26 @@ static long EntryScan(UFLASHVOLUME * vol, blknum_t lbe, time_t * mod)
             }
         }
     }
+    DPRINTF("highest seq of blocks seq=%d\n", seq);
     /* Size of full blocks. */
     siz = seq * (vol->vol_ifc->sf_unit_size * UFLASH_BLOCK_UNITS - (sizeof(BLOCKHEAD) + sizeof(BLOCKFOOT)));
+    DPRINTF("Size of full blocks siz = %ld\n", siz);
 
     /* Number of bytes in the highest sequence block. */
     p = vol->vol_l2p[lbs] * UFLASH_BLOCK_UNITS;
     off = -(int) sizeof(BLOCKFOOT);
     for (i = UFLASH_BLOCK_UNITS; --i >= 0;) {
         int s = (*vol->vol_ifc->sf_used) (vol->vol_ifc, p + i + vol->vol_ifc->sf_rsvbot, off);
-
+        DPRINTF("Size in unit %d/%d = %d (%d)\n",i, UFLASH_BLOCK_UNITS-1, s, vol->vol_ifc->sf_unit_size);
         off = 0;
         if (s) {
+            DPRINTF("Units up to %d are used. Adding %d x %d size\n", i, i, vol->vol_ifc->sf_unit_size - sizeof(BLOCKHEAD));
+            DPRINTF("Added size: %ld\n", (long int)(s + i * vol->vol_ifc->sf_unit_size - sizeof(BLOCKHEAD)));
             siz += s + i * vol->vol_ifc->sf_unit_size - sizeof(BLOCKHEAD);
             break;
         }
     }
+    DPRINTF("Final size: %ld\n", siz);
     return siz;
 }
 
@@ -875,11 +909,12 @@ static int EntrySearchNext(UFLASHVOLUME * vol, CONST char *name, ENTRYHEAD * eh,
     blknum_t lbe;
     blknum_t b;
     int nlen;
-
+    DPRINTF("name=%s\n start lbs=%d", name, lbs);
     nlen = strlen(name);
     /* Walking through the translation table requires exclusive access. */
     NutEventWait(&vol->vol_mutex, 0);
     for (lbe = lbs == UFLASH_ENTRIES ? 0 : lbs; lbe < UFLASH_ENTRIES; lbe++) {
+        DWDOG;
         b = vol->vol_l2p[lbe];
         if (b < vol->vol_blocks) {
             /* Read the entry header, which contains the path length. */
@@ -1322,7 +1357,7 @@ static NUTFILE *UFlashFileOpen(NUTDEVICE * dev, CONST char *path, int mode, int 
     NUTASSERT(path != NULL);
     vol = (UFLASHVOLUME *) dev->dev_dcb;
     NUTASSERT(vol != NULL);
-
+    DPRINTF("%s\n", path);
     while (*path == '/') {
         path++;
     }
@@ -1334,7 +1369,7 @@ static NUTFILE *UFlashFileOpen(NUTDEVICE * dev, CONST char *path, int mode, int 
     ent->ent_mode = mode;
 
     lbe = EntrySearch(vol, path, &eh);
-
+    DPRINTF("EntrySearch('%s') lbe=%d\n", path, lbe);
     NutEventWait(&vol->vol_mutex, 0);
     /* 
        ** Entry exists. 
@@ -1452,7 +1487,7 @@ static int UFlashFileRead(NUTFILE * nfp, void *data, int size)
     UFLASHENTRY *ent;
     UFLASHVOLUME *vol;
 
-    DEBUG(" %p %d\n",data, size);
+    DPRINTF(" %p %d\n",data, size);
     /* Ignore input flush. */
     if (data == NULL || size == 0) {
         return 0;
@@ -1529,7 +1564,7 @@ static int UFlashFileWrite(NUTFILE * nfp, CONST void *data, int len)
     UFLASHENTRY *ent;
     UFLASHVOLUME *vol;
 
-    DEBUG(" %p %d\n", data, len);
+    DPRINTF(" %p %d\n", data, len);
     /* Ignore output flush. */
     if (data == NULL || len == 0) {
         return 0;
@@ -1549,11 +1584,13 @@ static int UFlashFileWrite(NUTFILE * nfp, CONST void *data, int len)
        ** Loop until all data has been written.
      */
     while (len) {
+        DPRINTF("=== Loop len remain %d\n", len);
         /* Is the current logical block number still valid? */
         if (ent->ent_bidx >= vol->vol_blocks) {
             /* If not, seek for the right block. The routine will return an
                ** invalid block number, if we need a new block. */
             ent->ent_bidx = EntrySeek(vol, ent->ent_id, ent->ent_sidx);
+            DPRINTF("EntrySeek() returns ent->ent_bidx=%d\n", ent->ent_bidx);
         }
 
         /*
@@ -1566,6 +1603,7 @@ static int UFlashFileWrite(NUTFILE * nfp, CONST void *data, int len)
             if (b_old >= vol->vol_blocks) {
                 /* No more blocks available. */
                 NutEventPost(&vol->vol_mutex);
+                DPRINTF("NO FREE BLOCKS!\n");
                 return -1;
             }
             /* Read header of old block and increment the version number. */
@@ -1581,6 +1619,7 @@ static int UFlashFileWrite(NUTFILE * nfp, CONST void *data, int len)
             if (ent->ent_bidx >= vol->vol_blocks) {
                 /* No more blocks available. */
                 NutEventPost(&vol->vol_mutex);
+                DPRINTF("NO FREE BLOCKS!\n");
                 return -1;
             }
             /* No reallocation, old and new are the same block. */
@@ -1604,6 +1643,7 @@ static int UFlashFileWrite(NUTFILE * nfp, CONST void *data, int len)
            ** Write unit by unit.
          */
         for (u = 0; u < UFLASH_BLOCK_UNITS; u++) {
+            DPRINTF("+++ For loop unit %d\n", u);
             /* Make a copy of the old unit. If old and new are
                ** the same, this won't hurt. */
             FlashUnitCopy(vol->vol_ifc, b_old, b, u);
@@ -1634,10 +1674,12 @@ static int UFlashFileWrite(NUTFILE * nfp, CONST void *data, int len)
            ** remains incomplete, then the old version still exists and the
            ** incomplete block will be removed during mounting. */
         if (b != b_old) {
+            DPRINTF("Erase old place of relocated block %d\n", b_old);
             FlashEraseEntry(vol->vol_ifc, b_old);
         }
         NutEventPost(&vol->vol_mutex);
-    }
+    } // while (len)
+    DPRINTF("Written siz=%d\n", siz);
     return siz;
 }
 
@@ -1686,7 +1728,7 @@ static int UFlashFileSeek(NUTFILE * nfp, long *pos, int whence)
     NUTASSERT(nfp != NULL);
     NUTASSERT(nfp->nf_fcb != NULL);
 
-    DEBUG(" %ld %d\n", *pos, whence);
+    DPRINTF(" %ld %d\n", *pos, whence);
     ent = (UFLASHENTRY *) nfp->nf_fcb;
 
     NUTASSERT(pos != NULL);
@@ -1730,7 +1772,7 @@ static int UFlashMount(NUTDEVICE * dev)
     NUTASSERT(dev != NULL);
     NUTASSERT(dev->dev_icb != NULL);
     NUTASSERT(dev->dev_dcb == NULL);
-
+    DPRINTF("\n");
     /* Allocate the volume information structure  */
     vol = calloc(1, sizeof(UFLASHVOLUME));
     if (vol == NULL) {
@@ -1760,11 +1802,13 @@ static int UFlashMount(NUTDEVICE * dev)
        ** Fill the block translation table.
      */
     for (b = 0; b < vol->vol_blocks; b++) {
+        DWDOG;
         FlashReadBlockHead(vol->vol_ifc, b, &bh);
         /* Check if this is a logical block. */
         if (bh.bh_logblk < vol->vol_blocks) {
             /* Verify the CRC. */
             if (FlashCheckBlock(vol->vol_ifc, b)) {
+                DPRINTF("Bad CRC erasing %d\n", b);
                 /* Bad block, remove it. */
                 FlashEraseEntry(vol->vol_ifc, b);
                 /* Mark the volume fixed. */
@@ -1780,12 +1824,15 @@ static int UFlashMount(NUTDEVICE * dev)
                     if (bho.bh_version > bh.bh_version) {
                         if (bho.bh_version - bh.bh_version > vol->vol_blocks) {
                             /* The current version overflowed. */
+                            DPRINTF("Erase overflowed current %d\n", b);
                             FlashEraseEntry(vol->vol_ifc, b);
                         } else {
+                            DPRINTF("Erase previous version %d\n", b);
                             FlashEraseEntry(vol->vol_ifc, vol->vol_l2p[bh.bh_logblk]);
                             vol->vol_l2p[bh.bh_logblk] = b;
                         }
                     } else if (bh.bh_version - bho.bh_version < vol->vol_blocks) {
+                        DPRINTF("The current version is higher %d\n", b);
                         /* The current version is higher. */
                         FlashEraseEntry(vol->vol_ifc, b);
                     } else {
@@ -1919,7 +1966,7 @@ int UFlashFormat(NUTDEVICE * dev, NUTSERIALFLASH * sfi, NUTSPIBUS * bus)
     NUTASSERT(dev != NULL);
     NUTASSERT(sfi != NULL);
     NUTASSERT(dev->dev_dcb == NULL);
-    DEBUG("\n");
+    DPRINTF("\n");
     sfi->sf_node->node_bus = bus;
     if ((*sfi->sf_node->node_bus->bus_initnode) (sfi->sf_node)) {
         return -1;
