@@ -93,6 +93,32 @@ HEAPNODE *heapFastMemFreeList;
 static HEAPNODE *heapAllocList;
 #endif
 
+
+#if (NUTMEM_WITH_MIN_FREE_COUNTER)
+/*!
+ * Variable to keep minimum free memory. Updated after each call to malloc or realloc
+ */
+size_t ulMinFreeHeap;
+size_t ulMinLargestFreeHeap;
+#endif
+
+/**
+ * Check free memory and notice lowest value
+ */
+static void vUpdateMinFreeCounters(void)
+{
+#if (NUTMEM_WITH_MIN_FREE_COUNTER)
+  size_t Current_ulMinFreeHeap        = NutHeapRootAvailable(&heapFreeList);
+  size_t Current_ulMinLargestFreeHeap = NutHeapRootRegionAvailable(&heapFreeList);
+
+  if (Current_ulMinFreeHeap < ulMinFreeHeap)
+    ulMinFreeHeap = Current_ulMinFreeHeap;
+
+  if (Current_ulMinLargestFreeHeap < ulMinLargestFreeHeap)
+    ulMinLargestFreeHeap = Current_ulMinLargestFreeHeap;
+#endif
+}
+
 /*
  * Prepare the user region.
  *
@@ -266,6 +292,7 @@ void *NutHeapRootAlloc(HEAPNODE ** root, size_t size)
 #endif
         fit = (HEAPNODE *) PrepareUserArea(fit);
     }
+    vUpdateMinFreeCounters();
     return fit;
 }
 
@@ -443,6 +470,11 @@ void NutHeapRootAdd(HEAPNODE ** root, void *addr, size_t size)
 #else
     NutHeapRootFree(root, PrepareUserArea(node));
 #endif
+
+#if (NUTMEM_WITH_MIN_FREE_COUNTER)
+    ulMinFreeHeap        = NutHeapRootAvailable(&heapFreeList);
+    ulMinLargestFreeHeap = NutHeapRootRegionAvailable(&heapFreeList);
+#endif
 }
 
 /*!
@@ -588,6 +620,7 @@ void *NutHeapRootRealloc(HEAPNODE ** root, void *block, size_t size)
                 *npp = node->hn_next;
             }
             /* Return the original pointer. */
+            vUpdateMinFreeCounters();
             return block;
         }
 
@@ -606,6 +639,7 @@ void *NutHeapRootRealloc(HEAPNODE ** root, void *block, size_t size)
             NutHeapRootFree(root, block);
 #endif
         }
+        vUpdateMinFreeCounters();
         return newmem;
     }
 

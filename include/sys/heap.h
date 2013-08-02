@@ -73,6 +73,13 @@ struct _HEAPNODE {
 
 extern HEAPNODE *heapFreeList;
 
+#define NUTMEM_WITH_MIN_FREE_COUNTER   1
+
+#if (NUTMEM_WITH_MIN_FREE_COUNTER)
+extern size_t ulMinFreeHeap;
+extern size_t ulMinLargestFreeHeap;
+#endif
+
 #define NutHeapAdd(a, s)                NutHeapRootAdd(&heapFreeList, a, s)
 #define NutHeapAvailable()              NutHeapRootAvailable(&heapFreeList)
 #define NutHeapRegionAvailable()        NutHeapRootRegionAvailable(&heapFreeList)
