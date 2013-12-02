@@ -93,20 +93,50 @@ static volatile size_t tw_mm_len;       /* Number of bytes to transmit in master
 static volatile size_t tw_mm_idx;       /* Current master transmit buffer index. */
 
 /*
+ *             31 30 29 28 27 26 25 24   23 22 21 20 19 18 17 16   15 14 13 12 11 10 09 08   07 06 05 04 03 02 01 00
+ * TWI SR      -- -- -- -- -- -- -- --   -- -- -- -- -- -- -- --   -- -- -- -- -- -- -- Ne   -- -- -- -- -- TX RX TX
+ *                                                                                      ACK                 RD RD COMP
+ * TWI I EN
+ * TWI I DI
+ * TWI I MASK
+ */
+
+/* ATMEL ERRATA for SAM7X256 RevA and RevB (not RevC)
+ *
+ * 41.3.9.3 TWI: NACK Status Bit Lost
+ *          During a master frame, if TWI_SR is read between the Non Acknowledge condition detection
+ *          and the TXCOMP bit rising in the TWI_SR, the NACK bit is not set.
+ *          Problem Fix/Workaround
+ *          The user must wait for the TXCOMP status bit by interrupt and must not read the TWI_SR as
+ *          long as transmission is not completed.
+ *          TXCOMP and NACK fields are set simultaneously and the NACK field is reset after the read of
+ *          the TWI_SR.
+ *
+ */
+#define AT91_TWI_LOST_ACK_WORKAROUND  1
+
+/*
  * TWI interrupt handler.
  */
 static void TwInterrupt(void *arg)
 {
     register unsigned int twsr;
 
-    /* Read the status register and check for errors. */
-    twsr = inr(TWI_SR);
-    if (twsr & (TWI_NACK | TWI_OVRE | TWI_ARBLST)) {
-        if (twsr & TWI_NACK) {
-            tw_mm_err = TWERR_SLA_NACK;
-        } else {
-            tw_mm_err = TWERR_BUS;
-        }
+#ifdef AT91_TWI_LOST_ACK_WORKAROUND
+    // it is forbidden to read TWI_SR before TX_COMP during transmission (NACK can be lost)
+    twsr = inr(TWI_IMR);
+    if (twsr &  TWI_TXCOMP)
+#endif
+    {
+      /* Read the status register and check for errors. */
+      twsr = inr(TWI_SR);
+      if (twsr & (TWI_NACK | TWI_OVRE | TWI_ARBLST)) {
+          if (twsr & TWI_NACK) {
+              tw_mm_err = TWERR_SLA_NACK;
+          } else {
+              tw_mm_err = TWERR_BUS;
+          }
+      }
     }
 
     /* Mask inactive interrupt flags. */
