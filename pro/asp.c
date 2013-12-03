@@ -78,6 +78,7 @@
 
 #include <pro/httpd.h>
 #include <pro/asp.h>
+#include <pro/ssi.h>
 #include <arpa/inet.h>
 
 extern CONFNET confnet;
@@ -100,7 +101,8 @@ extern CONFNET confnet;
 enum {
     ASP_STATE_IDLE = 0,
     ASP_STATE_START,
-    ASP_STATE_COPY_FUNC
+    ASP_STATE_COPY_FUNC,
+    ASP_STATE_WAIT_FOR_END_BRACKET
 };
 
 /*==========================================================*/
@@ -157,6 +159,14 @@ static void ProcessAspFunction(char *pASPFunction, FILE * stream)
 /************************************************************/
 /*  NutHttpCheckAsp                                         */
 /************************************************************/
+/**
+ *
+ * @param stream    output stream (http connection)
+ * @param fd        fd to source file with ASP content
+ * @param file_len  length of source file
+ * @param http_root path prefix to web server root directory (can be NULL)
+ * @param req       current http request
+ */
 void NutHttpProcessAsp(FILE * stream, int fd, int file_len, char* http_root, REQUEST *req)
 {
     int n;
@@ -222,7 +232,9 @@ void NutHttpProcessAsp(FILE * stream, int fd, int file_len, char* http_root, REQ
                             fwrite(pWriteBuffer, 1, WriteCount, stream);
                             WriteCount = 0;
                         }
-                    } else {
+                    }
+                    else
+                    {
                         bASPState = ASP_STATE_IDLE;
                         pWriteBuffer[WriteCount] = Data;
                         WriteCount++;
@@ -230,18 +242,38 @@ void NutHttpProcessAsp(FILE * stream, int fd, int file_len, char* http_root, REQ
                     break;
                     /* ASP_STATE_START_1 */
 
-                case ASP_STATE_COPY_FUNC:
-                    if (Data == '>') {
-                        bASPState = ASP_STATE_IDLE;
-                        pASPFunction[bASPFuncLen] = 0;
-
+                case ASP_STATE_WAIT_FOR_END_BRACKET:
+                  if (Data == '>')
+                  {
+                      bASPState = ASP_STATE_IDLE;
+                      pASPFunction[bASPFuncLen] = 0;
+//<!-- nizinski_w: SSI tag in ASP support
+                      char *pcSSICommentStart = strstr (pASPFunction, "<!--");
+                      if ( (pcSSICommentStart != NULL) && (bASPFuncLen>4) )
+                      {
+                        // pASPFunction looks like: "<!-- #include abc -->"
+                        // pcSSICommentStart+bASPFuncLen points to null terminator after -->, so rewind it by 4
+                        NutSsiCheckForSsi (stream, pcSSICommentStart, bASPFuncLen-4, http_root, req );
+                      }
+                      else
+// -->
+                      {
                         ProcessAspFunction(pASPFunction, stream);
-                        bASPFuncLen = 0;
-                    } else {
+                      }
+                      bASPFuncLen = 0;
+                    }
+                    else
+                    {
+                      fprintf (stream, "ASP NO CLOSING '>' after '%%' ('%s')!", pASPFunction);
+                    }
+                    break;
+
+                case ASP_STATE_COPY_FUNC:
                         /*
                          * Skip over the END of an ASPFunction
                          */
                         if (Data == '%') {
+                            bASPState = ASP_STATE_WAIT_FOR_END_BRACKET;
                             Data = 0;
                         }
 
@@ -253,7 +285,6 @@ void NutHttpProcessAsp(FILE * stream, int fd, int file_len, char* http_root, REQ
                              */
                             bASPFuncLen = 0;
                         }
-                    }
                     break;
                     /* ASP_STATE_COPY_FUNC */
                 } /* end switch (bASPState) */

@@ -56,6 +56,7 @@
 __BEGIN_DECLS
 
 extern void NutRegisterSsi(void);
+extern uint8_t NutSsiCheckForSsi(FILE *stream, char *buffer, uint16_t end, char* http_root, REQUEST *req);
 
 __END_DECLS
 

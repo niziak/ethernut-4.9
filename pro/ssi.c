@@ -395,13 +395,13 @@ static void NutSsiSkipWhitespace(char *buffer, uint16_t *pos, uint16_t end)
  * 
  * \param stream Stream of the socket connection, previously opened for 
  *               binary read and write.
- * \param buffer Current file buffer so search in. The buffer is set to the start of a html comment
- * \param end    End position of the comment.
+ * \param buffer Current file buffer so search in. The buffer is set to the start of a html comment like: <!-- #include="... -->
+ * \param end    End position of the comment. (buffer+end should points to "-->")
  * \param http_root The root path of the http-deamon
  * \param req    The http request struct of the top most http_request
  */
 
-static uint8_t NutSsiCheckForSsi(FILE *stream, char *buffer, uint16_t end, char* http_root, REQUEST *req)
+uint8_t NutSsiCheckForSsi(FILE *stream, char *buffer, uint16_t end, char* http_root, REQUEST *req)
 {
     uint16_t pos = 4; // First character after comment start
     char * filename;
